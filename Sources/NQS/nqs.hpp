@@ -31,7 +31,21 @@ class NQS {
             op_(*new AdaMax()) {}
 
         void applyHadamard(int qubit) {}
-        void applyPauliX(int qubit){}
+
+        void applyPauliX(int qubit){
+            VectorType a = getPsi_a();
+            VectorType b = getPsi_b();
+            MatrixType W = getPsi_W();
+            
+            a(qubit) = -a(qubit);
+            for(int k = 0; k < b.size(); k++) {
+                b(k) += W(qubit, k);
+            }
+            W.row(qubit) = -W.row(qubit);
+
+            setPsiParams(a,b,W);
+        }
+
         void applyPauliY(int qubit){}
         void applyPauliZ(int qubit){}
         void applySingleZRotation(int qubit, double theta){}
@@ -48,27 +62,35 @@ class NQS {
         }
 
     private:
-
-        /*
+     
         VectorType getPsi_a() {
-            RbmSpin::VectorType pars = psi.GetParameters();
+            RbmSpin::VectorType pars = psi_.GetParameters();
             //always "use_a" & "use_b"
-            return pars.head(psi.Nvisible());
+            return pars.head(psi_.Nvisible());
         }
 
         VectorType getPsi_b() {
-            RbmSpin::VectorType pars = psi.GetParameters();
+            RbmSpin::VectorType pars = psi_.GetParameters();
             //always "use_a" & "use_b"
-            return pars.segment(psi.Nvisible(), psi.Nhidden());
+            return pars.segment(psi_.Nvisible(), psi_.Nhidden());
         }
 
         MatrixType getPsi_W() {
-            RbmSpin::VectorType pars = psi.GetParameters();
-            VectorType Wpars = pars.tail(psi.Nvisible() * psi.Nhidden());
-            return Eigen::Map<MatrixType>(Wpars.data(), psi.Nvisible(), psi.Nhidden());
+            RbmSpin::VectorType pars = psi_.GetParameters();
+            VectorType Wpars = pars.tail(psi_.Nvisible() * psi_.Nhidden());
+            return Eigen::Map<MatrixType>(Wpars.data(), psi_.Nvisible(), psi_.Nhidden());
         }
-        //void setPsiParams(RbmSpin::VectorType& a, RbmSpin::VectorType& b, RbmSpin::MatrixType& W);
-         */
+
+        void setPsiParams(RbmSpin::VectorType a,
+                            RbmSpin::VectorType b,
+                            RbmSpin::MatrixType W) {
+            VectorType pars(psi_.Npar());
+            pars.head(psi_.Nvisible()) = a;
+            pars.segment(psi_.Nvisible(), psi_.Nhidden()) = b;
+            pars.tail(psi_.Nvisible() * psi_.Nhidden()) = Eigen::Map<VectorType>(W.data(), psi_.Nvisible() * psi_.Nhidden());
+            psi_.SetParameters(pars);
+        }
+        
     };
 
 }  // namespace netket
