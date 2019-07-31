@@ -60,7 +60,16 @@ class NQS {
             setPsiParams(a,b,W);
         }
 
-        void applyPauliZ(int qubit){}
+        void applyPauliZ(int qubit){
+            VectorType a = getPsi_a();
+            VectorType b = getPsi_b();
+            MatrixType W = getPsi_W();
+            
+            a(qubit) = a(qubit) + (0, M_PI);
+
+            setPsiParams(a,b,W);
+        }
+
         void applySingleZRotation(int qubit, double theta){}
         void applyControlledZRotation(int controlQubit, int qubit, double theta){}
 
