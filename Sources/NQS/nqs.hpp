@@ -46,7 +46,20 @@ class NQS {
             setPsiParams(a,b,W);
         }
 
-        void applyPauliY(int qubit){}
+        void applyPauliY(int qubit){
+            VectorType a = getPsi_a();
+            VectorType b = getPsi_b();
+            MatrixType W = getPsi_W();
+            
+            a(qubit) = -a(qubit) + (0, M_PI/2.0);
+            for(int k = 0; k < b.size(); k++) {
+                b(k) += W(qubit, k);
+            }
+            W.row(qubit) = -W.row(qubit);
+
+            setPsiParams(a,b,W);
+        }
+
         void applyPauliZ(int qubit){}
         void applySingleZRotation(int qubit, double theta){}
         void applyControlledZRotation(int controlQubit, int qubit, double theta){}
