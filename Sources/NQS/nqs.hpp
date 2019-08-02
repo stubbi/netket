@@ -1,3 +1,4 @@
+#include <complex>
 #include "Machine/rbm_spin.hpp"
 #include "Graph/hypercube.hpp"
 #include "Hilbert/spins.hpp"
@@ -65,7 +66,7 @@ class NQS {
             VectorType b = getPsi_b();
             MatrixType W = getPsi_W();
             
-            a(qubit) = a(qubit) + (0, M_PI);
+            a(qubit) = a(qubit) + std::complex<double>(0, M_PI);
 
             setPsiParams(a,b,W);
         }
@@ -75,12 +76,28 @@ class NQS {
             VectorType b = getPsi_b();
             MatrixType W = getPsi_W();
             
-            a(qubit) = a(qubit) + (0, theta);
+            a(qubit) = a(qubit) + std::complex<double>(0, theta);
 
             setPsiParams(a,b,W);
         }
 
-        void applyControlledZRotation(int controlQubit, int qubit, double theta){}
+        void applyControlledZRotation(int controlQubit, int qubit, double theta){
+            std::complex<double> A_theta = std::acosh(std::exp(std::complex<double>(0, -theta/2.0)));
+
+            psi_.addHidden();
+
+            VectorType a = getPsi_a();
+            VectorType b = getPsi_b();
+            MatrixType W = getPsi_W();
+        
+            a(controlQubit) = a(controlQubit) + std::complex<double>(0, -theta/2.0) + A_theta;
+            a(qubit) = a(qubit) + std::complex<double>(0, -theta/2.0) - A_theta;
+
+            W(controlQubit, W.cols()-1) = -2.0 * A_theta;
+            W(qubit, W.cols()-1) = 2.0 * A_theta;
+
+            setPsiParams(a,b,W);
+        }
 
         const Eigen::VectorXd& sample(){
             sa_.Reset(true);
