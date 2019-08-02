@@ -31,7 +31,9 @@ class NQS {
             saHadamard_(*new MetropolisLocalHadamard(psi_)),
             op_(*new AdaMax()) {}
 
-        void applyHadamard(int qubit) {}
+        void applyHadamard(int qubit, int numSamples = 100, int numIterations = 1000) {
+
+        }
 
         void applyPauliX(int qubit){
             VectorType a = getPsi_a();

@@ -46,6 +46,7 @@ void AddNQSModule(py::module &m) {
                nqubits: Number of Qubits of the circuit to be simulated.
            )EOF")
       .def("applyHadamard", &NQS::applyHadamard, py::arg("qubit"),
+                            py::arg("numSamples"), py::arg("numIterations"),
             R"EOF(
            Apply Hadamard gate to qubit.
 
