@@ -30,6 +30,17 @@ int RbmSpin::Nvisible() const { return nv_; }
 
 int RbmSpin::Npar() const { return npar_; }
 
+void RbmSpin::addHidden() {
+  b_.conservativeResize(b_.size() + 1);
+  b_(b_.size() - 1) = 0;
+
+  W_.conservativeResize(W_.rows(), W_.cols() + 1);
+  W_.col(W_.cols()-1).setZero();
+  
+  nh_ += 1;
+  npar_ += W_.col(W_.cols() - 1).size() + 1;
+}
+
 void RbmSpin::Init() {
   W_.resize(nv_, nh_);
   a_.resize(nv_);
