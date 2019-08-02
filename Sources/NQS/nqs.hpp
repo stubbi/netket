@@ -70,7 +70,16 @@ class NQS {
             setPsiParams(a,b,W);
         }
 
-        void applySingleZRotation(int qubit, double theta){}
+        void applySingleZRotation(int qubit, double theta){
+            VectorType a = getPsi_a();
+            VectorType b = getPsi_b();
+            MatrixType W = getPsi_W();
+            
+            a(qubit) = a(qubit) + (0, theta);
+
+            setPsiParams(a,b,W);
+        }
+
         void applyControlledZRotation(int controlQubit, int qubit, double theta){}
 
         const Eigen::VectorXd& sample(){
