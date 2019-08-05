@@ -30,7 +30,17 @@ class NQS {
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmSpin(std::make_shared<Spin>(hi_), 0, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)),
             saHadamard_(*new MetropolisLocalHadamard(psi_)),
-            op_(*new AdaMax()) {}
+            op_(*new AdaMax()) {
+                VectorType a = getPsi_a();
+                VectorType b = getPsi_b();
+                MatrixType W = getPsi_W();
+                
+                for(int k = 0; k < a.size(); k++) {
+                    a(k) = -3.0;
+                }
+
+                setPsiParams(a,b,W);
+            }
 
         void applyHadamard(int qubit, int numSamples = 100, int numIterations = 1000) {
             std::vector<Eigen::VectorXd> trainingSamples;
