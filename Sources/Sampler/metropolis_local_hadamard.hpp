@@ -96,6 +96,27 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
   void Sweep() override {}
 
+  double PsiValueAfterHadamard(Eigen::VectorXd v, int qubit) {
+    double valueOfQubit = v(qubit);
+    //set qubit to -1
+    v(qubit) = -1.0;
+    std::complex<double> psi1 = std::exp(GetMachine().LogVal(v));
+    //set qubit to +1
+    v(qubit) = +1.0;
+    std::complex<double> psi2 = std::exp(GetMachine().LogVal(v));
+
+    double psi;
+    //if qubit in sample is -1 ..
+    if(valueOfQubit == -1.0) {
+      //... add psi1 and psi2 (|0> -> |+>)
+      psi = std::norm(psi1 + psi2);
+    } else {
+      //... else substract (|1> -> |->)
+      psi = std::norm(psi1 - psi2);
+    }
+    return psi;
+  }
+
   void Sweep(int qubit) {
     std::vector<int> tochange(1);
     std::vector<double> newconf(1);
@@ -152,8 +173,8 @@ class MetropolisLocalHadamard : public AbstractSampler {
       //reset
       v_(qubit) = valueOfQubit;
 
-      double psiAfter;
 
+      double psiAfter;
       //if qubit in sample is -1 ..
       if((tochange[0] == qubit && v_(qubit) == 1.0) || v_(qubit) == -1.0) {
         //... add psi1 and psi2 (|0> -> |+>)
@@ -163,7 +184,12 @@ class MetropolisLocalHadamard : public AbstractSampler {
         psiAfter = std::norm(psi1After - psi2After);
       }
 
-      double ratio = psiBefore / psiAfter;
+      double ratio;
+      if(psiAfter != 0.0) {
+        ratio = psiBefore / psiAfter;
+      } else {
+        ratio = 1.0;
+      }
 
 #ifndef NDEBUG
       const auto psival1 = GetMachine().LogVal(v_);

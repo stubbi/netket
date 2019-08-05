@@ -4,6 +4,7 @@
 #include "Hilbert/spins.hpp"
 #include "Optimizer/ada_max.hpp"
 #include "Sampler/metropolis_local_hadamard.hpp"
+#include "Supervised/supervised.hpp"
 #include <vector>
 
 
@@ -31,7 +32,25 @@ class NQS {
             saHadamard_(*new MetropolisLocalHadamard(psi_)),
             op_(*new AdaMax()) {}
 
-        void applyHadamard(int qubit) {}
+        void applyHadamard(int qubit, int numSamples = 100, int numIterations = 1000) {
+            std::vector<Eigen::VectorXd> trainingSamples;
+            std::vector<Eigen::VectorXcd> trainingTargets;
+
+            for(int i = 0; i < numSamples; i++) {
+                saHadamard_.Reset(true);
+                saHadamard_.Sweep(qubit);
+
+                trainingSamples.push_back(saHadamard_.Visible());
+
+                Eigen::VectorXcd target(1);
+                target(0) = saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit);
+
+                trainingTargets.push_back(target);
+            }
+
+            Supervised spvsd = *new Supervised(psi_, op_, numIterations/10.0, trainingSamples, trainingTargets);
+            spvsd.Run(numIterations, "Overlap_phi");
+        }
 
         void applyPauliX(int qubit){
             VectorType a = getPsi_a();
