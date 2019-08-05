@@ -38,6 +38,12 @@ void RbmSpin::addHidden() {
   W_.col(W_.cols()-1).setZero();
   
   nh_ += 1;
+
+  thetas_.resize(nh_);
+  lnthetas_.resize(nh_);
+  thetasnew_.resize(nh_);
+  lnthetasnew_.resize(nh_);
+
   npar_ += W_.col(W_.cols() - 1).size() + 1;
 }
 
