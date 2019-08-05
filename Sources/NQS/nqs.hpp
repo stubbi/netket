@@ -53,7 +53,7 @@ class NQS {
                 trainingSamples.push_back(saHadamard_.Visible());
 
                 Eigen::VectorXcd target(1);
-                target(0) = saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit);
+                target(0) = std::log(saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit));
 
                 trainingTargets.push_back(target);
             }
