@@ -158,11 +158,12 @@ class MetropolisLocalHadamard : public AbstractSampler {
       if(v_(qubit) == -1.0) {
         //... add psi1 and psi2 (|0> -> |+>)
         psiBefore = std::norm(psi1Before + psi2Before);
-      } else if(v_(qubit) == 1.0) {
+      } else {
         //... else substract (|1> -> |->)
         psiBefore = std::norm(psi1Before - psi2Before);
       }
 
+      double valueOfQubitToChange = v_(tochange[0]);
       v_(tochange[0]) = newconf[0];
       valueOfQubit = v_(qubit);
       //set qubit to -1
@@ -177,17 +178,20 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
       double psiAfter;
       //if qubit in sample is -1 ..
-      if((tochange[0] == qubit && v_(qubit) == 1.0) || v_(qubit) == -1.0) {
+      if(v_(qubit) == -1.0) {
         //... add psi1 and psi2 (|0> -> |+>)
         psiAfter = std::norm(psi1After + psi2After);
-      } else if((tochange[0] == qubit && v_(qubit) == -1.0) || v_(qubit) == 1.0) {
+      } else {
         //... else substract (|1> -> |->)
         psiAfter = std::norm(psi1After - psi2After);
       }
 
+      //reset
+      v_(tochange[0]) = valueOfQubitToChange;
+
       double ratio;
-      if(psiAfter != 0.0) {
-        ratio = psiBefore / psiAfter;
+      if(psiBefore != 0.0) {
+        ratio = psiAfter/ psiBefore;
       } else {
         ratio = 1.0;
       }
