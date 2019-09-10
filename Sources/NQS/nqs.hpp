@@ -46,6 +46,8 @@ class NQS {
             std::vector<Eigen::VectorXd> trainingSamples;
             std::vector<Eigen::VectorXcd> trainingTargets;
 
+            int countOne = 0;
+
             for(int i = 0; i < numSamples; i++) {
                 saHadamard_.Reset(true);
                 saHadamard_.Sweep(qubit);
@@ -56,9 +58,36 @@ class NQS {
                 target(0) = std::log(saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit));
 
                 trainingTargets.push_back(target);
+
+                if(saHadamard_.Visible()(qubit) == 1) {
+                    countOne++;
+                }
             }
 
-            Supervised spvsd = *new Supervised(psi_, op_, numIterations/10.0, trainingSamples, trainingTargets);
+            // in these cases, the gradient factors out and collapses
+            if(countOne == 0 || countOne == numSamples) {
+                // we have to add more samples, say 1%
+                for(int i = 0; i < numSamples; i++) {
+                    saHadamard_.Reset(true);
+                    saHadamard_.Sweep(qubit);
+
+                    auto sample = saHadamard_.Visible();
+                    sample(qubit) *= -1.0;
+
+                    trainingSamples.push_back(sample);
+
+                    Eigen::VectorXcd target(1);
+                    target(0) = std::log(saHadamard_.PsiValueAfterHadamard(sample, qubit));
+
+                    trainingTargets.push_back(target);
+                }
+
+            }
+
+            InfoMessage() << "ones " << countOne << std::endl;
+            InfoMessage() << "#samples " << trainingSamples.size() << std::endl;
+
+            Supervised spvsd = *new Supervised(psi_, op_, trainingSamples.size(), trainingSamples, trainingTargets);
             spvsd.Run(numIterations, "Overlap_phi");
         }
 
@@ -95,7 +124,7 @@ class NQS {
             VectorType b = getPsi_b();
             MatrixType W = getPsi_W();
             
-            a(qubit) = a(qubit) + std::complex<double>(0, M_PI);
+            a(qubit) = a(qubit) + std::complex<double>(0, M_PI/2.0);
 
             setPsiParams(a,b,W);
         }
@@ -113,17 +142,19 @@ class NQS {
         void applyControlledZRotation(int controlQubit, int qubit, double theta){
             std::complex<double> A_theta = std::acosh(std::exp(std::complex<double>(0, -theta/2.0)));
 
+            InfoMessage() << "A_theta = " << A_theta << std::endl;
+
             psi_.addHidden();
 
             VectorType a = getPsi_a();
             VectorType b = getPsi_b();
             MatrixType W = getPsi_W();
         
-            a(controlQubit) = a(controlQubit) + std::complex<double>(0, -theta/2.0) + A_theta;
-            a(qubit) = a(qubit) + std::complex<double>(0, -theta/2.0) - A_theta;
+            a(controlQubit) = a(controlQubit) - std::complex<double>(0, 2.0 * M_PI);
+            a(qubit) = a(qubit) + std::complex<double>(0, 4.0/3.0 * M_PI);
 
-            W(controlQubit, W.cols()-1) = -2.0 * A_theta;
-            W(qubit, W.cols()-1) = 2.0 * A_theta;
+            W(controlQubit, W.cols()-1) = - std::complex<double>(0, 3.0 * M_PI);
+            W(qubit, W.cols()-1) = std::complex<double>(0, 7.0/3.0 * M_PI);
 
             setPsiParams(a,b,W);
         }
