@@ -100,6 +100,13 @@ void AddNQSModule(py::module &m) {
       .def("getPsiParams", &NQS::getPsiParams,
             R"EOF(
            Get parameters of the underlying Boltzmann machine.
+           )EOF")
+      .def("psi", &NQS::psi, py::arg("v"),
+            R"EOF(
+           Get the psi value of a given configuration of qubits.
+
+           Args:
+               v: configuration of qubits to calculate wave function for.
            )EOF");
 }
 

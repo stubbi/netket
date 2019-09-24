@@ -25,7 +25,7 @@
 #include "Machine/machine.hpp"
 #include "Operator/abstract_operator.hpp"
 #include "Optimizer/optimizer.hpp"
-#include "Output/json_output_writer.hpp"
+//#include "Output/json_output_writer.hpp"
 #include "Sampler/abstract_sampler.hpp"
 #include "Stats/stats.hpp"
 #include "Utils/parallel_utils.hpp"
@@ -57,7 +57,7 @@ class QuantumStateReconstruction {
   Eigen::VectorXcd rotated_grad_;
 
   // This optional will contain a value iff the MPI rank is 0.
-  nonstd::optional<JsonOutputWriter> writer_;
+  //nonstd::optional<JsonOutputWriter> writer_;
 
   int totalnodes_;
   int mynode_;
@@ -134,12 +134,14 @@ class QuantumStateReconstruction {
     MPI_Barrier(MPI_COMM_WORLD);
   }
 
+  /*
   void InitOutput(std::string output_prefix, Index save_params_every) {
     if (mynode_ == 0) {
       writer_.emplace(output_prefix + ".log", output_prefix + ".wf",
                       save_params_every);
     }
   }
+  */
 
   void InitSweeps() {
     sampler_.Reset();
@@ -249,17 +251,20 @@ class QuantumStateReconstruction {
     assert(step_size > 0);
     assert(save_params_every > 0);
 
+    /*
     nonstd::optional<JsonOutputWriter> writer;
     if (mynode_ == 0) {
       writer.emplace(output_prefix + ".log", output_prefix + ".wf",
                      save_params_every);
     }
+    */
     opt_.Reset();
 
     for (Index step = 0; !n_iter.has_value() || step < *n_iter; step += step_size) {
       Advance(step_size);
       ComputeObservables();
 
+      /*
       // Note: This has to be called in all MPI processes, because converting
       // the ObsManager to JSON performs a MPI reduction.
       auto obs_data = json(obsmanager_);
@@ -271,6 +276,7 @@ class QuantumStateReconstruction {
         writer->WriteLog(step, obs_data);
         writer->WriteState(step, psi_);
       }
+      */
       MPI_Barrier(MPI_COMM_WORLD);
     }
   }
@@ -309,7 +315,7 @@ class QuantumStateReconstruction {
   // basis identified by b_index
   void RotateGradient(int b_index, const Eigen::VectorXd &state,
                       Eigen::VectorXcd &rotated_gradient) {
-    Complex den;
+    Complex den; 
     Eigen::VectorXcd num;
     Eigen::VectorXd v(psi_.Nvisible());
     rotations_[b_index]->FindConn(state, mel_, connectors_, newconfs_);
@@ -331,6 +337,7 @@ class QuantumStateReconstruction {
     rotated_gradient = (num / den);
   }
 
+  /*
   void PrintOutput(Index i) {
     // Note: This has to be called in all MPI processes, because converting
     // the ObsManager to JSON performs a MPI reduction.
@@ -344,6 +351,7 @@ class QuantumStateReconstruction {
     }
     MPI_Barrier(MPI_COMM_WORLD);
   }
+  */
 
   void setSrParameters(double diag_shift = 0.01, bool use_iterative = false,
                        bool use_cholesky = true) {

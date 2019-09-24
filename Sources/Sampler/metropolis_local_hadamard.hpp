@@ -75,9 +75,9 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
     // Always use odd sweep size to avoid possible ergodicity problems
     if (nv_ % 2 == 0) {
-      sweep_size_ = nv_ + 1;
+      sweep_size_ = 10 * nv_ + 1;
     } else {
-      sweep_size_ = nv_;
+      sweep_size_ = 10 * nv_;
     }
 
     InfoMessage() << "Local Metropolis sampler is ready " << std::endl;
@@ -98,24 +98,24 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
   std::complex<double> PsiValueAfterHadamard(Eigen::VectorXd v, int qubit) {
     double valueOfQubit = v(qubit);
-    //set qubit to -1
-    v(qubit) = -1.0;
+    //set qubit to 0
+    v(qubit) = 0.0;
     std::complex<double> psi1 = std::exp(GetMachine().LogVal(v));
-    //set qubit to +1
-    v(qubit) = +1.0;
+    //set qubit to 1
+    v(qubit) = 1.0;
     std::complex<double> psi2 = std::exp(GetMachine().LogVal(v));
 
     std::complex<double> psi;
-    //if qubit in sample is -1 ..
-    if(valueOfQubit == -1.0) {
+    //if qubit in sample is 0 ..
+    if(valueOfQubit == 0.0) {
       //... add psi1 and psi2 (|0> -> |+>)
-      psi = psi1 + psi2;
+      psi = std::norm(psi1 + psi2);
     } else {
       //... else substract (|1> -> |->)
-      psi = psi1 - psi2;
+      psi = std::norm(psi1 - psi2);
     }
-    
-    return psi;
+
+    return psi.real() > 0.0 ? psi : (0.0001, psi.imag());
   }
 
   void Sweep(int qubit) {
@@ -144,18 +144,18 @@ class MetropolisLocalHadamard : public AbstractSampler {
       }
 
       double valueOfQubit = v_(qubit);
-      //set qubit to -1
-      v_(qubit) = -1.0;
+      //set qubit to 0
+      v_(qubit) = 0.0;
       std::complex<double> psi1Before = std::exp(GetMachine().LogVal(v_));
-      //set qubit to +1
-      v_(qubit) = +1.0;
+      //set qubit to 1
+      v_(qubit) = 1.0;
       std::complex<double> psi2Before = std::exp(GetMachine().LogVal(v_));
       //reset
       v_(qubit) = valueOfQubit;
 
       double psiBefore;
-      //if qubit in sample is -1 ..
-      if(v_(qubit) == -1.0) {
+      //if qubit in sample is 0 ..
+      if(v_(qubit) == 0.0) {
         //... add psi1 and psi2 (|0> -> |+>)
         psiBefore = std::norm(psi1Before + psi2Before);
       } else {
@@ -166,19 +166,19 @@ class MetropolisLocalHadamard : public AbstractSampler {
       double valueOfQubitToChange = v_(tochange[0]);
       v_(tochange[0]) = newconf[0];
       valueOfQubit = v_(qubit);
-      //set qubit to -1
-      v_(qubit) = -1.0;
+      //set qubit to 0
+      v_(qubit) = 0.0;
       std::complex<double> psi1After = std::exp(GetMachine().LogVal(v_));
-      //set qubit to +1
-      v_(qubit) = +1.0;
+      //set qubit to 1
+      v_(qubit) = 1.0;
       std::complex<double> psi2After = std::exp(GetMachine().LogVal(v_));
       //reset
       v_(qubit) = valueOfQubit;
 
 
       double psiAfter;
-      //if qubit in sample is -1 ..
-      if(v_(qubit) == -1.0) {
+      //if qubit in sample is 0 ..
+      if(v_(qubit) == 0.0) {
         //... add psi1 and psi2 (|0> -> |+>)
         psiAfter = std::norm(psi1After + psi2After);
       } else {

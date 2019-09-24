@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_RBM_SPIN_HPP
-#define NETKET_RBM_SPIN_HPP
+#ifndef NETKET_RBM_NQS_HPP
+#define NETKET_RBM_NQS_HPP
 
 #include <cmath>
 
@@ -24,7 +24,7 @@ namespace netket {
 /** Restricted Boltzmann machine class with spin 1/2 hidden units.
  *
  */
-class RbmSpin : public AbstractMachine {
+class RbmNQS : public AbstractMachine {
   // number of visible units
   int nv_;
 
@@ -52,7 +52,7 @@ class RbmSpin : public AbstractMachine {
   bool useb_;
 
  public:
-  RbmSpin(std::shared_ptr<const AbstractHilbert> hilbert, int nhidden = 0,
+  RbmNQS(std::shared_ptr<const AbstractHilbert> hilbert, int nhidden = 0,
           int alpha = 0, bool usea = true, bool useb = true);
 
   int Nvisible() const override;
@@ -91,52 +91,48 @@ class RbmSpin : public AbstractMachine {
 
   bool IsHolomorphic() const noexcept override;
 
-  static double lncosh(double x) {
+
+  static void sigmoid(VectorConstRefType x, VectorType &y) {
+    assert(y.size() >= x.size());
+    y = 1.0 / (1.0 + Eigen::exp(-1.0 * x.array()));
+  }
+
+  static void sigmoid(RealVectorConstRefType x, RealVectorType &y) {
+    assert(y.size() >= x.size());
+    y = 1.0 / (1.0 + Eigen::exp(-1.0 * x.array()));
+  }
+
+  static double softplus(double x) {
     const double xp = std::abs(x);
     if (xp <= 12.) {
-      return std::log(std::cosh(xp));
+      return std::log(1.0 + std::exp(xp));
     } else {
       const static double log2v = std::log(2.);
       return xp - log2v;
     }
   }
 
-  // ln(cos(x)) for std::complex argument
+  // softplus(x) for std::complex argument
   // the modulus is computed by means of the previously defined function
   // for real argument
-  static Complex lncosh(Complex x) {
-    const double xr = x.real();
-    const double xi = x.imag();
-
-    Complex res = RbmSpin::lncosh(xr);
-    res += std::log(Complex(std::cos(xi), std::tanh(xr) * std::sin(xi))); //might be worth checking once. see tanh = sinh/cosh, but we should not need to divide by cosh (https://www.euclideanspace.com/maths/algebra/realNormedAlgebra/complex/functions/index.htm)
-
-    return res;
+  static Complex softplus(Complex x) {
+    return std::log(1.0 + std::exp(x));
   }
 
-  static void tanh(VectorConstRefType x, VectorType &y) {
-    assert(y.size() >= x.size());
-    y = Eigen::tanh(x.array());
-  }
-
-  static void tanh(RealVectorConstRefType x, RealVectorType &y) {
-    assert(y.size() >= x.size());
-    y = Eigen::tanh(x.array());
-  }
-
-  static void lncosh(VectorConstRefType x, VectorType &y) {
+  static void softplus(VectorConstRefType x, VectorType &y) {
     assert(y.size() >= x.size());
     for (int i = 0; i < x.size(); i++) {
-      y(i) = lncosh(x(i));
+      y(i) = softplus(x(i));
     }
   }
 
-  static void lncosh(RealVectorConstRefType x, RealVectorType &y) {
+  static void softplus(RealVectorConstRefType x, RealVectorType &y) {
     assert(y.size() >= x.size());
     for (int i = 0; i < x.size(); i++) {
-      y(i) = lncosh(x(i));
+      y(i) = softplus(x(i));
     }
   }
+
 
  private:
   inline void Init();

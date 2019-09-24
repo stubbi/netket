@@ -46,11 +46,16 @@ void Spin::Init() {
 
   local_.resize(nstates_);
 
+  local_[0] = 0.0;
+  local_[1] = +1.0;
+
+ /*
   int sp = -std::round(2. * S_);
   for (int i = 0; i < nstates_; i++) {
     local_[i] = sp;
     sp += 2;
   }
+  */
 }
 
 void Spin::SetConstraint(double totalS) {
@@ -88,7 +93,7 @@ void Spin::RandomVals(Eigen::Ref<Eigen::VectorXd> state,
   if (!constraintSz_) {
     // unconstrained random
     for (int i = 0; i < state.size(); i++) {
-      state(i) = 2. * (distribution(rgen) - S_);
+      state(i) = distribution(rgen);//2. * (distribution(rgen) - S_);
     }
   } else if (S_ == 0.5) {
     using std::begin;
@@ -108,7 +113,7 @@ void Spin::RandomVals(Eigen::Ref<Eigen::VectorXd> state,
     int nup = (nspins_ + m) / 2;
     int ndown = (nspins_ - m) / 2;
     std::fill_n(state.data(), nup, 1.0);
-    std::fill_n(state.data() + nup, ndown, -1.0);
+    std::fill_n(state.data() + nup, ndown, 0.0);
     std::shuffle(state.data(), state.data() + nspins_, rgen);
     return;
   } else {

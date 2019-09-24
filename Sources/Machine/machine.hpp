@@ -26,6 +26,7 @@
 #include "jastrow_symm.hpp"
 #include "mps_periodic.hpp"
 #include "rbm_multival.hpp"
+#include "rbm_nqs.hpp"
 #include "rbm_spin.hpp"
 #include "rbm_spin_phase.hpp"
 #include "rbm_spin_real.hpp"
