@@ -191,12 +191,14 @@ class QuantumStateReconstruction {
     const int ndata = batchsize_node_;
     Ok_.resize(ndata, psi_.Npar());
     for (int i = 0; i < ndata; i++) {
+      //InfoMessage() << "RotateGradient()" << std::endl;
       RotateGradient(batchBases[i], batchSamples[i], der);
       Ok_.row(i) = der.conjugate();
     }
     grad_ = -2.0 * (Ok_.colwise().mean());
 
     // Negative phase driven by the machine
+    //InfoMessage() << "Sample()" << std::endl;
     Sample();
 
     const int nsamp = vsamp_.rows();
@@ -258,10 +260,14 @@ class QuantumStateReconstruction {
                      save_params_every);
     }
     */
+
+    //InfoMessage() << "Reset()" << std::endl;
     opt_.Reset();
 
     for (Index step = 0; !n_iter.has_value() || step < *n_iter; step += step_size) {
+      //InfoMessage() << "Advance()" << std::endl;
       Advance(step_size);
+      //InfoMessage() << "ComputeObservables()" << std::endl;
       ComputeObservables();
 
       /*
@@ -284,7 +290,9 @@ class QuantumStateReconstruction {
   void Advance(Index steps = 1) {
     assert(steps > 0);
     for (Index i = 0; i < steps; ++i) {
+      //InfoMessage() << "Gradient()" << std::endl;
       Gradient();
+      //InfoMessage() << "UpdateParameters()" << std::endl;
       UpdateParameters();
     }
   }
@@ -315,26 +323,44 @@ class QuantumStateReconstruction {
   // basis identified by b_index
   void RotateGradient(int b_index, const Eigen::VectorXd &state,
                       Eigen::VectorXcd &rotated_gradient) {
-    Complex den; 
+    //InfoMessage() << "1" << std::endl;
+    Complex den;
+    //InfoMessage() << "2" << std::endl;
     Eigen::VectorXcd num;
+    //InfoMessage() << "3" << std::endl;
     Eigen::VectorXd v(psi_.Nvisible());
+    //InfoMessage() << "4" << std::endl;
     rotations_[b_index]->FindConn(state, mel_, connectors_, newconfs_);
+    //InfoMessage() << "5" << std::endl;
     assert(connectors_.size() == mel_.size());
+    //InfoMessage() << "6" << std::endl;
+
 
     const std::size_t nconn = connectors_.size();
+    //InfoMessage() << "7" << std::endl;
 
     auto logvaldiffs = (psi_.LogValDiff(state, connectors_, newconfs_));
+    //InfoMessage() << "8" << std::endl;
     den = 0.0;
+    //InfoMessage() << "9" << std::endl;
     num.setZero(psi_.Npar());
+    //InfoMessage() << "10" << std::endl;
     for (std::size_t k = 0; k < nconn; k++) {
+      //InfoMessage() << "11" << std::endl;
       v = state;
+      //InfoMessage() << "12" << std::endl;
       for (std::size_t j = 0; j < connectors_[k].size(); j++) {
+        //InfoMessage() << "13" << std::endl;
         v(connectors_[k][j]) = newconfs_[k][j];
+        //InfoMessage() << "14" << std::endl;
       }
       num += mel_[k] * std::exp(logvaldiffs(k)) * psi_.DerLog(v);
+      //InfoMessage() << "15" << std::endl;
       den += mel_[k] * std::exp(logvaldiffs(k));
+      //InfoMessage() << "16" << std::endl;
     }
     rotated_gradient = (num / den);
+    //InfoMessage() << "17" << std::endl;
   }
 
   /*
