@@ -140,6 +140,15 @@ class NQS {
             setPsiParams(a,b,W);
         }
 
+        /**
+         * T gate as in Nielsen and Chuang. 
+         * 
+         * [ 1 , 0 ; 0 , exp(i*pi/4.0) ]
+        **/
+        void applyT(int qubit){
+            applySingleZRotation(qubit, M_PI/4.0);
+        }
+
         const Eigen::VectorXd& sample() {
             sa_.Reset(true);
             sa_.Sweep();

@@ -93,6 +93,13 @@ void AddNQSModule(py::module &m) {
                controlQubit: The index of the qubit depending on which value the rotation will be applied
                theta: angle of the rotation
            )EOF")
+      .def("applyT", &NQS::applyT, py::arg("qubit"),
+            R"EOF(
+           Apply T gate as defined in Nielsen and Chuang to qubit.
+
+           Args:
+               qubit: The index of the qubit the gate will be applied to
+           )EOF")
       .def("sample", &NQS::sample,
             R"EOF(
            Sample from the nqs.
