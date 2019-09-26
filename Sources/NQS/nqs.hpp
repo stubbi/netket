@@ -112,7 +112,7 @@ class NQS {
             setPsiParams(a,b,W);
         }
 
-        void applySingleZRotation(int qubit, double theta){
+        void applySingleZRotation(int qubit, double theta) {
             VectorType a = getPsi_a();
             VectorType b = getPsi_b();
             MatrixType W = getPsi_W();
@@ -122,7 +122,7 @@ class NQS {
             setPsiParams(a,b,W);
         }
 
-        void applyControlledZRotation(int controlQubit, int qubit, double theta){
+        void applyControlledZRotation(int controlQubit, int qubit, double theta) {
             std::complex<double> A_theta = std::acosh(std::exp(std::complex<double>(0, -theta/2.0)));
 
             psi_.addHidden();
@@ -145,8 +145,51 @@ class NQS {
          * 
          * [ 1 , 0 ; 0 , exp(i*pi/4.0) ]
         **/
-        void applyT(int qubit){
+        void applyT(int qubit) {
             applySingleZRotation(qubit, M_PI/4.0);
+        }
+
+        void applyTDagger(int qubit) {
+            applySingleZRotation(qubit, -M_PI/4.0);
+        }
+
+        void applyToffoli(int qubit1, int qubit2, int qubit3, int numSamples = 100, int numIterations = 1000) {
+            applyControlledZRotation(qubit2, qubit3, M_PI);
+            applyHadamard(qubit3, numSamples, numIterations);
+
+            applyTDagger(qubit3);
+
+            applyHadamard(qubit3, numSamples, numIterations);
+            applyControlledZRotation(qubit1, qubit3, M_PI);
+            applyHadamard(qubit3, numSamples, numIterations);
+
+            applyT(qubit3);
+
+            applyHadamard(qubit3, numSamples, numIterations);
+            applyControlledZRotation(qubit2, qubit3, M_PI);
+            applyHadamard(qubit3, numSamples, numIterations);
+
+            applyTDagger(qubit3);
+
+            applyHadamard(qubit3, numSamples, numIterations);
+            applyControlledZRotation(qubit1, qubit3, M_PI);
+            applyHadamard(qubit3, numSamples, numIterations);
+
+            applyT(qubit2);
+            applyT(qubit3);
+
+            applyHadamard(qubit2, numSamples, numIterations);
+            applyControlledZRotation(qubit1, qubit2, M_PI);
+            applyHadamard(qubit2, numSamples, numIterations);
+
+            applyHadamard(qubit3, numSamples, numIterations);
+
+            applyT(qubit1);
+            applyTDagger(qubit2);
+
+            applyHadamard(qubit2, numSamples, numIterations);
+            applyControlledZRotation(qubit1, qubit2, M_PI);
+            applyHadamard(qubit2, numSamples, numIterations);
         }
 
         const Eigen::VectorXd& sample() {
