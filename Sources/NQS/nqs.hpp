@@ -6,7 +6,6 @@
 #include "Sampler/metropolis_local_hadamard.hpp"
 #include "Supervised/supervised.hpp"
 #include "Operator/local_operator.hpp"
-#include "Unsupervised/quantum_state_reconstruction.hpp"
 #include <vector>
 
 
@@ -48,8 +47,7 @@ class NQS {
             std::vector<Eigen::VectorXd> trainingSamples;
             std::vector<Eigen::VectorXcd> trainingTargets;
             
-            std::vector<AbstractOperator *> rotations;
-            std::vector<int> trainingBases;
+            int countOne = 0;
 
             for(int i = 0; i < numSamples; i++) {
                 saHadamard_.Reset(true);
@@ -61,17 +59,30 @@ class NQS {
                 target(0) = std::log(saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit));
                 trainingTargets.push_back(target);
 
-                LocalOperator* o = new LocalOperator(std::make_shared<Spin>(hi_), 1.0);
-                rotations.push_back(o);
+                if(saHadamard_.Visible()(qubit) == 1) {
+                    countOne++;
+                }
+            }
 
-                trainingBases.push_back(0);
+            // in these cases, the gradient factors out and collapses
+            if(countOne == 0 || countOne == numSamples) {
+                // we have to add more samples, say 1%
+                for(int i = 0; i < numSamples; i++) {
+                    saHadamard_.Reset(true);
+                    saHadamard_.Sweep(qubit);
+
+                    auto sample = saHadamard_.Visible();
+                    sample(qubit) = 1.0 - sample(qubit);
+                    trainingSamples.push_back(sample);
+
+                    Eigen::VectorXcd target(1);
+                    target(0) = std::log(saHadamard_.PsiValueAfterHadamard(sample, qubit));
+                    trainingTargets.push_back(target);
+                }
             }
     
-            QuantumStateReconstruction qsr = *new QuantumStateReconstruction(sa_, op_,
-                                                trainingSamples.size(), trainingSamples.size(),
-                                                rotations, trainingSamples, trainingBases);
-
-            qsr.Run("out", numIterations);
+            Supervised spvsd = *new Supervised(psi_, op_, trainingSamples.size(), trainingSamples, trainingTargets);
+            spvsd.Run(numIterations, "Overlap_phi");
         }
 
         void applyPauliX(int qubit){
@@ -175,7 +186,7 @@ class NQS {
             applyControlledZRotation(qubit1, qubit3, M_PI);
             applyHadamard(qubit3, numSamples, numIterations);
 
-            applyT(qubit2);
+            applyTDagger(qubit2);
             applyT(qubit3);
 
             applyHadamard(qubit2, numSamples, numIterations);
@@ -184,12 +195,14 @@ class NQS {
 
             applyHadamard(qubit3, numSamples, numIterations);
 
-            applyT(qubit1);
             applyTDagger(qubit2);
 
             applyHadamard(qubit2, numSamples, numIterations);
             applyControlledZRotation(qubit1, qubit2, M_PI);
             applyHadamard(qubit2, numSamples, numIterations);
+
+            applyT(qubit1);
+            applySingleZRotation(qubit2, M_PI/2.0);
         }
 
         const Eigen::VectorXd& sample() {
