@@ -75,9 +75,9 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
     // Always use odd sweep size to avoid possible ergodicity problems
     if (nv_ % 2 == 0) {
-      sweep_size_ = 100 * nv_ + 1;
+      sweep_size_ = 0;//nv_ + 1;
     } else {
-      sweep_size_ = 100 * nv_;
+      sweep_size_ = 0;//nv_;
     }
 
     InfoMessage() << "Local Metropolis sampler is ready " << std::endl;
@@ -115,7 +115,7 @@ class MetropolisLocalHadamard : public AbstractSampler {
       psi = std::norm(psi1 - psi2);
     }
 
-    return psi.real() > 0.0 ? psi : (0.0001, psi.imag());
+    return psi.real() > 0.0 ? psi : std::complex<double>(0.0001, psi.imag());
   }
 
   void Sweep(int qubit) {

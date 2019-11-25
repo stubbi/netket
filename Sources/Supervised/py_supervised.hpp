@@ -36,12 +36,14 @@ void AddSupervisedModule(py::module &m) {
       subm, "Supervised",
       R"EOF(Supervised learning scheme to learn data, i.e. the given state, by stochastic gradient descent with log overlap loss or MSE loss.)EOF")
       .def(py::init([](AbstractMachine &ma, AbstractOptimizer &op,
+                       MetropolisLocal &sa,
                        int batch_size, std::vector<Eigen::VectorXd> samples,
                        std::vector<Eigen::VectorXcd> targets,
                        const std::string &method, double diag_shift,
                        bool use_iterative, bool use_cholesky) {
              return Supervised{ma,
                                op,
+                               sa,
                                batch_size,
                                std::move(samples),
                                std::move(targets),
@@ -50,8 +52,9 @@ void AddSupervisedModule(py::module &m) {
                                use_iterative,
                                use_cholesky};
            }),
-           py::keep_alive<1, 2>(), py::keep_alive<1, 3>(), py::arg("machine"),
-           py::arg("optimizer"), py::arg("batch_size"), py::arg("samples"),
+           py::keep_alive<1, 2>(), py::keep_alive<1, 3>(), py::keep_alive<1, 4>(),
+           py::arg("machine"), py::arg("optimizer"), py::arg("sampler"),
+           py::arg("batch_size"), py::arg("samples"),
            py::arg("targets"), py::arg("method") = "Gd",
            py::arg("diag_shift") = 0.01, py::arg("use_iterative") = false,
            py::arg("use_cholesky") = true,
@@ -62,6 +65,7 @@ void AddSupervisedModule(py::module &m) {
            Args:
                machine: The machine representing the wave function.
                optimizer: The optimizer object that determines how the SGD optimization.
+               sampler: The sampler.
                batch_size: The batch size used in SGD.
                samples: The input data, i.e. many-body basis.
                targets: The output label, i.e. amplitude of the corresponding basis.

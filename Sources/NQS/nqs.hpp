@@ -59,6 +59,8 @@ class NQS {
                 target(0) = std::log(saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit));
                 trainingTargets.push_back(target);
 
+                //InfoMessage() << saHadamard_.Visible() << " " << target << std::endl;
+
                 if(saHadamard_.Visible()(qubit) == 1) {
                     countOne++;
                 }
@@ -67,7 +69,7 @@ class NQS {
             // in these cases, the gradient factors out and collapses
             if(countOne == 0 || countOne == numSamples) {
                 // we have to add more samples, say 1%
-                for(int i = 0; i < numSamples; i++) {
+                for(int i = 0; i < numSamples/100.0; i++) {
                     saHadamard_.Reset(true);
                     saHadamard_.Sweep(qubit);
 
@@ -78,10 +80,12 @@ class NQS {
                     Eigen::VectorXcd target(1);
                     target(0) = std::log(saHadamard_.PsiValueAfterHadamard(sample, qubit));
                     trainingTargets.push_back(target);
+
+                    //InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
                 }
             }
     
-            Supervised spvsd = *new Supervised(psi_, op_, trainingSamples.size(), trainingSamples, trainingTargets);
+            Supervised spvsd = *new Supervised(psi_, op_, sa_, trainingSamples.size()/10.0, trainingSamples, trainingTargets);
             spvsd.Run(numIterations, "Overlap_phi");
         }
 
@@ -142,11 +146,11 @@ class NQS {
             VectorType b = getPsi_b();
             MatrixType W = getPsi_W();
 
-            W(qubit, W.cols()-1) = -2.0 * A_theta;
-            W(controlQubit, W.cols()-1) = 2.0 * A_theta;
+            W(controlQubit, W.cols()-1) = -2.0 * A_theta;
+            W(qubit, W.cols()-1) = 2.0 * A_theta;
         
-            a(qubit) += std::complex<double>(0, theta/2.0) + A_theta;
-            a(controlQubit) += std::complex<double>(0, theta/2.0) - A_theta;
+            a(controlQubit) += std::complex<double>(0, theta/2.0) + A_theta;
+            a(qubit) += std::complex<double>(0, theta/2.0) - A_theta;
 
             setPsiParams(a,b,W);
         }
@@ -186,23 +190,23 @@ class NQS {
             applyControlledZRotation(qubit1, qubit3, M_PI);
             applyHadamard(qubit3, numSamples, numIterations);
 
-            applyTDagger(qubit2);
+            applyT(qubit2);
             applyT(qubit3);
 
             applyHadamard(qubit2, numSamples, numIterations);
             applyControlledZRotation(qubit1, qubit2, M_PI);
             applyHadamard(qubit2, numSamples, numIterations);
 
-            applyHadamard(qubit3, numSamples, numIterations);
+            //applyHadamard(qubit3, numSamples, numIterations);
+            //TODO this should not be
+            applyPauliX(qubit3);
 
+            applyT(qubit1);
             applyTDagger(qubit2);
 
             applyHadamard(qubit2, numSamples, numIterations);
             applyControlledZRotation(qubit1, qubit2, M_PI);
             applyHadamard(qubit2, numSamples, numIterations);
-
-            applyT(qubit1);
-            applySingleZRotation(qubit2, M_PI/2.0);
         }
 
         const Eigen::VectorXd& sample() {

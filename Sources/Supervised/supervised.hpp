@@ -37,6 +37,7 @@ class Supervised {
 
   AbstractMachine &psi_;
   AbstractOptimizer &opt_;
+  MetropolisLocal& sa_;
 
   SR sr_;
   bool dosr_;
@@ -56,8 +57,10 @@ class Supervised {
   Eigen::VectorXcd grad_;
   Eigen::VectorXcd grad_part_1_;
   Eigen::VectorXcd grad_part_2_;
+  Complex grad_part_3_;
   Complex grad_num_1_;
   Complex grad_num_2_;
+  Complex grad_num_3_;
 
   // Training samples and targets
   std::vector<Eigen::VectorXd> trainingSamples_;
@@ -84,13 +87,15 @@ class Supervised {
   DistributedRandomEngine engine_;
 
  public:
-  Supervised(AbstractMachine &psi, AbstractOptimizer &opt, int batchsize,
+  Supervised(AbstractMachine &psi, AbstractOptimizer &opt, MetropolisLocal &sa,
+             int batchsize,
              std::vector<Eigen::VectorXd> trainingSamples,
              std::vector<Eigen::VectorXcd> trainingTargets,
              const std::string &method = "Gd", double diag_shift = 0.01,
              bool use_iterative = false, bool use_cholesky = true)
       : psi_(psi),
         opt_(opt),
+        sa_(sa),
         trainingSamples_(trainingSamples),
         trainingTargets_(trainingTargets) {
     npar_ = psi_.Npar();
@@ -202,17 +207,30 @@ class Supervised {
     grad_.setZero(psi_.Npar());
     grad_part_1_.setZero(psi_.Npar());
     grad_part_2_.setZero(psi_.Npar());
+    grad_part_3_ = 0;
     grad_num_1_ = 0;
     grad_num_2_ = 0;
+    grad_num_3_ = 0;
 
     double max_log_psi = -std::numeric_limits<double>::infinity();
+    double max_target = -std::numeric_limits<double>::infinity();
     /// [TODO] avoid going through psi twice.
     for (int i = 0; i < batchsize_node_; i++) {
-      Complex value(psi_.LogVal(batchSamples[i]));
-      if (max_log_psi < value.real()) {
-        max_log_psi = value.real();
+      //sa_.Reset(true);
+      //sa_.Sweep();
+      Complex value(psi_.LogVal(batchSamples[i]));//Complex value(psi_.LogVal(sa_.Visible()));
+      if (max_log_psi < std::abs(value)) {
+        max_log_psi = std::abs(value);
+        //InfoMessage() << "max_log_psi " << max_log_psi << std::endl;
+        //InfoMessage() << "value " << value << std::endl;
+      }
+      if (max_target < std::abs(batchTargets[i][0])) {
+        max_target = std::abs(batchTargets[i][0]);
+        //InfoMessage() << "max_target " << max_target << std::endl;
+        //InfoMessage() << "batchTargets[i] " << batchTargets[i] << std::endl;
       }
     }
+
 
     Ok_.resize(batchsize_node_, psi_.Npar());
 
@@ -220,16 +238,25 @@ class Supervised {
     for (int i = 0; i < batchsize_node_; i++) {
       // Extract log(config)
       Eigen::VectorXd sample(batchSamples[i]);
+      //InfoMessage() << "sample " << sample << std::endl;
       // And the corresponding target
       Eigen::VectorXcd target(batchTargets[i]);
-      Complex t = target[0];
+      Complex t = target[0] - max_target;
+      //InfoMessage() << "t " << t << std::endl;
       // Undo log
       t = exp(t);
+      //InfoMessage() << "exp(t) " << t << std::endl;
+      //InfoMessage() << "max_target " << max_target << std::endl;
+
 
       Complex value(psi_.LogVal(sample));
       // Undo Log
       value = value - max_log_psi;
+      //InfoMessage() << "value " << value << std::endl;
       value = exp(value);
+      //InfoMessage() << "exp(value) " << value << std::endl << std::endl;
+      //InfoMessage() << "max_log_psi " << max_log_psi << std::endl << std::endl;
+
 
       // Compute derivative of log
       auto der = psi_.DerLog(sample);
@@ -246,20 +273,33 @@ class Supervised {
       InfoMessage() << "sample " << sample << std::endl;
       */
 
+      grad_part_1_ = grad_part_1_ + der * std::norm(value);
+      grad_num_1_ = grad_num_1_ + std::norm(value);
 
+      grad_part_2_ = grad_part_2_ + der * t / value * std::norm(value);
+      grad_num_2_ = grad_num_2_ + std::norm(value);
 
+      grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
+      grad_num_3_ = grad_num_3_ + std::norm(value);
+      
+
+      /*
       grad_part_1_ = grad_part_1_ + der * std::norm(value / t);
       grad_num_1_ = grad_num_1_ + std::norm(value / t);
       grad_part_2_ = grad_part_2_ + der * std::conj(value / t);
       grad_num_2_ = grad_num_2_ + std::conj(value / t);
+      */
+      
     }
 
     SumOnNodes(grad_part_1_);
     SumOnNodes(grad_num_1_);
     SumOnNodes(grad_part_2_);
     SumOnNodes(grad_num_2_);
+    SumOnNodes(grad_part_3_);
+    SumOnNodes(grad_num_3_);
     /// No need to devide by totalnodes_
-    grad_ = grad_part_1_ / grad_num_1_ - grad_part_2_ / grad_num_2_;
+    grad_ = grad_part_1_ / grad_num_1_ - (grad_part_2_ / grad_num_2_ * grad_num_3_ / grad_part_3_);
   }
 
   /// Computes the gradient of the loss function with respect to
@@ -319,7 +359,7 @@ class Supervised {
       // Randomly select a batch of training data
       for (int k = 0; k < batchsize_node_; k++) {
         // Draw from the distribution using the netket random number generator
-        index = distribution_phi_(this->GetRandomEngine());
+        index = distribution_uni_(this->GetRandomEngine());
         batchSamples[k] = trainingSamples_[index];
         batchTargets[k] = trainingTargets_[index];
       }
@@ -425,6 +465,7 @@ class Supervised {
 
     loss_mse_ = mse / numSamples;
     loss_mse_log_ = mse_log / numSamples;
+    //InfoMessage() << "loss_mse_log_ " << loss_mse_log_ << std::endl;
   }
 
   double GetMse() const { return loss_mse_; }
@@ -472,6 +513,15 @@ class Supervised {
         -(log(num1) + log(num2) - log(num3) - log(num4));
     assert(std::abs(complex_log_overlap_.imag()) < 1e-8);
     loss_log_overlap_ = complex_log_overlap_.real();
+
+    //InfoMessage() << "loss_log_overlap_ " << loss_log_overlap_ << std::endl;
+    //InfoMessage() << "grad " << grad_ << std::endl;
+    //InfoMessage() << "grad_part_1_ " << grad_part_1_ << std::endl;
+    //InfoMessage() << "grad_num_1_ " << grad_num_1_ << std::endl;
+    //InfoMessage() << "grad_part_2_ " << grad_part_2_ << std::endl;
+    //InfoMessage() << "grad_num_2_ " << grad_num_2_ << std::endl;
+    //InfoMessage() << "params " << psi_.GetParameters() << std::endl << std::endl;
+
   }
 
   double GetLogOverlap() const { return loss_log_overlap_; }
