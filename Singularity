@@ -10,6 +10,6 @@ From: python:3.8.0
     wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
     apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
     apt-get install -y --no-install-recommends cmake libmpich-dev mpich libatlas-base-dev python-pip libssl-dev
-    pip install -U pip setuptools 
+    pip install -U pip setuptools numpy scipy
     python setup.py install
 
