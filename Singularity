@@ -1,5 +1,5 @@
 Bootstrap: docker
-From: ubuntu:18.04
+From: python:3.8.0
 
 %files
     ./
