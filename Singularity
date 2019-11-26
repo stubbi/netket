@@ -2,7 +2,7 @@ Bootstrap: docker
 From: ubuntu:18.04
 
 %files
-    ./*
+    ./
 
 %post
     apt-get update
