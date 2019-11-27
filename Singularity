@@ -13,4 +13,3 @@ From: python:2.7
     pip install -U pip setuptools numpy scipy
     cd netket
     python setup.py install
-
