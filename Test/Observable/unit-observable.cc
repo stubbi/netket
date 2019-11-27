@@ -18,7 +18,7 @@
 #include "Utils/random_utils.hpp"
 #include "catch.hpp"
 
-#include "netket.hpp"
+#include "nqs.hpp"
 #include "observable_input_tests.hpp"
 
 TEST_CASE("observables produce elements in the hilbert space", "[observable]") {
@@ -30,15 +30,15 @@ TEST_CASE("observables produce elements in the hilbert space", "[observable]") {
             input_tests[it]["Observable"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Hilbert hilbert(pars);
-      auto observables = netket::Observable::FromJson(hilbert, pars);
+      nqs::Hilbert hilbert(pars);
+      auto observables = nqs::Observable::FromJson(hilbert, pars);
 
       const auto lstate = hilbert.LocalStates();
       REQUIRE(int(lstate.size()) == hilbert.LocalSize());
 
       std::set<int> lset(lstate.begin(), lstate.end());
 
-      netket::default_random_engine rgen(3421);
+      nqs::default_random_engine rgen(3421);
 
       Eigen::VectorXd v(hilbert.Size());
 
@@ -73,11 +73,11 @@ TEST_CASE("observables do not have duplicate newconfs", "[observable]") {
             input_tests[it]["Observable"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Hilbert hilbert(pars);
+      nqs::Hilbert hilbert(pars);
 
-      auto observables = netket::Observable::FromJson(hilbert, pars);
+      auto observables = nqs::Observable::FromJson(hilbert, pars);
 
-      netket::default_random_engine rgen(3421);
+      nqs::default_random_engine rgen(3421);
 
       Eigen::VectorXd v(hilbert.Size());
 
@@ -113,11 +113,11 @@ TEST_CASE("observables are hermitean", "[observable]") {
             input_tests[it]["Observable"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Hilbert hilbert(pars);
+      nqs::Hilbert hilbert(pars);
 
-      auto observables = netket::Observable::FromJson(hilbert, pars);
+      auto observables = nqs::Observable::FromJson(hilbert, pars);
 
-      netket::default_random_engine rgen(3421);
+      nqs::default_random_engine rgen(3421);
 
       Eigen::VectorXd v(hilbert.Size());
 

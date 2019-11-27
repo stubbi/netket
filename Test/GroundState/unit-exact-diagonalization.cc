@@ -16,7 +16,7 @@
 #include "GroundState/exact_diagonalization.hpp"
 #include "Operator/MatrixWrapper/matrix_wrapper.hpp"
 #include "catch.hpp"
-#include "netket.hpp"
+#include "nqs.hpp"
 
 #include "exact_diagonalization_input_tests.hpp"
 
@@ -28,11 +28,11 @@ TEST_CASE("Full / Lanczos ED give same ground state energy", "[ground state]") {
     std::string name = input_tests[i].dump();
     SECTION("Exact Diagonalization test (" + std::to_string(i) + ") on " +
             name) {
-      netket::json pars = input_tests[i];
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::json pars = input_tests[i];
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
       // Check whether full and sparse ED yield same result
       auto result_lanczos = lanczos_ed(hamiltonian);
@@ -41,7 +41,7 @@ TEST_CASE("Full / Lanczos ED give same ground state energy", "[ground state]") {
                        result_lanczos.eigenvalues[0]) < 1e-12);
 
       // Check whether ground state has lowest eigenvalue energy
-      auto mat = netket::SparseMatrixWrapper<>(hamiltonian);
+      auto mat = nqs::SparseMatrixWrapper<>(hamiltonian);
       result_lanczos = lanczos_ed(hamiltonian, false, 1, 1000, 42, 1e-12, true);
       const auto state_lanczos = result_lanczos.eigenvectors[0];
       auto mean_variance_lanczos = mat.MeanVariance(state_lanczos);

@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYUTILS_HPP
-#define NETKET_PYUTILS_HPP
+#ifndef NQS_PYUTILS_HPP
+#define NQS_PYUTILS_HPP
 
 #include <pybind11/pybind11.h>
 
-namespace netket {
+namespace nqs {
 
 void AddUtilsModule(pybind11::module m);
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_PYUTILS_HPP
+#endif  // NQS_PYUTILS_HPP

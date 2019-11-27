@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_KRONECKER_PRODUCT_HPP
-#define NETKET_KRONECKER_PRODUCT_HPP
+#ifndef NQS_KRONECKER_PRODUCT_HPP
+#define NQS_KRONECKER_PRODUCT_HPP
 
 #include <vector>
 
-namespace netket {
+namespace nqs {
 
 template <class T>
 bool isMatrix(const std::vector<std::vector<T>>& Am) {
@@ -100,6 +100,6 @@ std::vector<std::vector<T>> MatrixProduct(
   return Cm;
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

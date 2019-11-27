@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_RBM_SPIN_SYMM_HPP
-#define NETKET_RBM_SPIN_SYMM_HPP
+#ifndef NQS_RBM_SPIN_SYMM_HPP
+#define NQS_RBM_SPIN_SYMM_HPP
 
 #include "Machine/abstract_machine.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Rbm with permutation symmetries
 class RbmSpinSymm : public AbstractMachine {
@@ -109,6 +109,6 @@ class RbmSpinSymm : public AbstractMachine {
   void SetBareParameters();
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

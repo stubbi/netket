@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYLAYER_HPP
-#define NETKET_PYLAYER_HPP
+#ifndef NQS_PYLAYER_HPP
+#define NQS_PYLAYER_HPP
 
 #include <mpi.h>
 #include "layer.hpp"
 
 namespace py = pybind11;
 
-namespace netket {}  // namespace netket
+namespace nqs {}  // namespace nqs
 
 #endif

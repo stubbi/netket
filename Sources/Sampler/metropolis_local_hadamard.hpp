@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_METROPOLISLOCALHADAMARD_HPP
-#define NETKET_METROPOLISLOCALHADAMARD_HPP
+#ifndef NQS_METROPOLISLOCALHADAMARD_HPP
+#define NQS_METROPOLISLOCALHADAMARD_HPP
 
 #include <mpi.h>
 #include <Eigen/Dense>
@@ -23,7 +23,7 @@
 #include "Utils/random_utils.hpp"
 #include "abstract_sampler.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Metropolis sampling generating local moves in hilbert space on RBM after Hadamard gate has been applied
 class MetropolisLocalHadamard : public AbstractSampler {
@@ -245,6 +245,6 @@ class MetropolisLocalHadamard : public AbstractSampler {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

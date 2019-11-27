@@ -19,7 +19,7 @@
 #include "catch.hpp"
 
 #include "hamiltonian_input_tests.hpp"
-#include "netket.hpp"
+#include "nqs.hpp"
 
 TEST_CASE("hamiltonians produce elements in the hilbert space",
           "[hamiltonian]") {
@@ -31,17 +31,17 @@ TEST_CASE("hamiltonians produce elements in the hilbert space",
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
       const auto lstate = hilbert.LocalStates();
       REQUIRE(int(lstate.size()) == hilbert.LocalSize());
 
       std::set<int> lset(lstate.begin(), lstate.end());
 
-      netket::default_random_engine rgen(3421);
+      nqs::default_random_engine rgen(3421);
 
       Eigen::VectorXd v(hilbert.Size());
 
@@ -75,12 +75,12 @@ TEST_CASE("hamiltonians do not have duplicate connections or newconfs",
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
-      netket::default_random_engine rgen(3421);
+      nqs::default_random_engine rgen(3421);
 
       Eigen::VectorXd v(hilbert.Size());
 
@@ -117,12 +117,12 @@ TEST_CASE("hamiltonians are hermitean", "[hamiltonian]") {
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
-      netket::default_random_engine rgen(3421);
+      nqs::default_random_engine rgen(3421);
 
       Eigen::VectorXd v(hilbert.Size());
 

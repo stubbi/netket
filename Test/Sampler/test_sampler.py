@@ -1,4 +1,4 @@
-import netket as nk
+import nqs
 import networkx as nx
 import numpy as np
 import pytest
@@ -8,65 +8,65 @@ samplers = {}
 
 # TESTS FOR SPIN HILBERT
 # Constructing a 1d lattice
-g = nk.graph.Hypercube(length=6, n_dim=1)
+g = nqs.graph.Hypercube(length=6, n_dim=1)
 
 # Hilbert space of spins from given graph
-hi = nk.hilbert.Spin(s=0.5, graph=g)
-ma = nk.machine.RbmSpin(hilbert=hi, alpha=1)
+hi = nqs.hilbert.Spin(s=0.5, graph=g)
+ma = nqs.machine.RbmSpin(hilbert=hi, alpha=1)
 ma.init_random_parameters(seed=1234, sigma=0.2)
 
-sa = nk.sampler.MetropolisLocal(machine=ma)
+sa = nqs.sampler.MetropolisLocal(machine=ma)
 samplers["MetropolisLocal RbmSpin"] = sa
 
-sa = nk.sampler.MetropolisLocalPt(machine=ma, n_replicas=4)
+sa = nqs.sampler.MetropolisLocalPt(machine=ma, n_replicas=4)
 samplers["MetropolisLocalPt RbmSpin"] = sa
 
-ha = nk.operator.Ising(hilbert=hi, h=1.0)
-sa = nk.sampler.MetropolisHamiltonian(machine=ma, hamiltonian=ha)
+ha = nqs.operator.Ising(hilbert=hi, h=1.0)
+sa = nqs.sampler.MetropolisHamiltonian(machine=ma, hamiltonian=ha)
 samplers["MetropolisHamiltonian RbmSpin"] = sa
 
 # Test with uniform probability
-maz = nk.machine.RbmSpin(hilbert=hi, alpha=1)
+maz = nqs.machine.RbmSpin(hilbert=hi, alpha=1)
 maz.init_random_parameters(seed=1234, sigma=0)
-sa = nk.sampler.MetropolisLocal(machine=maz)
+sa = nqs.sampler.MetropolisLocal(machine=maz)
 samplers["MetropolisLocal RbmSpin ZeroPars"] = sa
 
-mas = nk.machine.RbmSpinSymm(hilbert=hi, alpha=1)
+mas = nqs.machine.RbmSpinSymm(hilbert=hi, alpha=1)
 mas.init_random_parameters(seed=1234, sigma=0.2)
-sa = nk.sampler.MetropolisHamiltonianPt(machine=mas, hamiltonian=ha, n_replicas=4)
+sa = nqs.sampler.MetropolisHamiltonianPt(machine=mas, hamiltonian=ha, n_replicas=4)
 samplers["MetropolisHamiltonianPt RbmSpinSymm"] = sa
 
-hi = nk.hilbert.Boson(graph=g, n_max=4)
-ma = nk.machine.RbmSpin(hilbert=hi, alpha=1)
+hi = nqs.hilbert.Boson(graph=g, n_max=4)
+ma = nqs.machine.RbmSpin(hilbert=hi, alpha=1)
 ma.init_random_parameters(seed=1234, sigma=0.2)
-sa = nk.sampler.MetropolisLocal(machine=ma)
-g = nk.graph.Hypercube(length=4, n_dim=1)
+sa = nqs.sampler.MetropolisLocal(machine=ma)
+g = nqs.graph.Hypercube(length=4, n_dim=1)
 samplers["MetropolisLocal Boson"] = sa
 
-sa = nk.sampler.MetropolisLocalPt(machine=ma, n_replicas=4)
+sa = nqs.sampler.MetropolisLocalPt(machine=ma, n_replicas=4)
 samplers["MetropolisLocalPt Boson"] = sa
 
-ma = nk.machine.RbmMultiVal(hilbert=hi, alpha=1)
+ma = nqs.machine.RbmMultiVal(hilbert=hi, alpha=1)
 ma.init_random_parameters(seed=1234, sigma=0.2)
-sa = nk.sampler.MetropolisLocal(machine=ma)
+sa = nqs.sampler.MetropolisLocal(machine=ma)
 samplers["MetropolisLocal Boson MultiVal"] = sa
 
-hi = nk.hilbert.Spin(s=0.5, graph=g)
-g = nk.graph.Hypercube(length=6, n_dim=1)
-ma = nk.machine.RbmSpinSymm(hilbert=hi, alpha=1)
+hi = nqs.hilbert.Spin(s=0.5, graph=g)
+g = nqs.graph.Hypercube(length=6, n_dim=1)
+ma = nqs.machine.RbmSpinSymm(hilbert=hi, alpha=1)
 ma.init_random_parameters(seed=1234, sigma=0.2)
 l = hi.size
 X = [[0, 1], [1, 0]]
 
-move_op = nk.operator.LocalOperator(
+move_op = nqs.operator.LocalOperator(
     hilbert=hi, operators=[X] * l, acting_on=[[i] for i in range(l)]
 )
 
-sa = nk.sampler.CustomSampler(machine=ma, move_operators=move_op)
+sa = nqs.sampler.CustomSampler(machine=ma, move_operators=move_op)
 samplers["CustomSampler Spin"] = sa
 
 
-sa = nk.sampler.CustomSamplerPt(machine=ma, move_operators=move_op, n_replicas=4)
+sa = nqs.sampler.CustomSamplerPt(machine=ma, move_operators=move_op, n_replicas=4)
 samplers["CustomSamplerPt Spin"] = sa
 
 # Two types of custom moves
@@ -79,13 +79,13 @@ ops += [spsm] * l
 acting_on = [[i] for i in range(l)]
 acting_on += [[i, (i + 1) % l] for i in range(l)]
 
-move_op = nk.operator.LocalOperator(hilbert=hi, operators=ops, acting_on=acting_on)
+move_op = nqs.operator.LocalOperator(hilbert=hi, operators=ops, acting_on=acting_on)
 
-sa = nk.sampler.CustomSampler(machine=ma, move_operators=move_op)
+sa = nqs.sampler.CustomSampler(machine=ma, move_operators=move_op)
 samplers["CustomSampler Spin 2 moves"] = sa
 
 # Diagonal density matrix sampling
-ma = nk.machine.NdmSpinPhase(
+ma = nqs.machine.NdmSpinPhase(
     hilbert=hi,
     alpha=1,
     beta=1,
@@ -94,8 +94,8 @@ ma = nk.machine.NdmSpinPhase(
     use_ancilla_bias=True,
 )
 ma.init_random_parameters(seed=1234, sigma=0.2)
-dm = nk.machine.DiagonalDensityMatrix(ma)
-sa = nk.sampler.MetropolisLocal(machine=dm)
+dm = nqs.machine.DiagonalDensityMatrix(ma)
+sa = nqs.sampler.MetropolisLocal(machine=dm)
 samplers["Diagonal Density Matrix"] = sa
 
 
@@ -161,7 +161,7 @@ def test_correct_sampling():
 
             hist_exsamp = np.zeros(n_states)
 
-            sa = nk.sampler.ExactSampler(machine=ma)
+            sa = nqs.sampler.ExactSampler(machine=ma)
             if ord == 1:
                 sa.machine_func = np.absolute
             if ord == 2:

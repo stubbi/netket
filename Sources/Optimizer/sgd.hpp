@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_SGD_HPP
-#define NETKET_SGD_HPP
+#ifndef NQS_SGD_HPP
+#define NQS_SGD_HPP
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -22,7 +22,7 @@
 #include <iostream>
 #include "abstract_optimizer.hpp"
 
-namespace netket {
+namespace nqs {
 
 class Sgd : public AbstractOptimizer {
   // decay constant
@@ -72,6 +72,6 @@ class Sgd : public AbstractOptimizer {
   void Reset() override {}
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

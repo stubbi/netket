@@ -1,30 +1,30 @@
 from pytest import approx, raises
 import numpy as np
 
-import netket as nk
-import netket.variational as vmc
+import nqs
+import nqs.variational as vmc
 
 SEED = 214748364
 
 
 def _setup_vmc():
     L = 4
-    g = nk.graph.Hypercube(length=L, n_dim=1)
-    hi = nk.hilbert.Spin(s=0.5, graph=g)
+    g = nqs.graph.Hypercube(length=L, n_dim=1)
+    hi = nqs.hilbert.Spin(s=0.5, graph=g)
 
-    ma = nk.machine.RbmSpin(hilbert=hi, alpha=1)
+    ma = nqs.machine.RbmSpin(hilbert=hi, alpha=1)
     ma.init_random_parameters(seed=SEED, sigma=0.01)
 
-    ha = nk.operator.Ising(hi, h=1.0)
-    sa = nk.sampler.ExactSampler(machine=ma)
+    ha = nqs.operator.Ising(hi, h=1.0)
+    sa = nqs.sampler.ExactSampler(machine=ma)
     sa.seed(SEED)
-    op = nk.optimizer.Sgd(learning_rate=0.1)
+    op = nqs.optimizer.Sgd(learning_rate=0.1)
 
     # Add custom observable
     X = [[0, 1], [1, 0]]
-    sx = nk.operator.LocalOperator(hi, [X] * L, [[i] for i in range(8)])
+    sx = nqs.operator.LocalOperator(hi, [X] * L, [[i] for i in range(8)])
 
-    driver = nk.variational.Vmc(ha, sa, op, 1000)
+    driver = nqs.variational.Vmc(ha, sa, op, 1000)
 
     return ha, sx, ma, sa, driver
 

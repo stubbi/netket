@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_LOCAL_OPERATOR_HPP
-#define NETKET_LOCAL_OPERATOR_HPP
+#ifndef NQS_LOCAL_OPERATOR_HPP
+#define NQS_LOCAL_OPERATOR_HPP
 
 #include <mpi.h>
 #include <Eigen/Dense>
@@ -31,7 +31,7 @@
 #include "Utils/next_variation.hpp"
 #include "abstract_operator.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
     Class for local operators acting on a list of sites and for generic local
@@ -178,7 +178,7 @@ class LocalOperator : public AbstractOperator {
 
       do {
         states.push_back(st);
-      } while (netket::next_variation(st.begin(), st.end(), localsize - 1));
+      } while (nqs::next_variation(st.begin(), st.end(), localsize - 1));
 
       for (std::size_t i = 0; i < states.size(); i++) {
         for (std::size_t k = 0; k < states[i].size(); k++) {
@@ -296,7 +296,7 @@ class LocalOperator : public AbstractOperator {
   LocalOperator Transpose() const {
     std::vector<MatType> mat_t(mat_.size());
     std::transform(mat_.begin(), mat_.end(), mat_t.begin(),
-                   netket::transpose_vecvec<MelType>);
+                   nqs::transpose_vecvec<MelType>);
 
     return LocalOperator(GetHilbertShared(), mat_t, sites_, constant_);
   }
@@ -328,11 +328,11 @@ class LocalOperator : public AbstractOperator {
     for (std::size_t opn = 0; opn < lhs.mat_.size(); opn++) {
       for (std::size_t opn1 = 0; opn1 < rhs.mat_.size(); opn1++) {
         if (lhs.sites_[opn] == rhs.sites_[opn1]) {
-          mat.push_back(netket::MatrixProduct(lhs.mat_[opn], rhs.mat_[opn1]));
+          mat.push_back(nqs::MatrixProduct(lhs.mat_[opn], rhs.mat_[opn1]));
           sites.push_back(lhs.sites_[opn]);
         } else {
           mat.push_back(
-              netket::KroneckerProduct(lhs.mat_[opn], rhs.mat_[opn1]));
+              nqs::KroneckerProduct(lhs.mat_[opn], rhs.mat_[opn1]));
           SiteType sitesum = lhs.sites_[opn];
           sitesum.insert(sitesum.end(), rhs.sites_[opn1].begin(),
                          rhs.sites_[opn1].end());
@@ -415,7 +415,7 @@ class LocalOperator : public AbstractOperator {
   const std::vector<SiteType> &ActingOn() const { return sites_; }
 
   std::size_t Size() const { return mat_.size(); }
-};  // namespace netket
+};  // namespace nqs
 
-}  // namespace netket
+}  // namespace nqs
 #endif

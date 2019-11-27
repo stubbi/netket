@@ -9,7 +9,7 @@
 #include "Utils/exceptions.hpp"
 #include "Utils/next_variation.hpp"
 
-namespace netket {
+namespace nqs {
 
 Hypercube::Hypercube(int const length, int const n_dim, bool pbc)
     : length_{length}, n_dim_{n_dim}, pbc_{pbc}, edges_{}, symm_table_{} {
@@ -203,7 +203,7 @@ std::tuple<int, std::vector<Hypercube::Edge>> Hypercube::BuildEdges(
 int Hypercube::Coord2Site(std::vector<int> const &coord,
                           int const length) noexcept {
   // NOTE(twesterhout): This is unsafe w.r.t. signed integer overflow. It's
-  // highly unlikely that such big graphs will ever be used with NetKet, but
+  // highly unlikely that such big graphs will ever be used with NQS, but
   // still.
   assert(length > 0);
   auto site = 0;
@@ -262,4 +262,4 @@ std::vector<std::vector<int>> Hypercube::BuildSymmTable(int const length,
   return permtable;
 }
 
-}  // namespace netket
+}  // namespace nqs

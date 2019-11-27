@@ -2,7 +2,7 @@ Bootstrap: docker
 From: python:2.7
 
 %files
-    ./ netket/
+    ./ nqs/
 
 %post
     apt-get update
@@ -11,5 +11,5 @@ From: python:2.7
     apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
     apt-get install -y --no-install-recommends cmake libmpich-dev mpich libatlas-base-dev python-dev python-pip libssl-dev
     pip install -U pip setuptools numpy scipy
-    cd netket
+    cd nqs
     python setup.py install

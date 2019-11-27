@@ -18,7 +18,7 @@
 #include "Utils/json_utils.hpp"
 #include "Utils/messages.hpp"
 
-namespace netket {
+namespace nqs {
 
 RbmSpinPhase::RbmSpinPhase(std::shared_ptr<const AbstractHilbert> hilbert,
                            int nhidden, int alpha, bool usea, bool useb)
@@ -80,7 +80,7 @@ int RbmSpinPhase::Npar() const { return npar_; }
 void RbmSpinPhase::InitRandomPars(int seed, double sigma) {
   RealVectorType par(npar_);
 
-  netket::RandomGaussian(par, seed, sigma);
+  nqs::RandomGaussian(par, seed, sigma);
 
   SetParameters(VectorType(par));
 }
@@ -358,4 +358,4 @@ void RbmSpinPhase::Load(const std::string &filename) {
 
 bool RbmSpinPhase::IsHolomorphic() const noexcept { return false; }
 
-}  // namespace netket
+}  // namespace nqs

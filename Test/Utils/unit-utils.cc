@@ -14,9 +14,9 @@
 
 #include <catch.hpp>
 
-#include "netket.hpp"
+#include "nqs.hpp"
 
-using namespace netket;
+using namespace nqs;
 
 /**
  * Matcher class for checking an exeption message.

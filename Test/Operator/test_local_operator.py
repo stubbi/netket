@@ -1,4 +1,4 @@
-import netket as nk
+import nqs
 import networkx as nx
 import numpy as np
 import pytest
@@ -14,21 +14,21 @@ sy = [[0, 1.0j], [-1.0j, 0]]
 sz = [[1, 0], [0, -1]]
 sm = [[0, 0], [1, 0]]
 sp = [[0, 1], [0, 0]]
-g = nk.graph.CustomGraph(edges=[[i, i + 1] for i in range(8)])
-hi = nk.hilbert.CustomHilbert(local_states=[1, -1], graph=g)
+g = nqs.graph.CustomGraph(edges=[[i, i + 1] for i in range(8)])
+hi = nqs.hilbert.CustomHilbert(local_states=[1, -1], graph=g)
 
-sx_hat = nk.operator.LocalOperator(hi, [sx] * 3, [[0], [1], [4]])
-sy_hat = nk.operator.LocalOperator(hi, [sy] * 4, [[1], [2], [3], [4]])
-szsz_hat = nk.operator.LocalOperator(hi, sz, [0]) * nk.operator.LocalOperator(
+sx_hat = nqs.operator.LocalOperator(hi, [sx] * 3, [[0], [1], [4]])
+sy_hat = nqs.operator.LocalOperator(hi, [sy] * 4, [[1], [2], [3], [4]])
+szsz_hat = nqs.operator.LocalOperator(hi, sz, [0]) * nqs.operator.LocalOperator(
     hi, sz, [1]
 )
-szsz_hat += nk.operator.LocalOperator(hi, sz, [4]) * nk.operator.LocalOperator(
+szsz_hat += nqs.operator.LocalOperator(hi, sz, [4]) * nqs.operator.LocalOperator(
     hi, sz, [5]
 )
-szsz_hat += nk.operator.LocalOperator(hi, sz, [6]) * nk.operator.LocalOperator(
+szsz_hat += nqs.operator.LocalOperator(hi, sz, [6]) * nqs.operator.LocalOperator(
     hi, sz, [8]
 )
-szsz_hat += nk.operator.LocalOperator(hi, sz, [7]) * nk.operator.LocalOperator(
+szsz_hat += nqs.operator.LocalOperator(hi, sz, [7]) * nqs.operator.LocalOperator(
     hi, sz, [0]
 )
 
@@ -38,13 +38,13 @@ herm_operators["sy"] = sy_hat
 herm_operators["Custom Hamiltonian"] = sx_hat + sy_hat + szsz_hat
 herm_operators["Custom Hamiltonian Prod"] = sx_hat * 1.5 + (2.0 * sy_hat)
 
-sm_hat = nk.operator.LocalOperator(hi, [sm] * 3, [[0], [1], [4]])
-sp_hat = nk.operator.LocalOperator(hi, [sp] * 3, [[0], [1], [4]])
+sm_hat = nqs.operator.LocalOperator(hi, [sm] * 3, [[0], [1], [4]])
+sp_hat = nqs.operator.LocalOperator(hi, [sp] * 3, [[0], [1], [4]])
 
 generic_operators["sigma +/-"] = (sm_hat, sp_hat)
 
 
-rg = nk.utils.RandomEngine(seed=1234)
+rg = nqs.utils.RandomEngine(seed=1234)
 
 
 def same_matrices(matl, matr, eps=1.0e-6):

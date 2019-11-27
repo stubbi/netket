@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_LATTICE_HPP
-#define NETKET_LATTICE_HPP
+#ifndef NQS_LATTICE_HPP
+#define NQS_LATTICE_HPP
 
 #include "abstract_graph.hpp"
 
-namespace netket {
+namespace nqs {
 
 class Lattice : public AbstractGraph {
   int ndim_;
@@ -162,6 +162,6 @@ class Lattice : public AbstractGraph {
                             const std::vector<double> &v2) const;
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

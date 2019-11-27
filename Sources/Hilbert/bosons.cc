@@ -14,7 +14,7 @@
 
 #include "bosons.hpp"
 
-namespace netket {
+namespace nqs {
 
 Boson::Boson(const AbstractGraph &graph, int const nmax)
     : graph_{graph}, nsites_{graph.Size()}, constraintN_{false}, nmax_{nmax} {
@@ -63,7 +63,7 @@ std::vector<double> Boson::LocalStates() const { return local_; }
 const AbstractGraph &Boson::GetGraph() const noexcept { return graph_; }
 
 void Boson::RandomVals(Eigen::Ref<Eigen::VectorXd> state,
-                       netket::default_random_engine &rgen) const {
+                       nqs::default_random_engine &rgen) const {
   assert(state.size() == nsites_);
 
   if (!constraintN_) {
@@ -115,4 +115,4 @@ void Boson::UpdateConf(Eigen::Ref<Eigen::VectorXd> v,
   }
 }
 
-}  // namespace netket
+}  // namespace nqs

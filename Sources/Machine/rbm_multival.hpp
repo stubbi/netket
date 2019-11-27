@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_RBM_MULTIVAL_HPP
-#define NETKET_RBM_MULTIVAL_HPP
+#ifndef NQS_RBM_MULTIVAL_HPP
+#define NQS_RBM_MULTIVAL_HPP
 
 #include <map>
 #include <vector>
@@ -23,7 +23,7 @@
 #include "Machine/abstract_machine.hpp"
 #include "Machine/rbm_spin.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Restricted Boltzman Machine wave function
 // for generic (finite) local hilbert space
@@ -122,6 +122,6 @@ class RbmMultival : public AbstractMachine {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYHILBERT_HPP
-#define NETKET_PYHILBERT_HPP
+#ifndef NQS_PYHILBERT_HPP
+#define NQS_PYHILBERT_HPP
 
 #include <pybind11/pybind11.h>
 
-namespace netket {
+namespace nqs {
 
 void AddHilbertModule(pybind11::module m);
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

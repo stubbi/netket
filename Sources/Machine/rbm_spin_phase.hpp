@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_RBM_SPIN_PHASE_HPP
-#define NETKET_RBM_SPIN_PHASE_HPP
+#ifndef NQS_RBM_SPIN_PHASE_HPP
+#define NQS_RBM_SPIN_PHASE_HPP
 
 #include "Machine/abstract_machine.hpp"
 
-namespace netket {
+namespace nqs {
 
 /** Restricted Boltzmann machine class with spin 1/2 hidden units.
 This version has real-valued weights and two RBMs parameterizing phase and
@@ -112,6 +112,6 @@ class RbmSpinPhase : public AbstractMachine {
   inline void Init();
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

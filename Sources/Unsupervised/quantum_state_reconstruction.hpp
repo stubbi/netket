@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_QUANTUMSTATERECONSTRUCTION_HPP_
-#define NETKET_QUANTUMSTATERECONSTRUCTION_HPP_
+#ifndef NQS_QUANTUMSTATERECONSTRUCTION_HPP_
+#define NQS_QUANTUMSTATERECONSTRUCTION_HPP_
 
 #include <bitset>
 #include <complex>
@@ -31,7 +31,7 @@
 #include "Utils/parallel_utils.hpp"
 #include "Utils/random_utils.hpp"
 
-namespace netket {
+namespace nqs {
 
 class QuantumStateReconstruction {
   using VectorT = Eigen::Matrix<Complex, Eigen::Dynamic, 1>;
@@ -420,6 +420,6 @@ class QuantumStateReconstruction {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_UNSUPERVISED_HPP
+#endif  // NQS_UNSUPERVISED_HPP

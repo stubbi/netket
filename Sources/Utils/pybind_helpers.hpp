@@ -1,5 +1,5 @@
-#ifndef NETKET_PYBIND_HELPERS_HPP
-#define NETKET_PYBIND_HELPERS_HPP
+#ifndef NQS_PYBIND_HELPERS_HPP
+#define NQS_PYBIND_HELPERS_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -23,7 +23,7 @@ struct type_caster<nonstd::nullopt_t> : public void_caster<nonstd::nullopt_t> {
 }  // namespace detail
 }  // namespace pybind11
 
-namespace netket {
+namespace nqs {
 
 template <class Value>
 Value GetOrDefault(const pybind11::kwargs& kwargs, std::string field,
@@ -46,6 +46,6 @@ Value GetOrThrow(const pybind11::kwargs& kwargs, std::string field) {
   }
 }
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_PYBIND_HELPERS_HPP
+#endif  // NQS_PYBIND_HELPERS_HPP

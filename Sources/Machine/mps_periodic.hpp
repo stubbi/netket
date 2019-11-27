@@ -14,14 +14,14 @@
 //
 // by S. Efthymiou, October 2018
 
-#ifndef NETKET_MPS_PERIODIC_HPP
-#define NETKET_MPS_PERIODIC_HPP
+#ifndef NQS_MPS_PERIODIC_HPP
+#define NQS_MPS_PERIODIC_HPP
 
 #include <map>
 
 #include "Machine/abstract_machine.hpp"
 
-namespace netket {
+namespace nqs {
 
 class MPSPeriodic : public AbstractMachine {
   // Number of sites
@@ -107,6 +107,6 @@ class MPSPeriodic : public AbstractMachine {
                                     const int &site2);
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

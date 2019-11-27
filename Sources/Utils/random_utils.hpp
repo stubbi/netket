@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_RANDOMUTILS_HPP
-#define NETKET_RANDOMUTILS_HPP
+#ifndef NQS_RANDOMUTILS_HPP
+#define NQS_RANDOMUTILS_HPP
 
 #include <complex>
 #include <random>
@@ -24,7 +24,7 @@
 #include "Utils/mpi_interface.hpp"
 #include "common_types.hpp"
 
-namespace netket {
+namespace nqs {
 using default_random_engine = std::mt19937;
 
 inline void RandomGaussian(Eigen::Matrix<double, Eigen::Dynamic, 1> &par,
@@ -120,6 +120,6 @@ class DistributedRandomEngine {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

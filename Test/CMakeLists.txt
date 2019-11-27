@@ -1,17 +1,17 @@
-option(NETKET_Sanitizer "Build test suite with Clang sanitizer" OFF)
+option(NQS_Sanitizer "Build test suite with Clang sanitizer" OFF)
 
-add_library(netket_test INTERFACE)
-target_link_libraries(netket_test INTERFACE netket_lib Catch2)
+add_library(nqs_test INTERFACE)
+target_link_libraries(nqs_test INTERFACE nqs_lib Catch2)
 
-if(NETKET_Sanitizer)
+if(NQS_Sanitizer)
     message(STATUS "Building test suite with Clang sanitizer")
     if(NOT MSVC)
-        target_compile_options(netket_test
+        target_compile_options(nqs_test
             INTERFACE
                 -O2 -g -fno-omit-frame-pointer
                 -fsanitize=address -fsanitize=undefined
         )
-        target_link_libraries(netket_test
+        target_link_libraries(nqs_test
             INTERFACE
                 -fsanitize=address -fsanitize=undefined
         )
@@ -27,7 +27,7 @@ find_package(Boost)
 
 add_library(catch_main OBJECT "unit-tests.cc")
 # This is _very_ ugly, but in CMake 3.1 object libraries can't link to anything
-# so we can't make it use netket_test
+# so we can't make it use nqs_test
 get_property(_catch2_include_dir
     TARGET Catch2
     PROPERTY INTERFACE_INCLUDE_DIRECTORIES)
@@ -49,7 +49,7 @@ foreach(_file ${TEST_SOURCES})
    string(REGEX REPLACE "unit-(.+)" "test-\\1" testcase ${_file_basename})
 
    add_executable(${testcase} $<TARGET_OBJECTS:catch_main> ${_file})
-   target_link_libraries(${testcase} PUBLIC netket_test)
+   target_link_libraries(${testcase} PUBLIC nqs_test)
    if(Boost_FOUND)
        target_include_directories(${testcase} SYSTEM PUBLIC ${Boost_INCLUDE_DIRS})
        target_compile_definitions(${testcase} PUBLIC WITH_BOOST_ODEINT)

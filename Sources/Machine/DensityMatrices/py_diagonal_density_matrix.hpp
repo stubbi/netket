@@ -2,8 +2,8 @@
 // Created by Filippo Vicentini on 2019-06-05.
 //
 
-#ifndef NETKET_PY_DIAGONAL_DENSITY_MATRIX_HPP
-#define NETKET_PY_DIAGONAL_DENSITY_MATRIX_HPP
+#ifndef NQS_PY_DIAGONAL_DENSITY_MATRIX_HPP
+#define NQS_PY_DIAGONAL_DENSITY_MATRIX_HPP
 
 #include <mpi.h>
 #include <pybind11/complex.h>
@@ -17,7 +17,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddDiagonalDensityMatrix(py::module &subm) {
   py::class_<DiagonalDensityMatrix, AbstractMachine>(
@@ -34,5 +34,5 @@ void AddDiagonalDensityMatrix(py::module &subm) {
 )EOF");
 }
 
-}  // namespace netket
-#endif  // NETKET_PY_DIAGONAL_DENSITY_MATRIX_HPP
+}  // namespace nqs
+#endif  // NQS_PY_DIAGONAL_DENSITY_MATRIX_HPP

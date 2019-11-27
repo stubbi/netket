@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_NDM_SPIN_PHASE_HPP
-#define NETKET_NDM_SPIN_PHASE_HPP
+#ifndef NQS_NDM_SPIN_PHASE_HPP
+#define NQS_NDM_SPIN_PHASE_HPP
 
 #include <Eigen/Dense>
 #include <iostream>
@@ -23,7 +23,7 @@
 #include "Utils/lookup.hpp"
 #include "abstract_density_matrix.hpp"
 
-namespace netket {
+namespace nqs {
 
 /** Neural Density Matrix machine class with spin 1/2 hidden units.
 This version has real-valued weights and two NDMs parameterizing phase and
@@ -191,7 +191,7 @@ class NdmSpinPhase : public AbstractDensityMatrix {
   void InitRandomPars(int seed, double sigma) override {
     RealVectorType par(npar_);
 
-    netket::RandomGaussian(par, seed, sigma);
+    nqs::RandomGaussian(par, seed, sigma);
 
     SetParameters(VectorType(par));
   }
@@ -688,6 +688,6 @@ class NdmSpinPhase : public AbstractDensityMatrix {
   bool IsHolomorphic() const noexcept override { return false; }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_NDM_SPIN_PHASE_HPP
+#endif  // NQS_NDM_SPIN_PHASE_HPP

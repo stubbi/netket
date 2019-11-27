@@ -9,7 +9,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 namespace ode {
 
 namespace detail {
@@ -66,4 +66,4 @@ void AddDynamicsModule(py::module m) {
            py::arg("name") = "Dopri54");
 }
 
-}  // namespace netket
+}  // namespace nqs

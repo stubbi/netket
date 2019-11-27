@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYLOCALOPERATOR_HPP
-#define NETKET_PYLOCALOPERATOR_HPP
+#ifndef NQS_PYLOCALOPERATOR_HPP
+#define NQS_PYLOCALOPERATOR_HPP
 
 #include <pybind11/complex.h>
 #include <pybind11/eigen.h>
@@ -26,7 +26,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddLocalOperator(py::module &subm) {
   py::class_<LocalOperator, AbstractOperator>(
@@ -45,9 +45,9 @@ void AddLocalOperator(py::module &subm) {
                Constructs a ``LocalOperator`` without any operators.
 
                ```python
-               >>> from netket.graph import CustomGraph
-               >>> from netket.hilbert import CustomHilbert
-               >>> from netket.operator import LocalOperator
+               >>> from nqs.graph import CustomGraph
+               >>> from nqs.hilbert import CustomHilbert
+               >>> from nqs.operator import LocalOperator
                >>> g = CustomGraph(edges=[[i, i + 1] for i in range(20)])
                >>> hi = CustomHilbert(local_states=[1, -1], graph=g)
                >>> empty_hat = LocalOperator(hi)
@@ -77,9 +77,9 @@ void AddLocalOperator(py::module &subm) {
               a corresponding list of sites.
 
               ```python
-              >>> from netket.graph import CustomGraph
-              >>> from netket.hilbert import CustomHilbert
-              >>> from netket.operator import LocalOperator
+              >>> from nqs.graph import CustomGraph
+              >>> from nqs.hilbert import CustomHilbert
+              >>> from nqs.operator import LocalOperator
               >>> sx = [[0, 1], [1, 0]]
               >>> g = CustomGraph(edges=[[i, i + 1] for i in range(20)])
               >>> hi = CustomHilbert(local_states=[1, -1], graph=g)
@@ -109,9 +109,9 @@ void AddLocalOperator(py::module &subm) {
                a single site.
 
                ```python
-               >>> from netket.graph import CustomGraph
-               >>> from netket.hilbert import CustomHilbert
-               >>> from netket.operator import LocalOperator
+               >>> from nqs.graph import CustomGraph
+               >>> from nqs.hilbert import CustomHilbert
+               >>> from nqs.operator import LocalOperator
                >>> sx = [[0, 1], [1, 0]]
                >>> g = CustomGraph(edges=[[i, i + 1] for i in range(20)])
                >>> hi = CustomHilbert(local_states=[1, -1], graph=g)
@@ -159,6 +159,6 @@ void AddLocalOperator(py::module &subm) {
       .def(py::self * py::self);
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

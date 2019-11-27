@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ABSTRACTMACHINE_HPP
-#define NETKET_ABSTRACTMACHINE_HPP
+#ifndef NQS_ABSTRACTMACHINE_HPP
+#define NQS_ABSTRACTMACHINE_HPP
 
 #include <complex>
 #include <iosfwd>
@@ -26,7 +26,7 @@
 #include "Utils/lookup.hpp"
 #include "Utils/random_utils.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
   Abstract class for Machines.
@@ -223,6 +223,6 @@ class AbstractMachine {
  private:
   std::shared_ptr<const AbstractHilbert> hilbert_;
 };
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_ABSTRACTMACHINE_HPP
+#endif  // NQS_ABSTRACTMACHINE_HPP

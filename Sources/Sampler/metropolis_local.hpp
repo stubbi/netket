@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_METROPOLISLOCAL_HPP
-#define NETKET_METROPOLISLOCAL_HPP
+#ifndef NQS_METROPOLISLOCAL_HPP
+#define NQS_METROPOLISLOCAL_HPP
 
 #include <mpi.h>
 #include <Eigen/Dense>
@@ -23,7 +23,7 @@
 #include "Utils/random_utils.hpp"
 #include "abstract_sampler.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Metropolis sampling generating local moves in hilbert space
 class MetropolisLocal : public AbstractSampler {
@@ -172,6 +172,6 @@ class MetropolisLocal : public AbstractSampler {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

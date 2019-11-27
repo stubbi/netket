@@ -14,8 +14,8 @@
 
 // authors: Hugo Théveniaut and Fabien Alet
 
-#ifndef NETKET_CUSTOMSAMPLER_HPP
-#define NETKET_CUSTOMSAMPLER_HPP
+#ifndef NQS_CUSTOMSAMPLER_HPP
+#define NQS_CUSTOMSAMPLER_HPP
 
 #include <mpi.h>
 #include <Eigen/Dense>
@@ -26,7 +26,7 @@
 #include "Utils/random_utils.hpp"
 #include "abstract_sampler.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Metropolis sampling using custom moves provided by user
 class CustomSampler : public AbstractSampler {
@@ -267,6 +267,6 @@ class CustomSampler : public AbstractSampler {
     }
   }
 };
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_MOMENTUM_HPP
-#define NETKET_MOMENTUM_HPP
+#ifndef NQS_MOMENTUM_HPP
+#define NQS_MOMENTUM_HPP
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -23,7 +23,7 @@
 #include <iostream>
 #include "abstract_optimizer.hpp"
 
-namespace netket {
+namespace nqs {
 
 class Momentum : public AbstractOptimizer {
   int npar_;
@@ -66,6 +66,6 @@ class Momentum : public AbstractOptimizer {
   void Reset() override { mt_ = Eigen::VectorXd::Zero(npar_); }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_SUPERVISED_CC
-#define NETKET_SUPERVISED_CC
+#ifndef NQS_SUPERVISED_CC
+#define NQS_SUPERVISED_CC
 
 #include <bitset>
 #include <complex>
@@ -30,7 +30,7 @@
 #include "Utils/parallel_utils.hpp"
 #include "Utils/random_utils.hpp"
 
-namespace netket {
+namespace nqs {
 
 class Supervised {
   using MatrixT = Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic>;
@@ -350,7 +350,7 @@ class Supervised {
     if (lossFunction == "MSE" || lossFunction == "Overlap_uni") {
       // Randomly select a batch of training data
       for (int k = 0; k < batchsize_node_; k++) {
-        // Draw from the distribution using the netket random number generator
+        // Draw from the distribution using the nqs random number generator
         index = distribution_uni_(this->GetRandomEngine());
         batchSamples[k] = trainingSamples_[index];
         batchTargets[k] = trainingTargets_[index];
@@ -358,7 +358,7 @@ class Supervised {
     } else if (lossFunction == "Overlap_phi") {
       // Randomly select a batch of training data
       for (int k = 0; k < batchsize_node_; k++) {
-        // Draw from the distribution using the netket random number generator
+        // Draw from the distribution using the nqs random number generator
         index = distribution_uni_(this->GetRandomEngine());
         batchSamples[k] = trainingSamples_[index];
         batchTargets[k] = trainingTargets_[index];
@@ -534,6 +534,6 @@ class Supervised {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYADAGRAD_HPP
-#define NETKET_PYADAGRAD_HPP
+#ifndef NQS_PYADAGRAD_HPP
+#define NQS_PYADAGRAD_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -24,7 +24,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddAdaGrad(py::module &subm) {
   py::class_<AdaGrad, AbstractOptimizer>(subm, "AdaGrad",
@@ -61,13 +61,13 @@ void AddAdaGrad(py::module &subm) {
                Simple AdaDelta optimizer.
 
                ```python
-               >>> from netket.optimizer import AdaGrad
+               >>> from nqs.optimizer import AdaGrad
                >>> op = AdaGrad()
 
                ```
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

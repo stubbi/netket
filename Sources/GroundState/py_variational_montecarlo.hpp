@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYVARIATIONALMONTECARLO_HPP
-#define NETKET_PYVARIATIONALMONTECARLO_HPP
+#ifndef NQS_PYVARIATIONALMONTECARLO_HPP
+#define NQS_PYVARIATIONALMONTECARLO_HPP
 
 #include <mpi.h>
 #include <pybind11/complex.h>
@@ -27,7 +27,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddVariationalMonteCarloModule(py::module &m) {
   auto m_vmc = m.def_submodule("variational");
@@ -80,17 +80,17 @@ void AddVariationalMonteCarloModule(py::module &m) {
                Optimizing a 1D wavefunction with Variational Mante Carlo.
 
                ```python
-               >>> import netket as nk
+               >>> import nqs
                >>> SEED = 3141592
-               >>> g = nk.graph.Hypercube(length=8, n_dim=1)
-               >>> hi = nk.hilbert.Spin(s=0.5, graph=g)
-               >>> ma = nk.machine.RbmSpin(hilbert=hi, alpha=1)
+               >>> g = nqs.graph.Hypercube(length=8, n_dim=1)
+               >>> hi = nqs.hilbert.Spin(s=0.5, graph=g)
+               >>> ma = nqs.machine.RbmSpin(hilbert=hi, alpha=1)
                >>> ma.init_random_parameters(seed=SEED, sigma=0.01)
-               >>> ha = nk.operator.Ising(hi, h=1.0)
-               >>> sa = nk.sampler.MetropolisLocal(machine=ma)
+               >>> ha = nqs.operator.Ising(hi, h=1.0)
+               >>> sa = nqs.sampler.MetropolisLocal(machine=ma)
                >>> sa.seed(SEED)
-               >>> op = nk.optimizer.Sgd(learning_rate=0.1)
-               >>> vmc = nk.variational.Vmc(hamiltonian=ha, sampler=sa,
+               >>> op = nqs.optimizer.Sgd(learning_rate=0.1)
+               >>> vmc = nqs.variational.Vmc(hamiltonian=ha, sampler=sa,
                ... optimizer=op, n_samples=500)
                >>> print(vmc.machine.n_visible)
                8
@@ -100,7 +100,7 @@ void AddVariationalMonteCarloModule(py::module &m) {
            )EOF")
       .def_property_readonly(
           "machine", &VariationalMonteCarlo::GetMachine,
-          R"EOF(netket.machine.Machine: The machine used to express the wavefunction.)EOF")
+          R"EOF(nqs.machine.Machine: The machine used to express the wavefunction.)EOF")
       .def("add_observable", &VariationalMonteCarlo::AddObservable,
            py::keep_alive<1, 2>(), py::arg("ob"), py::arg("ob_name"), R"EOF(
            Add an observable quantity, that will be calculated at each
@@ -128,17 +128,17 @@ void AddVariationalMonteCarloModule(py::module &m) {
 
 
                ```python
-               >>> import netket as nk
+               >>> import nqs
                >>> SEED = 3141592
-               >>> g = nk.graph.Hypercube(length=8, n_dim=1)
-               >>> hi = nk.hilbert.Spin(s=0.5, graph=g)
-               >>> ma = nk.machine.RbmSpin(hilbert=hi, alpha=1)
+               >>> g = nqs.graph.Hypercube(length=8, n_dim=1)
+               >>> hi = nqs.hilbert.Spin(s=0.5, graph=g)
+               >>> ma = nqs.machine.RbmSpin(hilbert=hi, alpha=1)
                >>> ma.init_random_parameters(seed=SEED, sigma=0.01)
-               >>> ha = nk.operator.Ising(hi, h=1.0)
-               >>> sa = nk.sampler.MetropolisLocal(machine=ma)
+               >>> ha = nqs.operator.Ising(hi, h=1.0)
+               >>> sa = nqs.sampler.MetropolisLocal(machine=ma)
                >>> sa.seed(SEED)
-               >>> op = nk.optimizer.Sgd(learning_rate=0.1)
-               >>> vmc = nk.variational.Vmc(hamiltonian=ha, sampler=sa,
+               >>> op = nqs.optimizer.Sgd(learning_rate=0.1)
+               >>> vmc = nqs.variational.Vmc(hamiltonian=ha, sampler=sa,
                ... optimizer=op, n_samples=500)
                >>> vmc.run(output_prefix='test', n_iter=1)
 
@@ -215,12 +215,12 @@ void AddVariationalMonteCarloModule(py::module &m) {
                A very basic VMC loop in Python:
 
                ```python
-                 from netket.graph import Hypercube
-                 from netket.hilbert import Spin
-                 from netket.operator import Ising
-                 from netket.machine import RbmSpin
-                 from netket.sampler import MetropolisLocal
-                 from netket.variational import compute_samples, expectation, gradient
+                 from nqs.graph import Hypercube
+                 from nqs.hilbert import Spin
+                 from nqs.operator import Ising
+                 from nqs.machine import RbmSpin
+                 from nqs.sampler import MetropolisLocal
+                 from nqs.variational import compute_samples, expectation, gradient
 
                  hi = Spin(s=0.5, graph=Hypercube(8, 1))
                  ham = Ising(hi, h=1.0)
@@ -277,12 +277,12 @@ void AddVariationalMonteCarloModule(py::module &m) {
                Computing the variance using precomputed values.
 
                ```python
-                 from netket.graph import Hypercube
-                 from netket.hilbert import Spin
-                 from netket.operator import Ising
-                 from netket.machine import RbmSpin
-                 from netket.sampler import MetropolisLocal
-                 import netket.variational as vmc
+                 from nqs.graph import Hypercube
+                 from nqs.hilbert import Spin
+                 from nqs.operator import Ising
+                 from nqs.machine import RbmSpin
+                 from nqs.sampler import MetropolisLocal
+                 import nqs.variational as vmc
 
                  hi = Spin(s=0.5, graph=Hypercube(8, 1))
                  ham = Ising(hi, h=1.0)
@@ -354,6 +354,6 @@ void AddVariationalMonteCarloModule(py::module &m) {
             )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

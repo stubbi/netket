@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_GRAPH_HAMILTONIAN_CC
-#define NETKET_GRAPH_HAMILTONIAN_CC
+#ifndef NQS_GRAPH_HAMILTONIAN_CC
+#define NQS_GRAPH_HAMILTONIAN_CC
 
 #include <Eigen/Dense>
 #include <array>
@@ -24,7 +24,7 @@
 #include "abstract_operator.hpp"
 #include "local_operator.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Graph Hamiltonian on an arbitrary graph
 class GraphOperator : public AbstractOperator {
@@ -119,6 +119,6 @@ class GraphOperator : public AbstractOperator {
   void ForEachConn(VectorConstRefType v, ConnCallback callback) const override {
     operator_.ForEachConn(v, callback);
   }
-};  // namespace netket
-}  // namespace netket
+};  // namespace nqs
+}  // namespace nqs
 #endif

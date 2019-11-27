@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYAMSGRAD_HPP
-#define NETKET_PYAMSGRAD_HPP
+#ifndef NQS_PYAMSGRAD_HPP
+#define NQS_PYAMSGRAD_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -24,7 +24,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddAmsGrad(py::module &subm) {
   py::class_<AMSGrad, AbstractOptimizer>(subm, "AmsGrad",
@@ -63,13 +63,13 @@ void AddAmsGrad(py::module &subm) {
                Simple AmsGrad optimizer.
 
                ```python
-               >>> from netket.optimizer import AmsGrad
+               >>> from nqs.optimizer import AmsGrad
                >>> op = AmsGrad()
 
                ```
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PY_METROPOLISLOCALPT_HPP
-#define NETKET_PY_METROPOLISLOCALPT_HPP
+#ifndef NQS_PY_METROPOLISLOCALPT_HPP
+#define NQS_PY_METROPOLISLOCALPT_HPP
 
 #include <pybind11/pybind11.h>
 #include "metropolis_local_pt.hpp"
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddMetropolisLocalPt(py::module &subm) {
   py::class_<MetropolisLocalPt, AbstractSampler>(subm, "MetropolisLocalPt",
@@ -45,21 +45,21 @@ void AddMetropolisLocalPt(py::module &subm) {
                  Sampling from a RBM machine in a 1D lattice of spin 1/2
 
                  ```python
-                 >>> import netket as nk
+                 >>> import nqs
                  >>>
-                 >>> g=nk.graph.Hypercube(length=10,n_dim=2,pbc=True)
-                 >>> hi=nk.hilbert.Spin(s=0.5,graph=g)
+                 >>> g=nqs.graph.Hypercube(length=10,n_dim=2,pbc=True)
+                 >>> hi=nqs.hilbert.Spin(s=0.5,graph=g)
                  >>>
                  >>> # RBM Spin Machine
-                 >>> ma = nk.machine.RbmSpin(alpha=1, hilbert=hi)
+                 >>> ma = nqs.machine.RbmSpin(alpha=1, hilbert=hi)
                  >>>
                  >>> # Construct a MetropolisLocalPt Sampler
-                 >>> sa = nk.sampler.MetropolisLocalPt(machine=ma,n_replicas=16)
+                 >>> sa = nqs.sampler.MetropolisLocalPt(machine=ma,n_replicas=16)
                  >>> print(sa.hilbert.size)
                  100
 
                  ```
              )EOF");
 }
-}  // namespace netket
+}  // namespace nqs
 #endif

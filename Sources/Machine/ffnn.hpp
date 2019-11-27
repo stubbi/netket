@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_FFNN_HPP
-#define NETKET_FFNN_HPP
+#ifndef NQS_FFNN_HPP
+#define NQS_FFNN_HPP
 
 #include <iostream>
 #include <memory>
@@ -28,7 +28,7 @@
 #include "Utils/all_utils.hpp"
 #include "Utils/lookup.hpp"
 
-namespace netket {
+namespace nqs {
 
 class FFNN : public AbstractMachine {
   std::vector<AbstractLayer *> layers_;  // Pointers to hidden layers
@@ -73,7 +73,7 @@ class FFNN : public AbstractMachine {
     if (layersizes_.back() != 1) {
       nlayer_ += 1;
 
-      sum_output_layer_ = netket::make_unique<SumOutput>(layersizes_.back());
+      sum_output_layer_ = nqs::make_unique<SumOutput>(layersizes_.back());
       layers_.push_back(sum_output_layer_.get());
       layersizes_.push_back(1);
     }
@@ -299,8 +299,8 @@ class FFNN : public AbstractMachine {
   }
 
   bool IsHolomorphic() const noexcept override { return true; }
-};  // namespace netket
+};  // namespace nqs
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

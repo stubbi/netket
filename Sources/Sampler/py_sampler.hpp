@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PY_SAMPLER_HPP
-#define NETKET_PY_SAMPLER_HPP
+#ifndef NQS_PY_SAMPLER_HPP
+#define NQS_PY_SAMPLER_HPP
 
 #include <mpi.h>
 #include <pybind11/complex.h>
@@ -42,13 +42,13 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddSamplerModule(py::module &m) {
   auto subm = m.def_submodule("sampler");
 
   py::class_<AbstractSampler>(subm, "Sampler", R"EOF(
-    NetKet implements generic sampling routines to be used in conjunction with
+    Nqs implements generic sampling routines to be used in conjunction with
     suitable variational states, the `Machines`.
     A `Sampler` generates quantum numbers distributed according to:
 
@@ -94,9 +94,9 @@ void AddSamplerModule(py::module &m) {
         In the case of rejection-free sampling this is always equal to 1.  )EOF")
       .def_property_readonly("hilbert", &AbstractSampler::GetHilbertShared,
                              R"EOF(
-        netket.hilbert: The Hilbert space used for the sampling.  )EOF")
+        nqs.hilbert: The Hilbert space used for the sampling.  )EOF")
       .def_property_readonly("machine", &AbstractSampler::GetMachine, R"EOF(
-        netket.machine: The machine used for the sampling.  )EOF")
+        nqs.machine: The machine used for the sampling.  )EOF")
       .def_property("machine_func", &AbstractSampler::GetMachineFunc,
                     &AbstractSampler::SetMachineFunc,
                     R"EOF(
@@ -116,6 +116,6 @@ void AddSamplerModule(py::module &m) {
   AddCustomSamplerPt(subm);
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

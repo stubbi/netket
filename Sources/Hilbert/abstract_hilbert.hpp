@@ -11,8 +11,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ABSTRACTHILBERT_HPP
-#define NETKET_ABSTRACTHILBERT_HPP
+#ifndef NQS_ABSTRACTHILBERT_HPP
+#define NQS_ABSTRACTHILBERT_HPP
 
 #include <Eigen/Core>
 #include <complex>
@@ -24,7 +24,7 @@
 #include "Hilbert/hilbert_index.hpp"
 #include "Utils/random_utils.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
   Abstract class for Hilbert spaces.
@@ -91,7 +91,7 @@ class AbstractHilbert {
   @param rgen the random number generator to be used
   */
   virtual void RandomVals(Eigen::Ref<Eigen::VectorXd> state,
-                          netket::default_random_engine &rgen) const = 0;
+                          nqs::default_random_engine &rgen) const = 0;
 
   /**
   Member function updating a visible configuration using the information on
@@ -117,6 +117,6 @@ class AbstractHilbert {
   mutable nonstd::optional<HilbertIndex> index_;
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

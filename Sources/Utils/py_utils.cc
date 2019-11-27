@@ -18,17 +18,17 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddUtilsModule(py::module m) {
   auto subm = m.def_submodule("utils");
 
-  py::class_<netket::default_random_engine>(subm, "RandomEngine")
-      .def(py::init<netket::default_random_engine::result_type>(),
-           py::arg("seed") = netket::default_random_engine::default_seed)
-      .def("seed", static_cast<void (netket::default_random_engine::*)(
-                       netket::default_random_engine::result_type)>(
-                       &netket::default_random_engine::seed));
+  py::class_<nqs::default_random_engine>(subm, "RandomEngine")
+      .def(py::init<nqs::default_random_engine::result_type>(),
+           py::arg("seed") = nqs::default_random_engine::default_seed)
+      .def("seed", static_cast<void (nqs::default_random_engine::*)(
+                       nqs::default_random_engine::result_type)>(
+                       &nqs::default_random_engine::seed));
 
   py::class_<Lookup<double>>(m, "LookupReal").def(py::init<>());
 
@@ -41,4 +41,4 @@ void AddUtilsModule(py::module m) {
            R"EOF(int: The total number of MPI ranks currently active.  )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs

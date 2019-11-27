@@ -22,7 +22,7 @@
 
 #include "Utils/messages.hpp"
 
-namespace netket {
+namespace nqs {
 
 namespace detail {
 namespace {
@@ -33,7 +33,7 @@ bool ShouldIDoIO() noexcept {
     return rank == 0;
   }
   std::fprintf(stderr,
-               "[NetKet] MPI_Comm_rank failed: doing I/O on all processes.\n");
+               "[NQS] MPI_Comm_rank failed: doing I/O on all processes.\n");
   return true;
 }
 
@@ -46,13 +46,13 @@ auto ShouldNotThrow(Function &&function, Args &&... args) noexcept
     if (ShouldIDoIO()) {
       std::fprintf(
           stderr,
-          "[NetKet] Fatal error: exception was thrown in a `noexcept` context\n"
-          "[NetKet]        Info: %s\n"
-          "[NetKet]\n"
-          "[NetKet] This is a bug. Please, be so kind to open an issue at\n"
-          "[NetKet]             https://github.com/netket/netket/issues\n"
-          "[NetKet]\n"
-          "[NetKet] Aborting...\n",
+          "[NQS] Fatal error: exception was thrown in a `noexcept` context\n"
+          "[NQS]        Info: %s\n"
+          "[NQS]\n"
+          "[NQS] This is a bug. Please, be so kind to open an issue at\n"
+          "[NQS]             https://github.com/stubbi/nqs/issues\n"
+          "[NQS]\n"
+          "[NQS] Aborting...\n",
           e.what());
     }
     MPI_Abort(MPI_COMM_WORLD, -1);
@@ -63,8 +63,8 @@ auto ShouldNotThrow(Function &&function, Args &&... args) noexcept
     if (ShouldIDoIO()) {
       std::fprintf(
           stderr,
-          "[NetKet] Fatal error: exception was thrown in a `noexcept` context\n"
-          "[NetKet] Aborting...\n");
+          "[NQS] Fatal error: exception was thrown in a `noexcept` context\n"
+          "[NQS] Aborting...\n");
     }
     MPI_Abort(MPI_COMM_WORLD, -1);
     std::abort();  // This call is unreachable and is here just to tell the
@@ -124,7 +124,7 @@ void PyAbstractMachine::SetParameters(VectorConstRefType pars) {
 
 void PyAbstractMachine::InitRandomPars(int const seed, double const sigma) {
   VectorType par(Npar());
-  netket::RandomGaussian(par, seed, sigma);
+  nqs::RandomGaussian(par, seed, sigma);
   SetParameters(par);
 }
 
@@ -216,4 +216,4 @@ void PyAbstractMachine::Load(const std::string &filename) {
   );
 }
 
-}  // namespace netket
+}  // namespace nqs

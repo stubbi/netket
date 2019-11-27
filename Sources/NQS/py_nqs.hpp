@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYNQS_HPP
-#define NETKET_PYNQS_HPP
+#ifndef NQS_PYNQS_HPP
+#define NQS_PYNQS_HPP
 
 #include <mpi.h>
 #include <pybind11/complex.h>
@@ -27,7 +27,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddNQSModule(py::module &m) {
   auto subm = m.def_submodule("nqs");
@@ -136,6 +136,6 @@ void AddNQSModule(py::module &m) {
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

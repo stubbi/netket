@@ -14,7 +14,7 @@
 
 #include "Operator/abstract_operator.hpp"
 
-namespace netket {
+namespace nqs {
 
 std::tuple<AbstractOperator::MelType, AbstractOperator::ConnectorsType,
            AbstractOperator::NewconfsType>
@@ -41,4 +41,4 @@ void AbstractOperator::ForEachConn(VectorConstRefType v,
   }
 }
 
-}  // namespace netket
+}  // namespace nqs

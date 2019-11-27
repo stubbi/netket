@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYOUTPUT_HPP
-#define NETKET_PYOUTPUT_HPP
+#ifndef NQS_PYOUTPUT_HPP
+#define NQS_PYOUTPUT_HPP
 
 #include <pybind11/pybind11.h>
 
@@ -21,7 +21,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddOutputModule(py::module &m) {
   auto subm = m.def_submodule("output");
@@ -32,6 +32,6 @@ void AddOutputModule(py::module &m) {
            py::arg("save_every") = 50);
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

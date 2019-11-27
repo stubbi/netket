@@ -23,9 +23,9 @@
 
 #include "../Observable/observable_input_tests.hpp"
 
-std::vector<netket::json> GetHamiltonianInputs() {
-  std::vector<netket::json> input_tests;
-  netket::json pars;
+std::vector<nqs::json> GetHamiltonianInputs() {
+  std::vector<nqs::json> input_tests;
+  nqs::json pars;
 
   // Ising 1d
   pars = {{"Graph",
@@ -86,12 +86,12 @@ TEST_CASE("SparseMatrixWrapper for Hamiltonian is Hermitian",
     SECTION("Hamiltonian test (" + std::to_string(it) + ") on " +
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
-      netket::SparseMatrixWrapper<> hmat(hamiltonian);
+      nqs::SparseMatrixWrapper<> hmat(hamiltonian);
 
       const auto& matrix = hmat.GetMatrix();
       REQUIRE(matrix.isApprox(matrix.adjoint()));
@@ -108,12 +108,12 @@ TEST_CASE("DenseMatrixWrapper for Hamiltonian is Hermitian",
     SECTION("Hamiltonian test (" + std::to_string(it) + ") on " +
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
-      netket::DenseMatrixWrapper<> hmat(hamiltonian);
+      nqs::DenseMatrixWrapper<> hmat(hamiltonian);
 
       const auto& matrix = hmat.GetMatrix();
       REQUIRE(matrix.isApprox(matrix.adjoint()));
@@ -130,13 +130,13 @@ TEST_CASE("DirectMatrixWrapper gives same results as SparseMatrixWrapper",
     SECTION("Hamiltonian test (" + std::to_string(it) + ") on " +
             input_tests[it]["Hamiltonian"].dump()) {
       auto pars = input_tests[it];
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
-      netket::DirectMatrixWrapper<> direct(hamiltonian);
-      netket::SparseMatrixWrapper<> sparse(hamiltonian);
+      nqs::DirectMatrixWrapper<> direct(hamiltonian);
+      nqs::SparseMatrixWrapper<> sparse(hamiltonian);
 
       Eigen::VectorXcd basis(direct.Dimension());
       Eigen::VectorXcd direct_result(direct.Dimension());
@@ -155,24 +155,24 @@ TEST_CASE("DirectMatrixWrapper gives same results as SparseMatrixWrapper",
 }
 
 TEST_CASE("MatrixWrappers compute correct eigenvalues", "[matrix-wrapper]") {
-  netket::json pars;
+  nqs::json pars;
 
   pars["Hilbert"]["QuantumNumbers"] = {-1, 1};
   pars["Hilbert"]["Size"] = 1;
   pars["Graph"]["Name"] = "Custom";
   pars["Graph"]["Size"] = 1;
 
-  netket::json observable_pars;
+  nqs::json observable_pars;
   observable_pars["ActingOn"] = {{0}};
   observable_pars["Operators"] = {{{-1, 2}, {2, 1}}};
   observable_pars["Name"] = "O1";
 
-  netket::Hilbert hilbert(pars);
-  netket::Observable obs(hilbert, observable_pars);
+  nqs::Hilbert hilbert(pars);
+  nqs::Observable obs(hilbert, observable_pars);
 
   // check whether the correct eigenvalues are computed
   {
-    netket::DenseMatrixWrapper<> dense(obs);
+    nqs::DenseMatrixWrapper<> dense(obs);
 
     auto ed = dense.ComputeEigendecomposition();
     auto eigs = ed.eigenvalues();
@@ -183,7 +183,7 @@ TEST_CASE("MatrixWrappers compute correct eigenvalues", "[matrix-wrapper]") {
     CHECK(eigs(1) == Approx(sqrt5));
   }
   {
-    netket::SparseMatrixWrapper<> sparse(obs);
+    nqs::SparseMatrixWrapper<> sparse(obs);
 
     auto ed = sparse.ComputeEigendecomposition();
     auto eigs = ed.eigenvalues();

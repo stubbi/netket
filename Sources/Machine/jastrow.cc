@@ -19,7 +19,7 @@
 #include "Utils/json_utils.hpp"
 #include "Utils/messages.hpp"
 
-namespace netket {
+namespace nqs {
 
 Jastrow::Jastrow(std::shared_ptr<const AbstractHilbert> hilbert)
     : AbstractMachine(hilbert), nv_(hilbert->Size()) {
@@ -51,7 +51,7 @@ int Jastrow::Npar() const { return npar_; }
 void Jastrow::InitRandomPars(int seed, double sigma) {
   VectorType par(npar_);
 
-  netket::RandomGaussian(par, seed, sigma);
+  nqs::RandomGaussian(par, seed, sigma);
 
   SetParameters(par);
 }
@@ -214,4 +214,4 @@ void Jastrow::Load(const std::string &filename) {
 
 bool Jastrow::IsHolomorphic() const noexcept { return true; }
 
-}  // namespace netket
+}  // namespace nqs

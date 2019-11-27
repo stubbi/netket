@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_MACHINE_HPP
-#define NETKET_MACHINE_HPP
+#ifndef NQS_MACHINE_HPP
+#define NQS_MACHINE_HPP
 
 #include <fstream>
 #include <memory>

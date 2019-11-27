@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYGROUND_STATE_HPP
-#define NETKET_PYGROUND_STATE_HPP
+#ifndef NQS_PYGROUND_STATE_HPP
+#define NQS_PYGROUND_STATE_HPP
 
 #include <pybind11/pybind11.h>
 #include "py_exact.hpp"
@@ -21,13 +21,13 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddGroundStateModule(py::module &m) {
   AddVariationalMonteCarloModule(m);
   AddExactModule(m);
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

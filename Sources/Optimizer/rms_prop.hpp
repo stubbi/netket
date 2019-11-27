@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_RMSPROP_HPP
-#define NETKET_RMSPROP_HPP
+#ifndef NQS_RMSPROP_HPP
+#define NQS_RMSPROP_HPP
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -23,7 +23,7 @@
 #include <iostream>
 #include "abstract_optimizer.hpp"
 
-namespace netket {
+namespace nqs {
 
 class RMSProp : public AbstractOptimizer {
   int npar_;
@@ -70,6 +70,6 @@ class RMSProp : public AbstractOptimizer {
   void Reset() override { st_ = Eigen::VectorXd::Zero(npar_); }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

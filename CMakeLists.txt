@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.10.3)
 set(CMAKE_DISABLE_SOURCE_CHANGES ON)
 set(CMAKE_DISABLE_IN_SOURCE_BUILD ON)
 
-project(NetKet LANGUAGES C CXX)
+project(Nqs LANGUAGES C CXX)
 
 list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/CMakeModules/)
 
@@ -14,15 +14,15 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
-option(NETKET_BUILD_TESTING "Build unit tests." OFF)
-option(NETKET_USE_OPENMP "Use OpenMP for multithreading" ON)
-option(NETKET_USE_SANITIZER "Build test suite with Clang sanitizer" OFF)
-option(NETKET_USE_BLAS "Use system BLAS instead of Eigen's implementation" ON)
-option(NETKET_USE_LAPACK "Use system LAPACK instead of Eigen's implementation" OFF)
-set(NETKET_PYTHON_VERSION "" CACHE STRING "Python version to use for compiling modules")
+option(NQS_BUILD_TESTING "Build unit tests." OFF)
+option(NQS_USE_OPENMP "Use OpenMP for multithreading" ON)
+option(NQS_USE_SANITIZER "Build test suite with Clang sanitizer" OFF)
+option(NQS_USE_BLAS "Use system BLAS instead of Eigen's implementation" ON)
+option(NQS_USE_LAPACK "Use system LAPACK instead of Eigen's implementation" OFF)
+set(NQS_PYTHON_VERSION "" CACHE STRING "Python version to use for compiling modules")
 
 if(NOT CMAKE_BUILD_TYPE)
-  message(STATUS "[NetKet] CMAKE_BUILD_TYPE not specified, setting it to "
+  message(STATUS "[Nqs] CMAKE_BUILD_TYPE not specified, setting it to "
                  "Release. Use `-DCMAKE_BUILD_TYPE=...` to overwrite.")
   set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -98,10 +98,10 @@ ExternalProject_Add(
     BUILD_COMMAND ""
     INSTALL_COMMAND ""
 )
-if (NOT NETKET_PYTHON_VERSION)
+if (NOT NQS_PYTHON_VERSION)
     set(Python_ADDITIONAL_VERSIONS 3.7 3.6 3.5 2.7)
 endif()
-find_package(PythonLibsNew ${NETKET_PYTHON_VERSION} REQUIRED)
+find_package(PythonLibsNew ${NQS_PYTHON_VERSION} REQUIRED)
 
 add_library(pybind11 INTERFACE)
 ExternalProject_Get_Property(pybind11_project SOURCE_DIR)
@@ -116,12 +116,12 @@ target_compile_options(pybind11 INTERFACE "-fvisibility=hidden")
 ################################################################################
 find_package(MPI REQUIRED)
 if(MPI_C_VERSION_MAJOR LESS 3)
-message( FATAL_ERROR "NetKet requires at least MPI 3." )
+message( FATAL_ERROR "Nqs requires at least MPI 3." )
 endif()
 
 # OpenMP
 ################################################################################
-if(NETKET_USE_OPENMP)
+if(NQS_USE_OPENMP)
     find_package(OpenMP REQUIRED)
     if(NOT TARGET OpenMP::OpenMP_CXX)
         find_package(Threads REQUIRED)
@@ -136,7 +136,7 @@ endif()
 
 # Catch2
 ################################################################################
-if (BUILD_TESTING AND NETKET_BUILD_TESTING)
+if (BUILD_TESTING AND NQS_BUILD_TESTING)
     if (NOT EXISTS "${CMAKE_BINARY_DIR}/External/Catch2/catch2/catch.hpp")
         file(DOWNLOAD
             "https://github.com/catchorg/Catch2/releases/download/v2.4.0/catch.hpp"
@@ -149,13 +149,13 @@ endif()
 
 
 #
-# NetKet
+# Nqs
 #
 
-add_library(netket_lib INTERFACE)
-target_include_directories(netket_lib INTERFACE Sources)
-target_include_directories(netket_lib SYSTEM INTERFACE ${MPI_CXX_INCLUDE_PATH})
-target_link_libraries(netket_lib
+add_library(nqs_lib INTERFACE)
+target_include_directories(nqs_lib INTERFACE Sources)
+target_include_directories(nqs_lib SYSTEM INTERFACE ${MPI_CXX_INCLUDE_PATH})
+target_link_libraries(nqs_lib
     INTERFACE
         ${MPI_CXX_LIBRARIES}
         Eigen3
@@ -164,48 +164,48 @@ target_link_libraries(netket_lib
         span_lite
         ${CMAKE_DL_LIBS}
 )
-if(NETKET_USE_OPENMP)
-    target_link_libraries(netket_lib INTERFACE OpenMP::OpenMP_CXX)
+if(NQS_USE_OPENMP)
+    target_link_libraries(nqs_lib INTERFACE OpenMP::OpenMP_CXX)
 endif()
 
-set(NETKET_WARNING_FLAGS
+set(NQS_WARNING_FLAGS
     -Wall -Wextra -pedantic
     -Wshadow
 )
-target_compile_options(netket_lib INTERFACE ${NETKET_WARNING_FLAGS})
+target_compile_options(nqs_lib INTERFACE ${NQS_WARNING_FLAGS})
 
 if(${CMAKE_GENERATOR} STREQUAL "Ninja")
     if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
-        target_compile_options(netket_lib INTERFACE -fcolor-diagnostics)
+        target_compile_options(nqs_lib INTERFACE -fcolor-diagnostics)
     elseif("${CMAKE_CXX_COMPILER_ID}" STREQUAL "GNU")
-        target_compile_options(netket_lib INTERFACE -fdiagnostics-color=always)
+        target_compile_options(nqs_lib INTERFACE -fdiagnostics-color=always)
     endif()
 endif()
 
-if(NETKET_USE_BLAS)
+if(NQS_USE_BLAS)
     find_package(BLAS REQUIRED)
-    target_compile_definitions(netket_lib INTERFACE EIGEN_USE_BLAS=1)
-    target_link_libraries(netket_lib INTERFACE ${BLAS_LIBRARIES})
+    target_compile_definitions(nqs_lib INTERFACE EIGEN_USE_BLAS=1)
+    target_link_libraries(nqs_lib INTERFACE ${BLAS_LIBRARIES})
 endif()
 
-if(NETKET_USE_LAPACK)
+if(NQS_USE_LAPACK)
     find_package(LAPACK REQUIRED)
     find_package(LAPACKE)
 
     if(LAPACKE_FOUND)
         message("Found LAPACKE.")
-        target_compile_definitions(netket_lib INTERFACE EIGEN_USE_LAPACK=1 EIGEN_USE_LAPACKE=1)
-        target_link_libraries(netket_lib INTERFACE ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
+        target_compile_definitions(nqs_lib INTERFACE EIGEN_USE_LAPACK=1 EIGEN_USE_LAPACKE=1)
+        target_link_libraries(nqs_lib INTERFACE ${LAPACK_LIBRARIES} ${LAPACKE_LIBRARIES})
     else()
         message(WARNING "Found LAPACK, but not LAPACKE.")
-        target_compile_definitions(netket_lib INTERFACE EIGEN_USE_LAPACK=1)
-        target_link_libraries(netket_lib INTERFACE ${LAPACK_LIBRARIES})
+        target_compile_definitions(nqs_lib INTERFACE EIGEN_USE_LAPACK=1)
+        target_link_libraries(nqs_lib INTERFACE ${LAPACK_LIBRARIES})
     endif()
 endif()
 
 
-set(NETKET_SOURCES
-    Sources/pynetket.cc
+set(NQS_SOURCES
+    Sources/pynqs.cc
     Sources/Dynamics/py_dynamics.cpp
     Sources/Graph/hypercube.cc
     Sources/Graph/lattice.cc
@@ -236,22 +236,22 @@ set(NETKET_SOURCES
     Sources/Utils/py_utils.cc
 )
 
-add_library(netket MODULE ${NETKET_SOURCES})
-target_link_libraries(netket PUBLIC netket_lib pybind11)
-set_target_properties(netket PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
+add_library(nqs MODULE ${NQS_SOURCES})
+target_link_libraries(nqs PUBLIC nqs_lib pybind11)
+set_target_properties(nqs PROPERTIES PREFIX "${PYTHON_MODULE_PREFIX}"
                                         SUFFIX "${PYTHON_MODULE_EXTENSION}")
-add_dependencies(netket json_project eigen_project pybind11_project)
-set_target_properties(netket PROPERTIES OUTPUT_NAME "_C_netket")
+add_dependencies(nqs json_project eigen_project pybind11_project)
+set_target_properties(nqs PROPERTIES OUTPUT_NAME "_C_nqs")
 
 
-# if(NETKET_SANITIZER)
-#     message(STATUS "[NetKet] Building python library with address and UB sanitizers")
-#     target_compile_options(netket_lib
+# if(NQS_SANITIZER)
+#     message(STATUS "[Nqs] Building python library with address and UB sanitizers")
+#     target_compile_options(nqs_lib
 #         INTERFACE
 #             -g -fno-omit-frame-pointer
 #             -fsanitize=address -fsanitize=undefined
 #     )
-#     target_link_libraries(netket_lib
+#     target_link_libraries(nqs_lib
 #         INTERFACE
 #             -fsanitize=address -fsanitize=undefined
 #     )
@@ -261,9 +261,9 @@ set_target_properties(netket PROPERTIES OUTPUT_NAME "_C_netket")
 # Testing
 #
 
-if(BUILD_TESTING AND NETKET_BUILD_TESTING)
-    add_library(netket_test INTERFACE)
-    target_link_libraries(netket_test INTERFACE netket_lib Catch2)
+if(BUILD_TESTING AND NQS_BUILD_TESTING)
+    add_library(nqs_test INTERFACE)
+    target_link_libraries(nqs_test INTERFACE nqs_lib Catch2)
     enable_testing()
     add_subdirectory(Test)
 endif()

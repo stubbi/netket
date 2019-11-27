@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ARRAYHASHER_HPP
-#define NETKET_ARRAYHASHER_HPP
+#ifndef NQS_ARRAYHASHER_HPP
+#define NQS_ARRAYHASHER_HPP
 
 #include <array>
 
-namespace netket {
+namespace nqs {
 // Special hash functor for the EdgeColors unordered_map
 // Same as hash_combine from boost
 struct ArrayHasher {
@@ -25,6 +25,6 @@ struct ArrayHasher {
     return *reinterpret_cast<std::size_t const*>(a.data());
   }
 };
-}  // namespace netket
+}  // namespace nqs
 
 #endif

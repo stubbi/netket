@@ -13,11 +13,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_DENSITY_MATRIX_MACHINE_HPP
-#define NETKET_DENSITY_MATRIX_MACHINE_HPP
+#ifndef NQS_DENSITY_MATRIX_MACHINE_HPP
+#define NQS_DENSITY_MATRIX_MACHINE_HPP
 
 #include "abstract_density_matrix.hpp"
 #include "diagonal_density_matrix.hpp"
 #include "ndm_spin_phase.hpp"
 
-#endif  // NETKET_DENSITY_MATRIX_MACHINE_HPP
+#endif  // NQS_DENSITY_MATRIX_MACHINE_HPP

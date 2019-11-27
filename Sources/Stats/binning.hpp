@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_BINNING_HPP
-#define NETKET_BINNING_HPP
+#ifndef NQS_BINNING_HPP
+#define NQS_BINNING_HPP
 
 #include <Eigen/Dense>
 #include <valarray>
@@ -24,7 +24,7 @@
 
 #include "onlinestat.hpp"
 
-namespace netket {
+namespace nqs {
 
 template <class T>
 class Binning {
@@ -333,6 +333,6 @@ class Binning {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

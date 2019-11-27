@@ -23,7 +23,7 @@
 #include "abstract_machine.hpp"
 #include "rbm_spin.hpp"
 
-namespace netket {
+namespace nqs {
 
 RbmMultival::RbmMultival(std::shared_ptr<const AbstractHilbert> hilbert,
                          int nhidden, int alpha, bool usea, bool useb)
@@ -96,7 +96,7 @@ int RbmMultival::Npar() const { return npar_; }
 void RbmMultival::InitRandomPars(int seed, double sigma) {
   VectorType par(npar_);
 
-  netket::RandomGaussian(par, seed, sigma);
+  nqs::RandomGaussian(par, seed, sigma);
 
   SetParameters(par);
 }
@@ -385,4 +385,4 @@ void RbmMultival::Load(const std::string &filename) {
 
 bool RbmMultival::IsHolomorphic() const noexcept { return true; }
 
-}  // namespace netket
+}  // namespace nqs

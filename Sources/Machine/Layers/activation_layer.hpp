@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ACTIVATIONLAYER_HH
-#define NETKET_ACTIVATIONLAYER_HH
+#ifndef NQS_ACTIVATIONLAYER_HH
+#define NQS_ACTIVATIONLAYER_HH
 
 #include <Eigen/Dense>
 #include <complex>
@@ -24,7 +24,7 @@
 #include "Utils/lookup.hpp"
 #include "abstract_layer.hpp"
 
-namespace netket {
+namespace nqs {
 
 template <typename A>
 class Activation : public AbstractLayer {
@@ -98,6 +98,6 @@ class Activation : public AbstractLayer {
     activation_.ApplyJacobian(prev_layer_output, this_layer_output, dout, din);
   }
 };
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -20,7 +20,7 @@
 #include "Utils/json_utils.hpp"
 #include "Utils/messages.hpp"
 
-namespace netket {
+namespace nqs {
 
 JastrowSymm::JastrowSymm(std::shared_ptr<const AbstractHilbert> hilbert)
     : AbstractMachine(hilbert),
@@ -130,7 +130,7 @@ int JastrowSymm::Npar() const { return npar_; }
 void JastrowSymm::InitRandomPars(int seed, double sigma) {
   VectorType par(npar_);
 
-  netket::RandomGaussian(par, seed, sigma);
+  nqs::RandomGaussian(par, seed, sigma);
 
   SetParameters(par);
 }
@@ -307,4 +307,4 @@ void JastrowSymm::Load(const std::string &filename) {
   SetBareParameters();
 }
 
-}  // namespace netket
+}  // namespace nqs

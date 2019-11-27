@@ -1,12 +1,12 @@
-#ifndef NETKET_DYNAMICS_PY_DYNAMICS_HPP
-#define NETKET_DYNAMICS_PY_DYNAMICS_HPP
+#ifndef NQS_DYNAMICS_PY_DYNAMICS_HPP
+#define NQS_DYNAMICS_PY_DYNAMICS_HPP
 
 #include <pybind11/pybind11.h>
 
-namespace netket {
+namespace nqs {
 
 void AddDynamicsModule(pybind11::module m);
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_DYNAMICS_PY_DYNAMICS_HPP
+#endif  // NQS_DYNAMICS_PY_DYNAMICS_HPP

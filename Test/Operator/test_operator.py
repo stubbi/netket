@@ -1,23 +1,23 @@
-import netket as nk
+import nqs
 import networkx as nx
 import numpy as np
 
 operators = {}
 
 # Ising 1D
-g = nk.graph.Hypercube(length=20, n_dim=1, pbc=True)
-hi = nk.hilbert.Spin(s=0.5, graph=g)
-operators["Ising 1D"] = nk.operator.Ising(h=1.321, hilbert=hi)
+g = nqs.graph.Hypercube(length=20, n_dim=1, pbc=True)
+hi = nqs.hilbert.Spin(s=0.5, graph=g)
+operators["Ising 1D"] = nqs.operator.Ising(h=1.321, hilbert=hi)
 
 # Heisenberg 1D
-g = nk.graph.Hypercube(length=20, n_dim=1, pbc=True)
-hi = nk.hilbert.Spin(s=0.5, total_sz=0, graph=g)
-operators["Heisenberg 1D"] = nk.operator.Heisenberg(hilbert=hi)
+g = nqs.graph.Hypercube(length=20, n_dim=1, pbc=True)
+hi = nqs.hilbert.Spin(s=0.5, total_sz=0, graph=g)
+operators["Heisenberg 1D"] = nqs.operator.Heisenberg(hilbert=hi)
 
 # Bose Hubbard
-g = nk.graph.Hypercube(length=3, n_dim=2, pbc=True)
-hi = nk.hilbert.Boson(n_max=3, n_bosons=6, graph=g)
-operators["Bose Hubbard"] = nk.operator.BoseHubbard(U=4.0, hilbert=hi)
+g = nqs.graph.Hypercube(length=3, n_dim=2, pbc=True)
+hi = nqs.hilbert.Boson(n_max=3, n_bosons=6, graph=g)
+operators["Bose Hubbard"] = nqs.operator.BoseHubbard(U=4.0, hilbert=hi)
 
 # Graph Hamiltonian
 sigmax = [[0, 1], [1, 0]]
@@ -45,9 +45,9 @@ edges = [
     [19, 0],
 ]
 
-g = nk.graph.CustomGraph(edges=edges)
-hi = nk.hilbert.CustomHilbert(local_states=[-1, 1], graph=g)
-ha = nk.operator.GraphOperator(
+g = nqs.graph.CustomGraph(edges=edges)
+hi = nqs.hilbert.CustomHilbert(local_states=[-1, 1], graph=g)
+ha = nqs.operator.GraphOperator(
     hi, siteops=[sigmax], bondops=[mszsz], bondops_colors=[0]
 )
 operators["Graph Hamiltonian"] = ha
@@ -56,28 +56,28 @@ operators["Graph Hamiltonian"] = ha
 sx = [[0, 1], [1, 0]]
 sy = [[0, 1.0j], [-1.0j, 0]]
 sz = [[1, 0], [0, -1]]
-g = nk.graph.CustomGraph(edges=[[i, i + 1] for i in range(20)])
-hi = nk.hilbert.CustomHilbert(local_states=[1, -1], graph=g)
+g = nqs.graph.CustomGraph(edges=[[i, i + 1] for i in range(20)])
+hi = nqs.hilbert.CustomHilbert(local_states=[1, -1], graph=g)
 
-sx_hat = nk.operator.LocalOperator(hi, [sx] * 3, [[0], [1], [5]])
-sy_hat = nk.operator.LocalOperator(hi, [sy] * 4, [[2], [3], [4], [9]])
-szsz_hat = nk.operator.LocalOperator(hi, sz, [0]) * nk.operator.LocalOperator(
+sx_hat = nqs.operator.LocalOperator(hi, [sx] * 3, [[0], [1], [5]])
+sy_hat = nqs.operator.LocalOperator(hi, [sy] * 4, [[2], [3], [4], [9]])
+szsz_hat = nqs.operator.LocalOperator(hi, sz, [0]) * nqs.operator.LocalOperator(
     hi, sz, [1]
 )
-szsz_hat += nk.operator.LocalOperator(hi, sz, [4]) * nk.operator.LocalOperator(
+szsz_hat += nqs.operator.LocalOperator(hi, sz, [4]) * nqs.operator.LocalOperator(
     hi, sz, [5]
 )
-szsz_hat += nk.operator.LocalOperator(hi, sz, [6]) * nk.operator.LocalOperator(
+szsz_hat += nqs.operator.LocalOperator(hi, sz, [6]) * nqs.operator.LocalOperator(
     hi, sz, [8]
 )
-szsz_hat += nk.operator.LocalOperator(hi, sz, [7]) * nk.operator.LocalOperator(
+szsz_hat += nqs.operator.LocalOperator(hi, sz, [7]) * nqs.operator.LocalOperator(
     hi, sz, [0]
 )
 
 operators["Custom Hamiltonian"] = sx_hat + sy_hat + szsz_hat
 operators["Custom Hamiltonian Prod"] = sx_hat * 1.5 + (2.0 * sy_hat)
 
-rg = nk.utils.RandomEngine(seed=1234)
+rg = nqs.utils.RandomEngine(seed=1234)
 
 
 def test_produce_elements_in_hilbert():
@@ -132,10 +132,10 @@ def test_operator_is_hermitean():
                 assert foundinv
 
 def test_no_segfault():
-    g = nk.graph.Hypercube(8, 1)
-    hi = nk.hilbert.Spin(g, 0.5)
+    g = nqs.graph.Hypercube(8, 1)
+    hi = nqs.hilbert.Spin(g, 0.5)
 
-    lo = nk.operator.LocalOperator(hi, [[1,0],[0,1]], [0])
+    lo = nqs.operator.LocalOperator(hi, [[1,0],[0,1]], [0])
     lo = lo.transpose()
 
     hi = None

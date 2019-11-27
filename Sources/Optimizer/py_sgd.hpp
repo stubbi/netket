@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYSGD_HPP
-#define NETKET_PYSGD_HPP
+#ifndef NQS_PYSGD_HPP
+#define NQS_PYSGD_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -24,7 +24,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddSgd(py::module &subm) {
   py::class_<Sgd, AbstractOptimizer>(
@@ -39,7 +39,7 @@ void AddSgd(py::module &subm) {
         $$
 
         where $$ \eta $$ is the so-called learning rate.
-        NetKet also implements two extensions to the simple SGD,
+        Nqs also implements two extensions to the simple SGD,
         the first one is $$ L_2 $$ regularization,
         and the second one is the possibility to set a decay
         factor $$ \gamma \leq 1 $$ for the learning rate, such that
@@ -57,13 +57,13 @@ void AddSgd(py::module &subm) {
                Simple SGD optimizer.
 
                ```python
-               >>> from netket.optimizer import Sgd
+               >>> from nqs.optimizer import Sgd
                >>> op = Sgd(learning_rate=0.05)
 
                ```
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

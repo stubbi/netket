@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYGRAPHOPERATOR_HPP
-#define NETKET_PYGRAPHOPERATOR_HPP
+#ifndef NQS_PYGRAPHOPERATOR_HPP
+#define NQS_PYGRAPHOPERATOR_HPP
 
 #include <pybind11/complex.h>
 #include <pybind11/eigen.h>
@@ -26,7 +26,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddGraphOperator(py::module &subm) {
   py::class_<GraphOperator, AbstractOperator>(
@@ -58,15 +58,15 @@ void AddGraphOperator(py::module &subm) {
              Constructs a ``BosGraphOperator`` operator for a 2D system.
 
              ```python
-             >>> import netket as nk
+             >>> import nqs
              >>> sigmax = [[0, 1], [1, 0]]
              >>> mszsz = [[1, 0, 0, 0], [0, -1, 0, 0], [0, 0, -1, 0], [0, 0, 0, 1]]
              >>> edges = [[0, 1], [1, 2], [2, 3], [3, 4], [4, 5], [5, 6], [6, 7], [7, 8],
              ... [8, 9], [9, 10], [10, 11], [11, 12], [12, 13], [13, 14], [14, 15],
              ... [15, 16], [16, 17], [17, 18], [18, 19], [19, 0]]
-             >>> g = nk.graph.CustomGraph(edges=edges)
-             >>> hi = nk.hilbert.CustomHilbert(local_states=[-1, 1], graph=g)
-             >>> op = nk.operator.GraphOperator(
+             >>> g = nqs.graph.CustomGraph(edges=edges)
+             >>> hi = nqs.hilbert.CustomHilbert(local_states=[-1, 1], graph=g)
+             >>> op = nqs.operator.GraphOperator(
              ... hi, siteops=[sigmax], bondops=[mszsz], bondops_colors=[0])
              >>> print(op.hilbert.size)
              20
@@ -76,6 +76,6 @@ void AddGraphOperator(py::module &subm) {
       .def(py::self + py::self);
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

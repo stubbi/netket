@@ -18,7 +18,7 @@
 #include "catch.hpp"
 
 #include "machine_input_tests.hpp"
-#include "netket.hpp"
+#include "nqs.hpp"
 
 TEST_CASE("machines set/get correctly parameters", "[machine]") {
   auto input_tests = GetMachineInputs();
@@ -29,19 +29,19 @@ TEST_CASE("machines set/get correctly parameters", "[machine]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = Complex;
 
-      netket::Machine<MType> machine(graph, hamiltonian, pars);
+      nqs::Machine<MType> machine(graph, hamiltonian, pars);
 
       int seed = 12342;
       double sigma = 1;
-      netket::Machine<MType>::VectorType params(machine.Npar());
-      netket::RandomGaussian(params, seed, sigma);
+      nqs::Machine<MType>::VectorType params(machine.Npar());
+      nqs::RandomGaussian(params, seed, sigma);
 
       machine.SetParameters(params);
 
@@ -59,28 +59,28 @@ TEST_CASE("machines write/read to/from json correctly", "[machine]") {
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = Complex;
 
-      netket::Machine<MType> machine(graph, hamiltonian, pars);
+      nqs::Machine<MType> machine(graph, hamiltonian, pars);
 
       int seed = 12342;
       double sigma = 1;
-      netket::Machine<MType>::VectorType params(machine.Npar());
-      netket::RandomGaussian(params, seed, sigma);
+      nqs::Machine<MType>::VectorType params(machine.Npar());
+      nqs::RandomGaussian(params, seed, sigma);
 
       machine.SetParameters(params);
 
-      netket::json pars_out;
+      nqs::json pars_out;
       machine.to_json(pars_out);
 
       machine.from_json(pars_out["Machine"]);
 
-      netket::Machine<MType>::VectorType params_out(machine.Npar());
+      nqs::Machine<MType>::VectorType params_out(machine.Npar());
 
       params_out = machine.GetParameters();
 
@@ -93,21 +93,21 @@ TEST_CASE("machines compute log derivatives correctly", "[machine]") {
   auto input_tests = GetMachineInputs();
   std::size_t ntests = input_tests.size();
 
-  netket::default_random_engine rgen;
+  nqs::default_random_engine rgen;
 
   for (std::size_t it = 0; it < ntests; it++) {
     SECTION("Machine test (" + std::to_string(it) + ") on " +
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = Complex;
 
-      netket::Machine<MType> machine(graph, hamiltonian, pars);
+      nqs::Machine<MType> machine(graph, hamiltonian, pars);
 
       double sigma = 0.1;
       machine.InitRandomPars(1234, sigma);
@@ -127,15 +127,15 @@ TEST_CASE("machines compute log derivatives correctly", "[machine]") {
         for (int p = 0; p < machine.Npar(); p++) {
           machine_pars(p) += eps;
           machine.SetParameters(machine_pars);
-          typename netket::Machine<MType>::StateType valp = machine.LogVal(v);
+          typename nqs::Machine<MType>::StateType valp = machine.LogVal(v);
 
           machine_pars(p) -= 2 * eps;
           machine.SetParameters(machine_pars);
-          typename netket::Machine<MType>::StateType valm = machine.LogVal(v);
+          typename nqs::Machine<MType>::StateType valm = machine.LogVal(v);
 
           machine_pars(p) += eps;
 
-          typename netket::Machine<MType>::StateType numder =
+          typename nqs::Machine<MType>::StateType numder =
               (-valm + valp) / (eps * 2);
 
           REQUIRE(Approx(std::real(numder)).epsilon(eps * 1000) ==
@@ -152,20 +152,20 @@ TEST_CASE("machines compute logval differences correctly", "[machine]") {
   auto input_tests = GetMachineInputs();
   std::size_t ntests = input_tests.size();
 
-  netket::default_random_engine rgen;
+  nqs::default_random_engine rgen;
 
   for (std::size_t it = 0; it < ntests; it++) {
     SECTION("Machine test (" + std::to_string(it) + ") on " +
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = Complex;
-      using WfType = netket::Machine<MType>;
+      using WfType = nqs::Machine<MType>;
 
       WfType machine(graph, hamiltonian, pars);
 
@@ -234,20 +234,20 @@ TEST_CASE("machines update look-up tables correctly", "[machine]") {
   auto input_tests = GetMachineInputs();
   std::size_t ntests = input_tests.size();
 
-  netket::default_random_engine rgen;
+  nqs::default_random_engine rgen;
 
   for (std::size_t it = 0; it < ntests; it++) {
     SECTION("Machine test (" + std::to_string(it) + ") on " +
             input_tests[it]["Machine"].dump()) {
       auto pars = input_tests[it];
 
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      netket::Hamiltonian hamiltonian(hilbert, pars);
+      nqs::Hamiltonian hamiltonian(hilbert, pars);
 
       using MType = Complex;
-      using WfType = netket::Machine<MType>;
+      using WfType = nqs::Machine<MType>;
 
       WfType machine(graph, hamiltonian, pars);
 

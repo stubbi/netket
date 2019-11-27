@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_SR_HPP
-#define NETKET_SR_HPP
+#ifndef NQS_SR_HPP
+#define NQS_SR_HPP
 
 #include <complex>
 #include <fstream>
@@ -30,7 +30,7 @@
 #include "common_types.hpp"
 #include "matrix_replacement.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Generalized Stochastic Reconfiguration Updates
 class SR {
@@ -155,8 +155,8 @@ class SR {
       }
     }
   }
-};  // namespace netket
+};  // namespace nqs
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ARRAYSEARCH_HPP
-#define NETKET_ARRAYSEARCH_HPP
+#ifndef NQS_ARRAYSEARCH_HPP
+#define NQS_ARRAYSEARCH_HPP
 
 #include "Utils/exceptions.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
   Returns the smallest non zero element of an array.
@@ -35,6 +35,6 @@ ForwardIterator min_nonzero_elem(ForwardIterator first, ForwardIterator last) {
   return smallest;
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

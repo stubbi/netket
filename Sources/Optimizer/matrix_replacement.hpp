@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_MATRIXREPLACEMENT_HPP
-#define NETKET_MATRIXREPLACEMENT_HPP
+#ifndef NQS_MATRIXREPLACEMENT_HPP
+#define NQS_MATRIXREPLACEMENT_HPP
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -26,20 +26,20 @@
 using Eigen::MatrixXcd;
 using Eigen::MatrixXd;
 
-namespace netket {
+namespace nqs {
 // Forward declaration
 class SrMatrixReal;
 class SrMatrixComplex;
-}  // namespace netket
+}  // namespace nqs
 
 namespace Eigen {
 namespace internal {
 // SrMatrix looks-like a SparseMatrix, so let's inherits its traits:
 template <>
-struct traits<netket::SrMatrixReal>
+struct traits<nqs::SrMatrixReal>
     : public Eigen::internal::traits<Eigen::SparseMatrix<double>> {};
 template <>
-struct traits<netket::SrMatrixComplex>
+struct traits<nqs::SrMatrixComplex>
     : public Eigen::internal::traits<
           Eigen::SparseMatrix<std::complex<double>>> {};
 }  // namespace internal
@@ -47,8 +47,8 @@ struct traits<netket::SrMatrixComplex>
 
 // Example of a matrix-free wrapper from a user type to Eigen's compatible type
 // For the sake of simplicity, this example simply wrap a Eigen::SparseMatrix.
-namespace netket {
-class SrMatrixReal : public Eigen::EigenBase<netket::SrMatrixReal> {
+namespace nqs {
+class SrMatrixReal : public Eigen::EigenBase<nqs::SrMatrixReal> {
  public:
   // Required typedefs, constants, and method:
   typedef double Scalar;
@@ -62,9 +62,9 @@ class SrMatrixReal : public Eigen::EigenBase<netket::SrMatrixReal> {
   Index rows() const { return mp_mat_.cols(); }
   Index cols() const { return mp_mat_.cols(); }
   template <typename Rhs>
-  Eigen::Product<netket::SrMatrixReal, Rhs, Eigen::AliasFreeProduct> operator*(
+  Eigen::Product<nqs::SrMatrixReal, Rhs, Eigen::AliasFreeProduct> operator*(
       const Eigen::MatrixBase<Rhs> &x) const {
-    return Eigen::Product<netket::SrMatrixReal, Rhs, Eigen::AliasFreeProduct>(
+    return Eigen::Product<nqs::SrMatrixReal, Rhs, Eigen::AliasFreeProduct>(
         *this, x.derived());
   }
   // Custom API:
@@ -83,7 +83,7 @@ class SrMatrixReal : public Eigen::EigenBase<netket::SrMatrixReal> {
   double scale_;
 };
 
-class SrMatrixComplex : public Eigen::EigenBase<netket::SrMatrixComplex> {
+class SrMatrixComplex : public Eigen::EigenBase<nqs::SrMatrixComplex> {
  public:
   // Required typedefs, constants, and method:
   typedef std::complex<double> Scalar;
@@ -97,9 +97,9 @@ class SrMatrixComplex : public Eigen::EigenBase<netket::SrMatrixComplex> {
   Index rows() const { return mp_mat_.cols(); }
   Index cols() const { return mp_mat_.cols(); }
   template <typename Rhs>
-  Eigen::Product<netket::SrMatrixComplex, Rhs, Eigen::AliasFreeProduct> operator
+  Eigen::Product<nqs::SrMatrixComplex, Rhs, Eigen::AliasFreeProduct> operator
       *(const Eigen::MatrixBase<Rhs> &x) const {
-    return Eigen::Product<netket::SrMatrixComplex, Rhs,
+    return Eigen::Product<nqs::SrMatrixComplex, Rhs,
                           Eigen::AliasFreeProduct>(*this, x.derived());
   }
   // Custom API:
@@ -116,21 +116,21 @@ class SrMatrixComplex : public Eigen::EigenBase<netket::SrMatrixComplex> {
   double shift_;
   double scale_;
 };
-}  // namespace netket
+}  // namespace nqs
 
 // Implementation of SrMatrix * Eigen::DenseVector though a
 // specialization of internal::generic_product_impl:
 namespace Eigen {
 namespace internal {
 template <typename Rhs>
-struct generic_product_impl<netket::SrMatrixReal, Rhs, SparseShape, DenseShape,
+struct generic_product_impl<nqs::SrMatrixReal, Rhs, SparseShape, DenseShape,
                             GemvProduct>  // GEMV stands for matrix-vector
     : generic_product_impl_base<
-          netket::SrMatrixReal, Rhs,
-          generic_product_impl<netket::SrMatrixReal, Rhs>> {
-  typedef typename Product<netket::SrMatrixReal, Rhs>::Scalar Scalar;
+          nqs::SrMatrixReal, Rhs,
+          generic_product_impl<nqs::SrMatrixReal, Rhs>> {
+  typedef typename Product<nqs::SrMatrixReal, Rhs>::Scalar Scalar;
   template <typename Dest>
-  static void scaleAndAddTo(Dest &dst, const netket::SrMatrixReal &lhs,
+  static void scaleAndAddTo(Dest &dst, const nqs::SrMatrixReal &lhs,
                             const Rhs &rhs, const Scalar &alpha) {
     // This method should implement "dst += alpha * lhs * rhs" inplace,
 
@@ -138,7 +138,7 @@ struct generic_product_impl<netket::SrMatrixReal, Rhs, SparseShape, DenseShape,
     auto vtildei = lhs.my_matrix().imag() * rhs;
     Eigen::VectorXd res = lhs.my_matrix().transpose().real() * vtilder;
     res += lhs.my_matrix().transpose().imag() * vtildei;
-    netket::SumOnNodes(res);
+    nqs::SumOnNodes(res);
 
     double nor = lhs.getScale();
 
@@ -146,21 +146,21 @@ struct generic_product_impl<netket::SrMatrixReal, Rhs, SparseShape, DenseShape,
   }
 };
 template <typename Rhs>
-struct generic_product_impl<netket::SrMatrixComplex, Rhs, SparseShape,
+struct generic_product_impl<nqs::SrMatrixComplex, Rhs, SparseShape,
                             DenseShape,
                             GemvProduct>  // GEMV stands for matrix-vector
     : generic_product_impl_base<
-          netket::SrMatrixComplex, Rhs,
-          generic_product_impl<netket::SrMatrixComplex, Rhs>> {
-  typedef typename Product<netket::SrMatrixComplex, Rhs>::Scalar Scalar;
+          nqs::SrMatrixComplex, Rhs,
+          generic_product_impl<nqs::SrMatrixComplex, Rhs>> {
+  typedef typename Product<nqs::SrMatrixComplex, Rhs>::Scalar Scalar;
   template <typename Dest>
-  static void scaleAndAddTo(Dest &dst, const netket::SrMatrixComplex &lhs,
+  static void scaleAndAddTo(Dest &dst, const nqs::SrMatrixComplex &lhs,
                             const Rhs &rhs, const Scalar &alpha) {
     // This method should implement "dst += alpha * lhs * rhs" inplace,
 
     auto vtilde = lhs.my_matrix() * rhs;
     Eigen::VectorXcd res = lhs.my_matrix().adjoint() * vtilde;
-    netket::SumOnNodes(res);
+    nqs::SumOnNodes(res);
 
     double nor = lhs.getScale();
 

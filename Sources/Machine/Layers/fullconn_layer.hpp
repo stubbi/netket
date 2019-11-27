@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_FULLCONNLAYER_HH
-#define NETKET_FULLCONNLAYER_HH
+#ifndef NQS_FULLCONNLAYER_HH
+#define NQS_FULLCONNLAYER_HH
 
 #include <Eigen/Dense>
 #include <complex>
@@ -25,7 +25,7 @@
 #include "Utils/lookup.hpp"
 #include "abstract_layer.hpp"
 
-namespace netket {
+namespace nqs {
 
 class FullyConnected : public AbstractLayer {
   bool usebias_;
@@ -97,7 +97,7 @@ class FullyConnected : public AbstractLayer {
   void InitRandomPars(int seed, double sigma) override {
     VectorType par(npar_);
 
-    netket::RandomGaussian(par, seed, sigma);
+    nqs::RandomGaussian(par, seed, sigma);
 
     SetParameters(par);
   }
@@ -196,6 +196,6 @@ class FullyConnected : public AbstractLayer {
     din.noalias() = weight_ * dout;
   }
 };
-}  // namespace netket
+}  // namespace nqs
 
 #endif

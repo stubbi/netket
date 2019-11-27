@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_METROPOLISEXCHANGEPT_HPP
-#define NETKET_METROPOLISEXCHANGEPT_HPP
+#ifndef NQS_METROPOLISEXCHANGEPT_HPP
+#define NQS_METROPOLISEXCHANGEPT_HPP
 
 #include <mpi.h>
 #include <Eigen/Dense>
@@ -22,7 +22,7 @@
 #include "Utils/random_utils.hpp"
 #include "abstract_sampler.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Metropolis sampling generating local exchanges
 // Parallel tempering is also used
@@ -222,6 +222,6 @@ class MetropolisExchangePt : public AbstractSampler {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

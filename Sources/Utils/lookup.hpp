@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_LOOKUP_HPP
-#define NETKET_LOOKUP_HPP
+#ifndef NQS_LOOKUP_HPP
+#define NQS_LOOKUP_HPP
 
 #include <cassert>
 #include <vector>
 
 #include <Eigen/Core>
 
-namespace netket {
+namespace nqs {
 
 // Generic look-up table
 template <class T>
@@ -87,6 +87,6 @@ class Lookup {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_LOOKUP_HPP
+#endif  // NQS_LOOKUP_HPP

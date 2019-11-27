@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_EXACT_SAMPLER_HPP
-#define NETKET_EXACT_SAMPLER_HPP
+#ifndef NQS_EXACT_SAMPLER_HPP
+#define NQS_EXACT_SAMPLER_HPP
 
 #include <mpi.h>
 #include <Eigen/Dense>
@@ -23,7 +23,7 @@
 #include "Utils/random_utils.hpp"
 #include "abstract_sampler.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Exact sampling using heat bath, mostly for testing purposes on small systems
 class ExactSampler : public AbstractSampler {
@@ -129,6 +129,6 @@ class ExactSampler : public AbstractSampler {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

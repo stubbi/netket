@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_DIAGONALDENSITYMATRIX_HPP
-#define NETKET_DIAGONALDENSITYMATRIX_HPP
+#ifndef NQS_DIAGONALDENSITYMATRIX_HPP
+#define NQS_DIAGONALDENSITYMATRIX_HPP
 
 #include <Eigen/Dense>
 #include <algorithm>
@@ -27,7 +27,7 @@
 #include "Utils/random_utils.hpp"
 #include "density_matrix_machine.hpp"
 
-namespace netket {
+namespace nqs {
 class DiagonalDensityMatrix : public AbstractMachine {
   using VisibleChangeInfo = std::pair<std::vector<int>, std::vector<double>>;
 
@@ -174,6 +174,6 @@ class DiagonalDensityMatrix : public AbstractMachine {
     return density_matrix_.Load(filename);
   }
 };
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_DIAGONALDENSITYMATRIX_HPP
+#endif  // NQS_DIAGONALDENSITYMATRIX_HPP

@@ -9,7 +9,7 @@
 #include <vector>
 
 
-namespace netket {
+namespace nqs {
 
 class NQS {
 
@@ -256,4 +256,4 @@ class NQS {
         
     };
 
-}  // namespace netket
+}  // namespace nqs

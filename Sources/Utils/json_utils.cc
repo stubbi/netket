@@ -83,7 +83,7 @@ void from_json(const nlohmann::json &js,
   std::vector<std::vector<T>> temp = js.get<std::vector<std::vector<T>>>();
 
   if (temp[0].size() == 0) {
-    throw netket::InvalidInputError(
+    throw nqs::InvalidInputError(
         "Error while loading Eigen Matrix from Json");
   }
 
@@ -91,7 +91,7 @@ void from_json(const nlohmann::json &js,
   for (std::size_t i = 0; i < temp.size(); i++) {
     for (std::size_t j = 0; j < temp[i].size(); j++) {
       if (temp[i].size() != temp[0].size()) {
-        throw netket::InvalidInputError(
+        throw nqs::InvalidInputError(
             "Error while loading Eigen Matrix from Json");
       }
       v(i, j) = temp[i][j];
@@ -120,7 +120,7 @@ template void from_json(
     Matrix<std::complex<double>, Eigen::Dynamic, Eigen::Dynamic> &);
 }  // namespace Eigen
 
-namespace netket {
+namespace nqs {
 
 bool FieldExists(const json &pars, const std::string &field) {
   return pars.count(field) > 0;
@@ -175,4 +175,4 @@ void WriteJsonToFile(const json &json, const std::string &filename) {
   out_file << json;
 }
 
-}  // namespace netket
+}  // namespace nqs

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_AMSGRAD_HPP
-#define NETKET_AMSGRAD_HPP
+#ifndef NQS_AMSGRAD_HPP
+#define NQS_AMSGRAD_HPP
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -23,7 +23,7 @@
 #include <iostream>
 #include "abstract_optimizer.hpp"
 
-namespace netket {
+namespace nqs {
 
 class AMSGrad : public AbstractOptimizer {
   int npar_;
@@ -83,6 +83,6 @@ class AMSGrad : public AbstractOptimizer {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

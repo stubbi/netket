@@ -7,11 +7,11 @@
 #include "catch.hpp"
 #include <Eigen/Eigen>
 
-#include "netket.hpp"
+#include "nqs.hpp"
 #include "Dynamics/TimeStepper/explicit_time_steppers.hpp"
 #include "Dynamics/TimeStepper/controlled_time_steppers.hpp"
 
-using namespace netket;
+using namespace nqs;
 
 TEST_CASE("Observer function is called once at each time step", "[time-evolution]")
 {

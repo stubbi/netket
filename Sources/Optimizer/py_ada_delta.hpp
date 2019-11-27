@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYADADELTA_HPP
-#define NETKET_PYADADELTA_HPP
+#ifndef NQS_PYADADELTA_HPP
+#define NQS_PYADADELTA_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -24,7 +24,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddAdaDelta(py::module &subm) {
   py::class_<AdaDelta, AbstractOptimizer>(subm, "AdaDelta",
@@ -32,7 +32,7 @@ void AddAdaDelta(py::module &subm) {
     Like RMSProp, [AdaDelta](http://arxiv.org/abs/1212.5701) corrects the
     monotonic decay of learning rates associated with AdaGrad,
     while additionally eliminating the need to choose a global
-    learning rate $$ \eta $$. The NetKet naming convention of
+    learning rate $$ \eta $$. The Nqs naming convention of
     the parameters strictly follows the one introduced in the original paper;
     here $$E[g^2]$$ is equivalent to the vector $$\mathbf{s}$$ from RMSProp.
     $$E[g^2]$$ and $$E[\Delta x^2]$$ are initialized as zero vectors.
@@ -59,13 +59,13 @@ void AddAdaDelta(py::module &subm) {
                Simple AdaDelta optimizer.
 
                ```python
-               >>> from netket.optimizer import AdaDelta
+               >>> from nqs.optimizer import AdaDelta
                >>> op = AdaDelta()
 
                ```
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

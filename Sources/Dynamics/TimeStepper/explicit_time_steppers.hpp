@@ -1,12 +1,12 @@
-#ifndef NETKET_EXPLICIT_TIME_STEPPERS_HPP
-#define NETKET_EXPLICIT_TIME_STEPPERS_HPP
+#ifndef NQS_EXPLICIT_TIME_STEPPERS_HPP
+#define NQS_EXPLICIT_TIME_STEPPERS_HPP
 
 #include <array>
 #include <cassert>
 
 #include "abstract_time_stepper.hpp"
 
-namespace netket {
+namespace nqs {
 namespace ode {
 
 /**
@@ -124,6 +124,6 @@ class RungeKutta4Stepper final : public ExplicitStepperBase<State> {
 };
 
 }  // namespace ode
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_EXPLICIT_TIME_STEPPERS_HPP
+#endif  // NQS_EXPLICIT_TIME_STEPPERS_HPP

@@ -17,7 +17,7 @@
 #include <iostream>
 #include <limits>
 
-#include "netket.hpp"
+#include "nqs.hpp"
 
 double loggaussian(double x) { return -(x * x); }
 
@@ -37,7 +37,7 @@ TEST_CASE("stats miscellanea", "[stats]") {
 
   std::mt19937 gen(2321);
 
-  netket::Binning<double> binning(16);
+  nqs::Binning<double> binning(16);
 
   double x = 0;
 

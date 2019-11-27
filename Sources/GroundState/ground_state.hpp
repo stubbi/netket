@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_GROUND_STATE_HPP
-#define NETKET_GROUND_STATE_HPP
+#ifndef NQS_GROUND_STATE_HPP
+#define NQS_GROUND_STATE_HPP
 
 #include "variational_montecarlo.hpp"
 

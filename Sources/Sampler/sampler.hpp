@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_SAMPLER_HPP
-#define NETKET_SAMPLER_HPP
+#ifndef NQS_SAMPLER_HPP
+#define NQS_SAMPLER_HPP
 
 #include <memory>
 #include <set>

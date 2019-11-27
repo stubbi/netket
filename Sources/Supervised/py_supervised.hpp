@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYSUPERVISED_HPP
-#define NETKET_PYSUPERVISED_HPP
+#ifndef NQS_PYSUPERVISED_HPP
+#define NQS_PYSUPERVISED_HPP
 
 #include <mpi.h>
 #include <pybind11/complex.h>
@@ -27,7 +27,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddSupervisedModule(py::module &m) {
   auto subm = m.def_submodule("supervised");
@@ -114,6 +114,6 @@ void AddSupervisedModule(py::module &m) {
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_METROPOLISHOP_HPP
-#define NETKET_METROPOLISHOP_HPP
+#ifndef NQS_METROPOLISHOP_HPP
+#define NQS_METROPOLISHOP_HPP
 
 #include <mpi.h>
 #include <Eigen/Dense>
@@ -21,7 +21,7 @@
 #include "Utils/random_utils.hpp"
 #include "abstract_sampler.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Metropolis sampling generating local hoppings
 class MetropolisHop : public AbstractSampler {
@@ -196,6 +196,6 @@ class MetropolisHop : public AbstractSampler {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

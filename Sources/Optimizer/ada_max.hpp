@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ADAMAX_HPP
-#define NETKET_ADAMAX_HPP
+#ifndef NQS_ADAMAX_HPP
+#define NQS_ADAMAX_HPP
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -23,7 +23,7 @@
 #include <iostream>
 #include "abstract_optimizer.hpp"
 
-namespace netket {
+namespace nqs {
 
 class AdaMax : public AbstractOptimizer {
   int npar_;
@@ -99,6 +99,6 @@ class AdaMax : public AbstractOptimizer {
   void SetResetEvery(double niter_reset) { niter_reset_ = niter_reset; }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

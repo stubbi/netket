@@ -1,6 +1,6 @@
 import json
 from pytest import approx
-import netket as nk
+import nqs
 import numpy as np
 import shutil
 import tempfile
@@ -10,24 +10,24 @@ SEED = 3141592
 
 
 def _setup_vmc():
-    g = nk.graph.Hypercube(length=8, n_dim=1)
-    hi = nk.hilbert.Spin(s=0.5, graph=g)
+    g = nqs.graph.Hypercube(length=8, n_dim=1)
+    hi = nqs.hilbert.Spin(s=0.5, graph=g)
 
-    ma = nk.machine.RbmSpin(hilbert=hi, alpha=1)
+    ma = nqs.machine.RbmSpin(hilbert=hi, alpha=1)
     ma.init_random_parameters(seed=SEED, sigma=0.01)
 
-    ha = nk.operator.Ising(hi, h=1.0)
-    sa = nk.sampler.MetropolisLocal(machine=ma)
+    ha = nqs.operator.Ising(hi, h=1.0)
+    sa = nqs.sampler.MetropolisLocal(machine=ma)
     sa.seed(SEED)
-    op = nk.optimizer.Sgd(learning_rate=0.1)
+    op = nqs.optimizer.Sgd(learning_rate=0.1)
 
-    vmc = nk.variational.Vmc(
+    vmc = nqs.variational.Vmc(
         hamiltonian=ha, sampler=sa, optimizer=op, n_samples=500, diag_shift=0.01
     )
 
     # Add custom observable
     X = [[0, 1], [1, 0]]
-    sx = nk.operator.LocalOperator(hi, [X] * 8, [[i] for i in range(8)])
+    sx = nqs.operator.LocalOperator(hi, [X] * 8, [[i] for i in range(8)])
     vmc.add_observable(sx, "SigmaX")
 
     return ma, vmc
@@ -95,13 +95,13 @@ def test_vmc_run():
 
 
 def test_imag_time_propagation():
-    g = nk.graph.Hypercube(length=8, n_dim=1, pbc=True)
-    hi = nk.hilbert.Spin(s=0.5, graph=g)
-    ha = nk.operator.Ising(h=0.0, hilbert=hi)
+    g = nqs.graph.Hypercube(length=8, n_dim=1, pbc=True)
+    hi = nqs.hilbert.Spin(s=0.5, graph=g)
+    ha = nqs.operator.Ising(h=0.0, hilbert=hi)
 
-    stepper = nk.dynamics.timestepper(hi.n_states, rel_tol=1e-10, abs_tol=1e-10)
+    stepper = nqs.dynamics.timestepper(hi.n_states, rel_tol=1e-10, abs_tol=1e-10)
     psi0 = np.random.rand(hi.n_states)
-    driver = nk.exact.ExactTimePropagation(
+    driver = nqs.exact.ExactTimePropagation(
         ha, stepper, t0=0, initial_state=psi0, propagation_type="imaginary"
     )
 
@@ -113,12 +113,12 @@ def test_imag_time_propagation():
 
 def test_ed():
     first_n = 3
-    g = nk.graph.Hypercube(length=8, n_dim=1, pbc=True)
-    hi = nk.hilbert.Spin(s=0.5, graph=g)
-    ha = nk.operator.Ising(h=1.0, hilbert=hi)
+    g = nqs.graph.Hypercube(length=8, n_dim=1, pbc=True)
+    hi = nqs.hilbert.Spin(s=0.5, graph=g)
+    ha = nqs.operator.Ising(h=1.0, hilbert=hi)
 
     # Test Lanczos ED with eigenvectors
-    res = nk.exact.lanczos_ed(ha, first_n=first_n, compute_eigenvectors=True)
+    res = nqs.exact.lanczos_ed(ha, first_n=first_n, compute_eigenvectors=True)
     assert len(res.eigenvalues) == first_n
     assert len(res.eigenvectors) == first_n
     gse = res.mean(ha, 0)
@@ -127,12 +127,12 @@ def test_ed():
     assert fse == approx(res.eigenvalues[1], rel=1e-12, abs=1e-12)
 
     # Test Lanczos ED without eigenvectors
-    res = nk.exact.lanczos_ed(ha, first_n=first_n, compute_eigenvectors=False)
+    res = nqs.exact.lanczos_ed(ha, first_n=first_n, compute_eigenvectors=False)
     assert len(res.eigenvalues) == first_n
     assert len(res.eigenvectors) == 0
 
     # Test Full ED with eigenvectors
-    res = nk.exact.full_ed(ha, first_n=first_n, compute_eigenvectors=True)
+    res = nqs.exact.full_ed(ha, first_n=first_n, compute_eigenvectors=True)
     assert len(res.eigenvalues) == first_n
     assert len(res.eigenvectors) == first_n
     gse = res.mean(ha, 0)
@@ -141,6 +141,6 @@ def test_ed():
     assert fse == approx(res.eigenvalues[1], rel=1e-12, abs=1e-12)
 
     # Test Full ED without eigenvectors
-    res = nk.exact.full_ed(ha, first_n=first_n, compute_eigenvectors=False)
+    res = nqs.exact.full_ed(ha, first_n=first_n, compute_eigenvectors=False)
     assert len(res.eigenvalues) == first_n
     assert len(res.eigenvectors) == 0

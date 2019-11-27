@@ -22,7 +22,7 @@
 #include <random>
 #include <vector>
 #include "catch.hpp"
-#include "netket.hpp"
+#include "nqs.hpp"
 
 #include "optimizer_input_tests.hpp"
 const Complex im(0, 1);
@@ -40,7 +40,7 @@ TEST_CASE("optimizers step twice correctly", "[optimizer]") {
 
     if (input_tests[it]["Optimizer"]["Name"] == "Sgd") {
       SECTION("Stepper test (" + std::to_string(it) + ") on " + name) {
-        netket::Optimizer optimizer(input_tests[it]);
+        nqs::Optimizer optimizer(input_tests[it]);
 
         Eigen::VectorXcd grad(2);
         grad << 1.0 + 4.0 * im, 2.0 + 5.0 * im;
@@ -61,7 +61,7 @@ TEST_CASE("optimizers step twice correctly", "[optimizer]") {
 
     else if (input_tests[it]["Optimizer"]["Name"] == "AdaDelta") {
       SECTION("Stepper test (" + std::to_string(it) + ") on " + name) {
-        netket::Optimizer optimizer(input_tests[it]);
+        nqs::Optimizer optimizer(input_tests[it]);
 
         double eps = input_tests[it]["Optimizer"]["Epscut"];
         double rho = input_tests[it]["Optimizer"]["Rho"];
@@ -125,7 +125,7 @@ TEST_CASE("optimizers step twice correctly", "[optimizer]") {
 
     else if (input_tests[it]["Optimizer"]["Name"] == "AdaGrad") {
       SECTION("Stepper test (" + std::to_string(it) + ") on " + name) {
-        netket::Optimizer optimizer(input_tests[it]);
+        nqs::Optimizer optimizer(input_tests[it]);
 
         double eta = input_tests[it]["Optimizer"]["LearningRate"];
         double eps = input_tests[it]["Optimizer"]["Epscut"];
@@ -167,7 +167,7 @@ TEST_CASE("optimizers step twice correctly", "[optimizer]") {
 
     else if (input_tests[it]["Optimizer"]["Name"] == "AdaMax") {
       SECTION("Stepper test (" + std::to_string(it) + ") on " + name) {
-        netket::Optimizer optimizer(input_tests[it]);
+        nqs::Optimizer optimizer(input_tests[it]);
 
         double alpha = input_tests[it]["Optimizer"]["Alpha"];
 
@@ -192,7 +192,7 @@ TEST_CASE("optimizers step twice correctly", "[optimizer]") {
 
     else if (input_tests[it]["Optimizer"]["Name"] == "AMSGrad") {
       SECTION("Stepper test (" + std::to_string(it) + ") on " + name) {
-        netket::Optimizer optimizer(input_tests[it]);
+        nqs::Optimizer optimizer(input_tests[it]);
 
         double eta = input_tests[it]["Optimizer"]["LearningRate"];
         double beta1 = input_tests[it]["Optimizer"]["Beta1"];
@@ -250,7 +250,7 @@ TEST_CASE("optimizers step twice correctly", "[optimizer]") {
 
     else if (input_tests[it]["Optimizer"]["Name"] == "RMSProp") {
       SECTION("Stepper test (" + std::to_string(it) + ") on " + name) {
-        netket::Optimizer optimizer(input_tests[it]);
+        nqs::Optimizer optimizer(input_tests[it]);
 
         double eta = input_tests[it]["Optimizer"]["LearningRate"];
         double beta = input_tests[it]["Optimizer"]["Beta"];
@@ -305,7 +305,7 @@ TEST_CASE("optimizers step twice correctly", "[optimizer]") {
       }
     } else if (input_tests[it]["Optimizer"]["Name"] == "Momentum") {
       SECTION("Stepper test (" + std::to_string(it) + ") on " + name) {
-        netket::Optimizer optimizer(input_tests[it]);
+        nqs::Optimizer optimizer(input_tests[it]);
 
         double eta = input_tests[it]["Optimizer"]["LearningRate"];
         double beta = input_tests[it]["Optimizer"]["Beta"];
@@ -352,7 +352,7 @@ TEST_CASE("optimizers correctly minimize Matyas function", "[optimizer]") {
       Eigen::VectorXd params(2);
       params << 5.0, 5.0;
 
-      netket::Optimizer optimizer(input_tests[it]);
+      nqs::Optimizer optimizer(input_tests[it]);
       optimizer.Init(params);
 
       while (err > tol and iter < 5e4) {
@@ -392,7 +392,7 @@ TEST_CASE("optimizers correctly minimize Beale function", "[optimizer]") {
       Eigen::VectorXd params(2);
       params << 4.0, 3.0;
 
-      netket::Optimizer optimizer(input_tests[it]);
+      nqs::Optimizer optimizer(input_tests[it]);
       optimizer.Init(params);
 
       while (err > tol and iter < 1e5) {
@@ -441,7 +441,7 @@ TEST_CASE("optimizers correctly minimize Rosenbrock function", "[optimizer]") {
       Eigen::VectorXd params(4);
       params << 4.0, 3.0, 10.0, -5.0;
 
-      netket::Optimizer optimizer(input_tests[it]);
+      nqs::Optimizer optimizer(input_tests[it]);
       optimizer.Init(params);
 
       while (err > tol and iter < 5e5) {
@@ -495,7 +495,7 @@ TEST_CASE("optimizers correctly minimize Ackley function", "[optimizer]") {
       Eigen::VectorXd params(2);
       params << 2.5, 2.5;
 
-      netket::Optimizer optimizer(input_tests[it]);
+      nqs::Optimizer optimizer(input_tests[it]);
       optimizer.Init(params);
 
       while (err > tol and iter < 5e5) {
@@ -559,7 +559,7 @@ TEST_CASE("optimizers correctly minimize complex Ackley function",
       Eigen::VectorXcd params(2);
       params << 0.0 + 2.5 * im, 0.0 + 2.5 * im;
 
-      netket::Optimizer optimizer(input_tests[it]);
+      nqs::Optimizer optimizer(input_tests[it]);
       optimizer.Init(params);
 
       while (err > tol and iter < 5e5) {

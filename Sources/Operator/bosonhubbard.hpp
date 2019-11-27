@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_BOSONHUBBARD_HPP
-#define NETKET_BOSONHUBBARD_HPP
+#ifndef NQS_BOSONHUBBARD_HPP
+#define NQS_BOSONHUBBARD_HPP
 
 #include <Eigen/Dense>
 #include <cmath>
@@ -27,7 +27,7 @@
 #include "Utils/messages.hpp"
 #include "abstract_operator.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Heisenberg model on an arbitrary graph
 class BoseHubbard : public AbstractOperator {
@@ -125,6 +125,6 @@ class BoseHubbard : public AbstractOperator {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

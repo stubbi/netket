@@ -23,7 +23,7 @@
 #include "Utils/messages.hpp"
 #include "Utils/next_variation.hpp"
 
-namespace netket {
+namespace nqs {
 // Constructor
 Lattice::Lattice(std::vector<std::vector<double>> basis_vector,
                  std::vector<int> extent, std::vector<bool> pbc,
@@ -375,4 +375,4 @@ double Lattice::GetSquaredDistance(const std::vector<double> &v1,
   return distance;
 }
 
-}  // namespace netket
+}  // namespace nqs

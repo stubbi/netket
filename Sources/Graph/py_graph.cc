@@ -22,7 +22,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 namespace detail {
 namespace {
@@ -239,8 +239,8 @@ void AddCustomGraph(py::module subm) {
                constructed specifying the edges as follows:
 
                ```python
-               >>> import netket
-               >>> g=netket.graph.CustomGraph([[i, (i + 1) % 10] for i in range(10)])
+               >>> import nqs
+               >>> g=nqs.graph.CustomGraph([[i, (i + 1) % 10] for i in range(10)])
                >>> print(g.n_sites)
                10
 
@@ -272,8 +272,8 @@ void AddHypercube(py::module subm) {
              constructed as follows:
 
              ```python
-             >>> import netket
-             >>> g=netket.graph.Hypercube(length=10,n_dim=2,pbc=True)
+             >>> import nqs
+             >>> g=nqs.graph.Hypercube(length=10,n_dim=2,pbc=True)
              >>> print(g.n_sites)
              100
 
@@ -330,8 +330,8 @@ void AddLattice(py::module subm) {
                                  Constructs a rectangular 3X4 lattice with periodic boundary conditions.
 
                                  ```python
-                                 >>> import netket
-                                 >>> g=netket.graph.Lattice(basis_vectors=[[1,0],[0,1]],extent=[3,4])
+                                 >>> import nqs
+                                 >>> g=nqs.graph.Lattice(basis_vectors=[[1,0],[0,1]],extent=[3,4])
                                  >>> print(g.n_sites)
                                  12
 
@@ -361,8 +361,8 @@ void AddLattice(py::module subm) {
               Constructs a square 2X2 lattice without periodic boundary conditions and prints the site vectors corresponding to given site indices.
 
               ```python
-               >>> import netket
-               >>> g=netket.graph.Lattice(basis_vectors=[[1.,0.],[0.,1.]], extent=[2,2], pbc=[0,0])
+               >>> import nqs
+               >>> g=nqs.graph.Lattice(basis_vectors=[[1.,0.],[0.,1.]], extent=[2,2], pbc=[0,0])
                >>> print(list(map(int,g.site_to_vector(0))))
                [0, 0]
                >>> print(list(map(int,g.site_to_vector(1))))
@@ -409,4 +409,4 @@ void AddGraphModule(py::module m) {
   AddLattice(subm);
 }
 
-}  // namespace netket
+}  // namespace nqs

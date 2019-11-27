@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_CUSTOM_GRAPH_HPP
-#define NETKET_CUSTOM_GRAPH_HPP
+#ifndef NQS_CUSTOM_GRAPH_HPP
+#define NQS_CUSTOM_GRAPH_HPP
 
 #include "abstract_graph.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
     Class for user-defined graphs
@@ -56,6 +56,6 @@ class CustomGraph : public AbstractGraph {
   void CheckEdgeColors() const;
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_CUSTOM_GRAPH_HPP
+#endif  // NQS_CUSTOM_GRAPH_HPP

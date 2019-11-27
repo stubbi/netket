@@ -12,20 +12,20 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PY_METROPOLISHOP_HPP
-#define NETKET_PY_METROPOLISHOP_HPP
+#ifndef NQS_PY_METROPOLISHOP_HPP
+#define NQS_PY_METROPOLISHOP_HPP
 
 #include <pybind11/pybind11.h>
 #include "metropolis_hop.hpp"
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddMetropolisHop(py::module &subm) {
   py::class_<MetropolisHop, AbstractSampler>(subm, "MetropolisHop")
       .def(py::init<AbstractMachine &, int>(), py::keep_alive<1, 3>(),
            py::arg("machine"), py::arg("d_max") = 1);
 }
-}  // namespace netket
+}  // namespace nqs
 #endif

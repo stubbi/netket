@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYADAMAX_HPP
-#define NETKET_PYADAMAX_HPP
+#ifndef NQS_PYADAMAX_HPP
+#define NQS_PYADAMAX_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -24,7 +24,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddAdaMax(py::module &subm) {
   py::class_<AdaMax, AbstractOptimizer>(subm, "AdaMax", R"EOF(AdaMax Optimizer.
@@ -41,7 +41,7 @@ void AddAdaMax(py::module &subm) {
     $$
 
     where $$ \mathcal{S}_k $$ implicitly depends on all the history of the optimization up to the current point.
-    The NetKet naming convention of the parameters strictly follows the one introduced by the authors of AdaMax.
+    The Nqs naming convention of the parameters strictly follows the one introduced by the authors of AdaMax.
     For an in-depth description of this method, please refer to
     [Kingma, D., & Ba, J. (2015). Adam: a method for stochastic optimization](https://arxiv.org/pdf/1412.6980.pdf)
     (Algorithm 2 therein).)EOF")
@@ -60,13 +60,13 @@ void AddAdaMax(py::module &subm) {
                Simple AdaMax optimizer.
 
                ```python
-               >>> from netket.optimizer import AdaMax
+               >>> from nqs.optimizer import AdaMax
                >>> op = AdaMax()
 
                ```
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

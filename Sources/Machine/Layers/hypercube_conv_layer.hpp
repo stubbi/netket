@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_HYPERCUBECONVLAYER_HH
-#define NETKET_HYPERCUBECONVLAYER_HH
+#ifndef NQS_HYPERCUBECONVLAYER_HH
+#define NQS_HYPERCUBECONVLAYER_HH
 
 #include <time.h>
 #include <Eigen/Dense>
@@ -29,7 +29,7 @@
 #include "Utils/lookup.hpp"
 #include "abstract_layer.hpp"
 
-namespace netket {
+namespace nqs {
 /** Convolutional layer with spin 1/2 hidden units.
  Important: In order for this to work correctly, VectorType and MatrixType must
  be column major.
@@ -175,7 +175,7 @@ class ConvolutionalHypercube : public AbstractLayer {
   void InitRandomPars(int seed, double sigma) override {
     VectorType par(npar_);
 
-    netket::RandomGaussian(par, seed, sigma);
+    nqs::RandomGaussian(par, seed, sigma);
 
     SetParameters(par);
   }
@@ -404,6 +404,6 @@ class ConvolutionalHypercube : public AbstractLayer {
     return coord;
   }
 };
-}  // namespace netket
+}  // namespace nqs
 
 #endif

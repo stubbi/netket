@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_MACHINE_PY_ABSTRACT_MACHINE_HPP
-#define NETKET_MACHINE_PY_ABSTRACT_MACHINE_HPP
+#ifndef NQS_MACHINE_PY_ABSTRACT_MACHINE_HPP
+#define NQS_MACHINE_PY_ABSTRACT_MACHINE_HPP
 
 #include "Machine/abstract_machine.hpp"
 
-namespace netket {
+namespace nqs {
 
 class PyAbstractMachine : public AbstractMachine {
  public:
@@ -66,6 +66,6 @@ class PyAbstractMachine : public AbstractMachine {
                             const std::vector<double> &new_conf);
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_MACHINE_PY_ABSTRACT_MACHINE_HPP
+#endif  // NQS_MACHINE_PY_ABSTRACT_MACHINE_HPP

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_HILBERT_HPP
-#define NETKET_HILBERT_HPP
+#ifndef NQS_HILBERT_HPP
+#define NQS_HILBERT_HPP
 
 #include "Hilbert/abstract_hilbert.hpp"
 #include "Hilbert/bosons.hpp"

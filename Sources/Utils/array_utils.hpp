@@ -2,14 +2,14 @@
 // Created by Filippo Vicentini on 2019-06-06.
 //
 
-#ifndef NETKET_ARRAY_UTILS_HPP
-#define NETKET_ARRAY_UTILS_HPP
+#ifndef NQS_ARRAY_UTILS_HPP
+#define NQS_ARRAY_UTILS_HPP
 
 #include <algorithm>
 #include <complex>
 #include <vector>
 
-namespace netket {
+namespace nqs {
 
 template <typename T>
 std::vector<std::vector<T>> transpose_vecvec(
@@ -27,5 +27,5 @@ std::vector<std::vector<T>> transpose_vecvec(
   return result;
 }
 
-}  // namespace netket
-#endif  // NETKET_ARRAY_UTILS_HPP
+}  // namespace nqs
+#endif  // NQS_ARRAY_UTILS_HPP

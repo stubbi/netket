@@ -15,9 +15,9 @@
 #include <vector>
 #include "Utils/json_utils.hpp"
 
-std::vector<netket::json> GetExactDiagonalizationInputs() {
-  std::vector<netket::json> input_tests;
-  netket::json pars;
+std::vector<nqs::json> GetExactDiagonalizationInputs() {
+  std::vector<nqs::json> input_tests;
+  nqs::json pars;
 
   // Ising 1d
   pars = {{"Graph",

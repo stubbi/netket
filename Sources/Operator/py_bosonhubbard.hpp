@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYBOSONHUBBARD_HPP
-#define NETKET_PYBOSONHUBBARD_HPP
+#ifndef NQS_PYBOSONHUBBARD_HPP
+#define NQS_PYBOSONHUBBARD_HPP
 
 #include <pybind11/complex.h>
 #include <pybind11/eigen.h>
@@ -26,7 +26,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddBoseHubbard(py::module &subm) {
   py::class_<BoseHubbard, AbstractOperator>(
@@ -50,10 +50,10 @@ void AddBoseHubbard(py::module &subm) {
                Constructs a ``BoseHubbard`` operator for a 2D system.
 
                ```python
-               >>> import netket as nk
-               >>> g = nk.graph.Hypercube(length=3, n_dim=2, pbc=True)
-               >>> hi = nk.hilbert.Boson(n_max=3, n_bosons=6, graph=g)
-               >>> op = nk.operator.BoseHubbard(U=4.0, hilbert=hi)
+               >>> import nqs
+               >>> g = nqs.graph.Hypercube(length=3, n_dim=2, pbc=True)
+               >>> hi = nqs.hilbert.Boson(n_max=3, n_bosons=6, graph=g)
+               >>> op = nqs.operator.BoseHubbard(U=4.0, hilbert=hi)
                >>> print(op.hilbert.size)
                9
 
@@ -61,6 +61,6 @@ void AddBoseHubbard(py::module &subm) {
            )EOF");  // ADDOPERATORMETHODS(BoseHubbard);
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

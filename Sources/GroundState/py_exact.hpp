@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYEXACT_HPP
-#define NETKET_PYEXACT_HPP
+#ifndef NQS_PYEXACT_HPP
+#define NQS_PYEXACT_HPP
 
 #include <complex>
 #include <vector>
@@ -28,7 +28,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddExactModule(py::module &m) {
   auto m_exact = m.def_submodule("exact");
@@ -64,17 +64,17 @@ void AddExactModule(py::module &m) {
                Solving 1D Ising model with imaginary time propagation:
 
                ```python
-               >>> import netket as nk
+               >>> import nqs
                >>> import numpy as np
                >>> L = 8
-               >>> graph = nk.graph.Hypercube(L, n_dim=1, pbc=True)
-               >>> hilbert = nk.hilbert.Spin(graph, 0.5)
+               >>> graph = nqs.graph.Hypercube(L, n_dim=1, pbc=True)
+               >>> hilbert = nqs.hilbert.Spin(graph, 0.5)
                >>> n_states = hilbert.n_states
-               >>> hamiltonian = nk.operator.Ising(hilbert, h=1.0)
-               >>> stepper = nk.dynamics.timestepper(n_states, rel_tol=1e-10, abs_tol=1e-10)
-               >>> output = nk.output.JsonOutputWriter('test.log', 'test.wf')
+               >>> hamiltonian = nqs.operator.Ising(hilbert, h=1.0)
+               >>> stepper = nqs.dynamics.timestepper(n_states, rel_tol=1e-10, abs_tol=1e-10)
+               >>> output = nqs.output.JsonOutputWriter('test.log', 'test.wf')
                >>> psi0 = np.random.rand(n_states)
-               >>> driver = nk.exact.ExactTimePropagation(hamiltonian, stepper, t0=0,
+               >>> driver = nqs.exact.ExactTimePropagation(hamiltonian, stepper, t0=0,
                ...                                        initial_state=psi0,
                ...                                        propagation_type="imaginary")
                >>> driver.add_observable(hamiltonian, 'Hamiltonian')
@@ -117,6 +117,6 @@ void AddExactModule(py::module &m) {
         )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

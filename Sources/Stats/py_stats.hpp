@@ -1,5 +1,5 @@
-#ifndef NETKET_PYSTATS_HPP
-#define NETKET_PYSTATS_HPP
+#ifndef NQS_PYSTATS_HPP
+#define NQS_PYSTATS_HPP
 
 #include <pybind11/pybind11.h>
 
@@ -8,7 +8,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 namespace detail {
 
@@ -30,7 +30,7 @@ void AddStatsModule(py::module& m) {
       .def("__len__", &ObsManager::Size)
       .def("keys", &ObsManager::Names)
       .def("__repr__", [](const ObsManager& self) {
-        std::string s("<netket.stats.ObsManager: size=");
+        std::string s("<nqs.stats.ObsManager: size=");
         auto size = self.Size();
         s += std::to_string(size);
         if(size > 0) {
@@ -47,13 +47,13 @@ void AddStatsModule(py::module& m) {
         return s + ">";
       });
 }
-}  // namespace netket
+}  // namespace nqs
 
 // Expose the Stats object to Python as dict
 namespace pybind11 {
 namespace detail {
 
-using NkStatsType = netket::Binning<double>::Stats;
+using NkStatsType = nqs::Binning<double>::Stats;
 
 template <>
 struct type_caster<NkStatsType> {
@@ -73,4 +73,4 @@ struct type_caster<NkStatsType> {
 }  // namespace detail
 }  // namespace pybind11
 
-#endif  // NETKET_PYSTATS_HPP
+#endif  // NQS_PYSTATS_HPP

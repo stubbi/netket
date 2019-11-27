@@ -1,5 +1,5 @@
-#ifndef NETKET_CONTROLLED_TIME_STEPPERS_HPP
-#define NETKET_CONTROLLED_TIME_STEPPERS_HPP
+#ifndef NQS_CONTROLLED_TIME_STEPPERS_HPP
+#define NQS_CONTROLLED_TIME_STEPPERS_HPP
 
 #include <array>
 #include <cassert>
@@ -8,7 +8,7 @@
 #include "Utils/math_helpers.hpp"
 #include "abstract_time_stepper.hpp"
 
-namespace netket {
+namespace nqs {
 namespace ode {
 
 /**
@@ -239,6 +239,6 @@ template <class S>
 constexpr double Dopri54TimeStepper<S>::C_[7];
 
 }  // namespace ode
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_CONTROLLED_TIME_STEPPERS_HPP
+#endif  // NQS_CONTROLLED_TIME_STEPPERS_HPP

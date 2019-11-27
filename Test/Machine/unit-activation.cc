@@ -20,10 +20,10 @@
 #include "Utils/json_utils.hpp"
 #include "catch.hpp"
 
-#include "netket.hpp"
+#include "nqs.hpp"
 
-netket::json GetActivationInputs() {
-  netket::json pars;
+nqs::json GetActivationInputs() {
+  nqs::json pars;
 
   // Activations
   pars = {{"Activations",
@@ -38,31 +38,31 @@ TEST_CASE("activations compute derivatives correctly", "[activation]") {
   auto input_tests = GetActivationInputs();
   std::size_t ntests = input_tests["Activations"].size();
 
-  netket::default_random_engine rgen;
+  nqs::default_random_engine rgen;
 
   for (std::size_t it = 0; it < ntests; it++) {
     SECTION("Activation test (" + std::to_string(it) + ") on " +
             input_tests["Activations"][it].dump()) {
       auto pars = input_tests["Activations"][it];
 
-      netket::Activation activation(pars);
+      nqs::Activation activation(pars);
 
       using MType = Complex;
 
       double eps = std::sqrt(std::numeric_limits<double>::epsilon()) * 1000;
 
-      netket::Layer<MType>::VectorType eps_vec(100);
-      netket::Layer<MType>::VectorType test_var(100);
-      netket::Layer<MType>::VectorType test_varp(100);
-      netket::Layer<MType>::VectorType test_varm(100);
-      netket::Layer<MType>::VectorType val(100);
-      netket::Layer<MType>::VectorType valp(100);
-      netket::Layer<MType>::VectorType valm(100);
-      netket::Layer<MType>::VectorType check_der(100);
-      netket::Layer<MType>::VectorType comp_der(100);
-      netket::Layer<MType>::VectorType dLdA(100);
+      nqs::Layer<MType>::VectorType eps_vec(100);
+      nqs::Layer<MType>::VectorType test_var(100);
+      nqs::Layer<MType>::VectorType test_varp(100);
+      nqs::Layer<MType>::VectorType test_varm(100);
+      nqs::Layer<MType>::VectorType val(100);
+      nqs::Layer<MType>::VectorType valp(100);
+      nqs::Layer<MType>::VectorType valm(100);
+      nqs::Layer<MType>::VectorType check_der(100);
+      nqs::Layer<MType>::VectorType comp_der(100);
+      nqs::Layer<MType>::VectorType dLdA(100);
 
-      netket::RandomGaussian(test_var, 1232, 0.5);
+      nqs::RandomGaussian(test_var, 1232, 0.5);
       eps_vec.setConstant(eps);
       dLdA.setConstant(1);
 

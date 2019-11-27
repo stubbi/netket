@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ADAGRAD_HPP
-#define NETKET_ADAGRAD_HPP
+#ifndef NQS_ADAGRAD_HPP
+#define NQS_ADAGRAD_HPP
 
 #include <Eigen/Core>
 #include <Eigen/Dense>
@@ -23,7 +23,7 @@
 #include <iostream>
 #include "abstract_optimizer.hpp"
 
-namespace netket {
+namespace nqs {
 
 class AdaGrad : public AbstractOptimizer {
   int npar_;
@@ -68,6 +68,6 @@ class AdaGrad : public AbstractOptimizer {
   void Reset() override { Gt_ = Eigen::VectorXd::Zero(npar_); }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

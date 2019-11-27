@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYMACHINE_HPP
-#define NETKET_PYMACHINE_HPP
+#ifndef NQS_PYMACHINE_HPP
+#define NQS_PYMACHINE_HPP
 
 #include <pybind11/pybind11.h>
 
-namespace netket {
+namespace nqs {
 
 void AddMachineModule(pybind11::module m);
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_PYMACHINE_HPP
+#endif  // NQS_PYMACHINE_HPP

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_MPI_INTERFACE_HPP
-#define NETKET_MPI_INTERFACE_HPP
+#ifndef NQS_MPI_INTERFACE_HPP
+#define NQS_MPI_INTERFACE_HPP
 
 #include <cassert>
 #include <complex>
@@ -24,7 +24,7 @@
 
 #include "common_types.hpp"
 
-namespace netket {
+namespace nqs {
 
 inline void SendToAll(double &val, int sendnode = 0,
                       const MPI_Comm comm = MPI_COMM_WORLD) {
@@ -205,6 +205,6 @@ struct MPIHelpers {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

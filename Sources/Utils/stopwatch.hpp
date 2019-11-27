@@ -1,9 +1,9 @@
-#ifndef NETKET_STOPWATCH_HPP
-#define NETKET_STOPWATCH_HPP
+#ifndef NQS_STOPWATCH_HPP
+#define NQS_STOPWATCH_HPP
 
 #include <chrono>
 
-namespace netket {
+namespace nqs {
 
 class Stopwatch {
   using Clock = std::chrono::high_resolution_clock;
@@ -32,6 +32,6 @@ class Stopwatch {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_STOPWATCH_HPP
+#endif  // NQS_STOPWATCH_HPP

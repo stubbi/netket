@@ -3,9 +3,9 @@ from pytest import approx
 from scipy.integrate import solve_ivp
 from scipy.linalg import norm
 
-import netket as nk
-from netket.dynamics import timestepper
-from netket.exact import ExactTimePropagation
+import nqs
+from nqs.dynamics import timestepper
+from nqs.exact import ExactTimePropagation
 
 
 ATOL = 1e-9
@@ -14,9 +14,9 @@ TIME = 20.0
 
 
 def _setup_model():
-    g = nk.graph.Hypercube(8, 1)
-    hi = nk.hilbert.Spin(g, 0.5)
-    ham = nk.operator.Heisenberg(hi)
+    g = nqs.graph.Hypercube(8, 1)
+    hi = nqs.hilbert.Spin(g, 0.5)
+    ham = nqs.operator.Heisenberg(hi)
 
     ts = timestepper(hi.n_states, abs_tol=ATOL, rel_tol=RTOL)
     psi0 = np.random.rand(hi.n_states) + 1j * np.random.rand(hi.n_states)

@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_HYPERCUBE_HPP
-#define NETKET_HYPERCUBE_HPP
+#ifndef NQS_HYPERCUBE_HPP
+#define NQS_HYPERCUBE_HPP
 
 #include "abstract_graph.hpp"
 
-namespace netket {
+namespace nqs {
 
 class Hypercube : public AbstractGraph {
   int length_;               ///< Side length of the hypercube
@@ -77,5 +77,5 @@ class Hypercube : public AbstractGraph {
                                                       bool pbc, int n_sites);
 };
 
-}  // namespace netket
+}  // namespace nqs
 #endif

@@ -12,17 +12,17 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_MEMORYUTILS_HPP
-#define NETKET_MEMORYUTILS_HPP
+#ifndef NQS_MEMORYUTILS_HPP
+#define NQS_MEMORYUTILS_HPP
 
 #include <memory>
 #include <utility>
 
-namespace netket {
+namespace nqs {
 template <typename T, typename... Args>
 std::unique_ptr<T> make_unique(Args &&... args) {
   return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
-}  // namespace netket
+}  // namespace nqs
 
 #endif

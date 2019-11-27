@@ -12,20 +12,18 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_WELCOME_HPP
-#define NETKET_WELCOME_HPP
+#ifndef NQS_WELCOME_HPP
+#define NQS_WELCOME_HPP
 
 #include <mpi.h>
 #include <iostream>
 
-namespace netket {
+namespace nqs {
 
 void Welcome(int argc) {
   InfoMessage() << "############################################ #"
                 << std::endl;
-  InfoMessage() << "# NetKet version 1.0.5                     # #"
-                << std::endl;
-  InfoMessage() << "# Website: https://www.netket.org          # #"
+  InfoMessage() << "# NQS version 0.1                          # #"
                 << std::endl;
   InfoMessage() << "# Licensed under Apache-2.0 - see LICENSE  # #"
                 << std::endl;
@@ -43,5 +41,5 @@ void Welcome(int argc) {
     std::exit(0);
   }
 }
-}  // namespace netket
+}  // namespace nqs
 #endif

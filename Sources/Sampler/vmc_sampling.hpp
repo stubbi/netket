@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_VMC_SAMPLING_HPP
-#define NETKET_VMC_SAMPLING_HPP
+#ifndef NQS_VMC_SAMPLING_HPP
+#define NQS_VMC_SAMPLING_HPP
 
 #include "Machine/abstract_machine.hpp"
 #include "Operator/abstract_operator.hpp"
@@ -21,7 +21,7 @@
 #include "Stats/binning.hpp"
 #include "common_types.hpp"
 
-namespace netket {
+namespace nqs {
 namespace vmc {
 
 using Stats = Binning<double>::Stats;
@@ -177,6 +177,6 @@ VectorXcd GradientOfVariance(const Result &result, AbstractMachine &psi,
                              const AbstractOperator &op);
 
 }  // namespace vmc
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_VMC_SAMPLING_HPP
+#endif  // NQS_VMC_SAMPLING_HPP

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_OPERATOR_HPP
-#define NETKET_OPERATOR_HPP
+#ifndef NQS_OPERATOR_HPP
+#define NQS_OPERATOR_HPP
 
 #include <memory>
 

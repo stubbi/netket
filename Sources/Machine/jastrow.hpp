@@ -14,12 +14,12 @@
 //
 // by G. Mazzola, May-Aug 2018
 
-#ifndef NETKET_JASTROW_HPP
-#define NETKET_JASTROW_HPP
+#ifndef NQS_JASTROW_HPP
+#define NQS_JASTROW_HPP
 
 #include "Machine/abstract_machine.hpp"
 
-namespace netket {
+namespace nqs {
 
 /** Jastrow machine class.
  *
@@ -72,6 +72,6 @@ class Jastrow : public AbstractMachine {
   bool IsHolomorphic() const noexcept override;
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_JASTROW_HPP
+#endif  // NQS_JASTROW_HPP

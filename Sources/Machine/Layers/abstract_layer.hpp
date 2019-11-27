@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ABSTRACTLAYER_HH
-#define NETKET_ABSTRACTLAYER_HH
+#ifndef NQS_ABSTRACTLAYER_HH
+#define NQS_ABSTRACTLAYER_HH
 
 #include <complex>
 #include <fstream>
@@ -26,7 +26,7 @@
 #include "Machine/abstract_machine.hpp"
 #include "Utils/lookup.hpp"
 
-namespace netket {
+namespace nqs {
 /**
   Abstract class for Neural Network layer.
 */
@@ -146,6 +146,6 @@ class AbstractLayer {
   */
   virtual ~AbstractLayer() {}
 };
-}  // namespace netket
+}  // namespace nqs
 
 #endif

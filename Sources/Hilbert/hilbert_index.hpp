@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_HILBERT_INDEX_HPP
-#define NETKET_HILBERT_INDEX_HPP
+#ifndef NQS_HILBERT_INDEX_HPP
+#define NQS_HILBERT_INDEX_HPP
 
 #include <limits>
 #include <map>
@@ -24,7 +24,7 @@
 
 #include "common_types.hpp"
 
-namespace netket {
+namespace nqs {
 
 class HilbertIndex {
  public:
@@ -86,6 +86,6 @@ class StateGenerator {
   const HilbertIndex &index_;
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_HILBERT_INDEX_HPP
+#endif  // NQS_HILBERT_INDEX_HPP

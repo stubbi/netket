@@ -1,4 +1,4 @@
-import netket as nk
+import nqs
 import networkx as nx
 import numpy as np
 import pytest
@@ -17,28 +17,28 @@ machines = {}
 
 # TESTS FOR SPIN HILBERT
 # Constructing a 1d lattice
-g = nk.graph.Hypercube(length=4, n_dim=1)
+g = nqs.graph.Hypercube(length=4, n_dim=1)
 
 # Hilbert space of spins from given graph
-hi = nk.hilbert.Spin(s=0.5, graph=g)
+hi = nqs.hilbert.Spin(s=0.5, graph=g)
 
-machines["RbmSpin 1d Hypercube spin"] = nk.machine.RbmSpin(hilbert=hi, alpha=2)
+machines["RbmSpin 1d Hypercube spin"] = nqs.machine.RbmSpin(hilbert=hi, alpha=2)
 
 machines["PyRbm 1d Hypercube spin"] = PyRbm(hilbert=hi, alpha=3)
 
-machines["RbmSpinSymm 1d Hypercube spin"] = nk.machine.RbmSpinSymm(hilbert=hi, alpha=2)
+machines["RbmSpinSymm 1d Hypercube spin"] = nqs.machine.RbmSpinSymm(hilbert=hi, alpha=2)
 
-machines["Real RBM"] = nk.machine.RbmSpinReal(hilbert=hi, alpha=1)
+machines["Real RBM"] = nqs.machine.RbmSpinReal(hilbert=hi, alpha=1)
 
-machines["Phase RBM"] = nk.machine.RbmSpinPhase(hilbert=hi, alpha=2)
+machines["Phase RBM"] = nqs.machine.RbmSpinPhase(hilbert=hi, alpha=2)
 
-machines["Jastrow 1d Hypercube spin"] = nk.machine.Jastrow(hilbert=hi)
+machines["Jastrow 1d Hypercube spin"] = nqs.machine.Jastrow(hilbert=hi)
 
-hi = nk.hilbert.Spin(s=0.5, graph=g, total_sz=0)
-machines["Jastrow 1d Hypercube spin"] = nk.machine.JastrowSymm(hilbert=hi)
+hi = nqs.hilbert.Spin(s=0.5, graph=g, total_sz=0)
+machines["Jastrow 1d Hypercube spin"] = nqs.machine.JastrowSymm(hilbert=hi)
 
 dm_machines = {}
-dm_machines["Phase NDM"] = nk.machine.NdmSpinPhase(
+dm_machines["Phase NDM"] = nqs.machine.NdmSpinPhase(
     hilbert=hi,
     alpha=2,
     beta=2,
@@ -49,15 +49,15 @@ dm_machines["Phase NDM"] = nk.machine.NdmSpinPhase(
 
 # Layers
 layers = (
-    nk.layer.FullyConnected(input_size=g.n_sites, output_size=40),
-    nk.layer.Lncosh(input_size=40),
+    nqs.layer.FullyConnected(input_size=g.n_sites, output_size=40),
+    nqs.layer.Lncosh(input_size=40),
 )
 
 # FFNN Machine
-machines["FFFN 1d Hypercube spin FullyConnected"] = nk.machine.FFNN(hi, layers)
+machines["FFFN 1d Hypercube spin FullyConnected"] = nqs.machine.FFNN(hi, layers)
 
 layers = (
-    nk.layer.ConvolutionalHypercube(
+    nqs.layer.ConvolutionalHypercube(
         length=4,
         n_dim=1,
         input_channels=1,
@@ -66,27 +66,27 @@ layers = (
         kernel_length=2,
         use_bias=True,
     ),
-    nk.layer.Lncosh(input_size=8),
+    nqs.layer.Lncosh(input_size=8),
 )
 
 # FFNN Machine
-machines["FFFN 1d Hypercube spin Convolutional Hypercube"] = nk.machine.FFNN(hi, layers)
+machines["FFFN 1d Hypercube spin Convolutional Hypercube"] = nqs.machine.FFNN(hi, layers)
 
-machines["MPS Diagonal 1d spin"] = nk.machine.MPSPeriodicDiagonal(hi, bond_dim=3)
-machines["MPS 1d spin"] = nk.machine.MPSPeriodic(hi, bond_dim=3)
+machines["MPS Diagonal 1d spin"] = nqs.machine.MPSPeriodicDiagonal(hi, bond_dim=3)
+machines["MPS 1d spin"] = nqs.machine.MPSPeriodic(hi, bond_dim=3)
 
 # BOSONS
-hi = nk.hilbert.Boson(graph=g, n_max=3)
-machines["RbmSpin 1d Hypercube boson"] = nk.machine.RbmSpin(hilbert=hi, alpha=1)
+hi = nqs.hilbert.Boson(graph=g, n_max=3)
+machines["RbmSpin 1d Hypercube boson"] = nqs.machine.RbmSpin(hilbert=hi, alpha=1)
 
-machines["RbmSpinSymm 1d Hypercube boson"] = nk.machine.RbmSpinSymm(hilbert=hi, alpha=2)
-machines["RbmMultiVal 1d Hypercube boson"] = nk.machine.RbmMultiVal(
+machines["RbmSpinSymm 1d Hypercube boson"] = nqs.machine.RbmSpinSymm(hilbert=hi, alpha=2)
+machines["RbmMultiVal 1d Hypercube boson"] = nqs.machine.RbmMultiVal(
     hilbert=hi, n_hidden=10
 )
-machines["Jastrow 1d Hypercube boson"] = nk.machine.Jastrow(hilbert=hi)
+machines["Jastrow 1d Hypercube boson"] = nqs.machine.Jastrow(hilbert=hi)
 
-machines["JastrowSymm 1d Hypercube boson"] = nk.machine.JastrowSymm(hilbert=hi)
-machines["MPS 1d boson"] = nk.machine.MPSPeriodic(hi, bond_dim=4)
+machines["JastrowSymm 1d Hypercube boson"] = nqs.machine.JastrowSymm(hilbert=hi)
+machines["MPS 1d boson"] = nqs.machine.MPSPeriodic(hi, bond_dim=4)
 
 
 np.random.seed(12346)
@@ -166,7 +166,7 @@ def test_log_derivative():
         # random visibile state
         hi = machine.hilbert
         assert hi.size > 0
-        rg = nk.utils.RandomEngine(seed=1234)
+        rg = nqs.utils.RandomEngine(seed=1234)
         v = np.zeros(hi.size)
 
         for i in range(100):
@@ -199,7 +199,7 @@ def test_log_val_diff():
 
         hi = machine.hilbert
 
-        rg = nk.utils.RandomEngine(seed=1234)
+        rg = nqs.utils.RandomEngine(seed=1234)
 
         # loop over different random states
         for i in range(100):

@@ -20,7 +20,7 @@
 #include <iostream>
 #include <vector>
 
-namespace netket {
+namespace nqs {
 
 Spin::Spin(const AbstractGraph &graph, double const S)
     : graph_{graph}, S_{S}, constraintSz_{false}, nspins_{graph.Size()} {
@@ -85,7 +85,7 @@ std::vector<double> Spin::LocalStates() const { return local_; }
 const AbstractGraph &Spin::GetGraph() const noexcept { return graph_; }
 
 void Spin::RandomVals(Eigen::Ref<Eigen::VectorXd> state,
-                      netket::default_random_engine &rgen) const {
+                      nqs::default_random_engine &rgen) const {
   std::uniform_int_distribution<int> distribution(0, nstates_ - 1);
 
   assert(state.size() == nspins_);
@@ -147,4 +147,4 @@ void Spin::UpdateConf(Eigen::Ref<Eigen::VectorXd> v,
   }
 }
 
-}  // namespace netket
+}  // namespace nqs

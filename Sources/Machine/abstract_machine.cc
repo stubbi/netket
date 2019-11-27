@@ -18,7 +18,7 @@
 
 #include <nlohmann/json.hpp>
 
-namespace netket {
+namespace nqs {
 
 AbstractMachine::VectorType AbstractMachine::DerLogChanged(
     VisibleConstType v, const std::vector<int> &tochange,
@@ -28,4 +28,4 @@ AbstractMachine::VectorType AbstractMachine::DerLogChanged(
   return DerLog(vp);
 }
 
-}  // namespace netket
+}  // namespace nqs

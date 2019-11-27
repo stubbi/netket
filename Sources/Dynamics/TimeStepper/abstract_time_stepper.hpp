@@ -1,10 +1,10 @@
-#ifndef NETKET_ABSTRACT_TIME_STEPPER_HPP
-#define NETKET_ABSTRACT_TIME_STEPPER_HPP
+#ifndef NQS_ABSTRACT_TIME_STEPPER_HPP
+#define NQS_ABSTRACT_TIME_STEPPER_HPP
 
 #include <cassert>
 #include <functional>
 
-namespace netket {
+namespace nqs {
 namespace ode {
 
 struct TimeRange {
@@ -102,6 +102,6 @@ void Integrate(Stepper& stepper, OdeSystemFunction<State> ode_system,
 }
 
 }  // namespace ode
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_ABSTRACT_TIME_STEPPER_HPP
+#endif  // NQS_ABSTRACT_TIME_STEPPER_HPP

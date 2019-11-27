@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ABSTRACT_OPERATOR_HPP
-#define NETKET_ABSTRACT_OPERATOR_HPP
+#ifndef NQS_ABSTRACT_OPERATOR_HPP
+#define NQS_ABSTRACT_OPERATOR_HPP
 
 #include <complex>
 #include <functional>
@@ -27,7 +27,7 @@
 
 #include "Hilbert/hilbert.hpp"
 
-namespace netket {
+namespace nqs {
 /**
  * This struct represents a non-zero matrix-element H(v,v') of an operator for a
  * given visible state v.
@@ -205,6 +205,6 @@ std::pair<Complex, double> MeanVariance(Operator &&apply,
   return {mean, var};
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_BOSONS_HPP
-#define NETKET_BOSONS_HPP
+#ifndef NQS_BOSONS_HPP
+#define NQS_BOSONS_HPP
 
 #include <Eigen/Core>
 #include <algorithm>
@@ -22,7 +22,7 @@
 #include "Graph/abstract_graph.hpp"
 #include "Hilbert/abstract_hilbert.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
   Hilbert space for integer or bosons.
@@ -41,7 +41,7 @@ class Boson : public AbstractHilbert {
   const AbstractGraph &GetGraph() const noexcept override;
 
   void RandomVals(Eigen::Ref<Eigen::VectorXd> state,
-                  netket::default_random_engine &rgen) const override;
+                  nqs::default_random_engine &rgen) const override;
 
   void UpdateConf(Eigen::Ref<Eigen::VectorXd> v,
                   nonstd::span<const int> tochange,
@@ -71,5 +71,5 @@ class Boson : public AbstractHilbert {
   int nstates_;
 };
 
-}  // namespace netket
+}  // namespace nqs
 #endif

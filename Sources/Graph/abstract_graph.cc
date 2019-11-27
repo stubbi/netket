@@ -14,7 +14,7 @@
 
 #include "abstract_graph.hpp"
 
-namespace netket {
+namespace nqs {
 
 std::vector<std::vector<int>> AbstractGraph::AllDistances() const {
   // This can be implemented more efficiently (by reusing information between
@@ -134,4 +134,4 @@ int CheckEdges(std::vector<AbstractGraph::Edge> const &edges) {
 }
 }  // namespace detail
 
-}  // namespace netket
+}  // namespace nqs

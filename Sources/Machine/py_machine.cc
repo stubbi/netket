@@ -39,7 +39,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 namespace {
 void AddRbmSpin(py::module subm) {
@@ -75,9 +75,9 @@ void AddRbmSpin(py::module subm) {
                        alpha = 2 for a one-dimensional L=20 spin-half system:
 
                        ```python
-                       >>> from netket.machine import RbmSpin
-                       >>> from netket.hilbert import Spin
-                       >>> from netket.graph import Hypercube
+                       >>> from nqs.machine import RbmSpin
+                       >>> from nqs.hilbert import Spin
+                       >>> from nqs.graph import Hypercube
                        >>> g = Hypercube(length=20, n_dim=1)
                        >>> hi = Spin(s=0.5, total_sz=0, graph=g)
                        >>> ma = RbmSpin(hilbert=hi,alpha=2)
@@ -122,9 +122,9 @@ void AddRbmSpinSymm(py::module subm) {
                        alpha = 2 for a one-dimensional L=20 spin-half system:
 
                        ```python
-                       >>> from netket.machine import RbmSpinSymm
-                       >>> from netket.hilbert import Spin
-                       >>> from netket.graph import Hypercube
+                       >>> from nqs.machine import RbmSpinSymm
+                       >>> from nqs.hilbert import Spin
+                       >>> from nqs.graph import Hypercube
                        >>> g = Hypercube(length=20, n_dim=1)
                        >>> hi = Spin(s=0.5, total_sz=0, graph=g)
                        >>> ma = RbmSpinSymm(hilbert=hi, alpha=2)
@@ -181,9 +181,9 @@ void AddRbmSpinPhase(py::module subm) {
                        alpha = 2 for a one-dimensional L=20 spin-half system:
 
                        ```python
-                       >>> from netket.machine import RbmSpinPhase
-                       >>> from netket.hilbert import Spin
-                       >>> from netket.graph import Hypercube
+                       >>> from nqs.machine import RbmSpinPhase
+                       >>> from nqs.hilbert import Spin
+                       >>> from nqs.graph import Hypercube
                        >>> g = Hypercube(length=20, n_dim=1)
                        >>> hi = Spin(s=0.5, total_sz=0, graph=g)
                        >>> ma = RbmSpinPhase(hilbert=hi,alpha=2)
@@ -227,9 +227,9 @@ void AddRbmSpinReal(py::module subm) {
                        alpha = 2 for a one-dimensional L=20 spin-half system:
 
                        ```python
-                       >>> from netket.machine import RbmSpinReal
-                       >>> from netket.hilbert import Spin
-                       >>> from netket.graph import Hypercube
+                       >>> from nqs.machine import RbmSpinReal
+                       >>> from nqs.hilbert import Spin
+                       >>> from nqs.graph import Hypercube
                        >>> g = Hypercube(length=20, n_dim=1)
                        >>> hi = Spin(s=0.5, total_sz=0, graph=g)
                        >>> ma = RbmSpinReal(hilbert=hi,alpha=2)
@@ -265,12 +265,12 @@ void AddFFNN(py::module subm) {
                   for a one-dimensional L=20 spin-half system:
 
                   ```python
-                  >>> from netket.layer import SumOutput
-                  >>> from netket.layer import FullyConnected
-                  >>> from netket.layer import Lncosh
-                  >>> from netket.hilbert import Spin
-                  >>> from netket.graph import Hypercube
-                  >>> from netket.machine import FFNN
+                  >>> from nqs.layer import SumOutput
+                  >>> from nqs.layer import FullyConnected
+                  >>> from nqs.layer import Lncosh
+                  >>> from nqs.hilbert import Spin
+                  >>> from nqs.graph import Hypercube
+                  >>> from nqs.machine import FFNN
                   >>> g = Hypercube(length=20, n_dim=1)
                   >>> hi = Spin(s=0.5, total_sz=0, graph=g)
                   >>> layers = (FullyConnected(input_size=20,output_size=20,use_bias=True),Lncosh(input_size=20),SumOutput(input_size=20))
@@ -303,9 +303,9 @@ void AddJastrow(py::module subm) {
                      system:
 
                      ```python
-                     >>> from netket.machine import Jastrow
-                     >>> from netket.hilbert import Spin
-                     >>> from netket.graph import Hypercube
+                     >>> from nqs.machine import Jastrow
+                     >>> from nqs.hilbert import Spin
+                     >>> from nqs.graph import Hypercube
                      >>> g = Hypercube(length=20, n_dim=1)
                      >>> hi = Spin(s=0.5, total_sz=0, graph=g)
                      >>> ma = Jastrow(hilbert=hi)
@@ -337,9 +337,9 @@ void AddJastrowSymm(py::module subm) {
                      1/2 system:
 
                      ```python
-                     >>> from netket.machine import JastrowSymm
-                     >>> from netket.hilbert import Spin
-                     >>> from netket.graph import Hypercube
+                     >>> from nqs.machine import JastrowSymm
+                     >>> from nqs.hilbert import Spin
+                     >>> from nqs.graph import Hypercube
                      >>> g = Hypercube(length=20, n_dim=1)
                      >>> hi = Spin(s=0.5, total_sz=0, graph=g)
                      >>> ma = JastrowSymm(hilbert=hi)
@@ -416,7 +416,7 @@ void AddLayerModule(py::module m) {
                  and gives a 20-dimensional output:
 
                  ```python
-                 >>> from netket.layer import FullyConnected
+                 >>> from nqs.layer import FullyConnected
                  >>> l=FullyConnected(input_size=10,output_size=20,use_bias=True)
                  >>> print(l.n_par)
                  220
@@ -452,7 +452,7 @@ void AddLayerModule(py::module m) {
                  and gives 8 10x10 output images by convolving with 4x4 kernels:
 
                  ```python
-                 >>> from netket.layer import ConvolutionalHypercube
+                 >>> from nqs.layer import ConvolutionalHypercube
                  >>> l=ConvolutionalHypercube(length=10,n_dim=2,input_channels=4,output_channels=8,kernel_length=4)
                  >>> print(l.n_par)
                  512
@@ -474,7 +474,7 @@ void AddLayerModule(py::module m) {
             A ``SumOutput`` layer which takes 10-dimensional inputs:
 
             ```python
-            >>> from netket.layer import SumOutput
+            >>> from nqs.layer import SumOutput
             >>> l=SumOutput(input_size=10)
             >>> print(l.n_par)
             0
@@ -497,7 +497,7 @@ void AddLayerModule(py::module m) {
             coefficient-wise to a 10-dimensional input:
 
             ```python
-            >>> from netket.layer import Lncosh
+            >>> from nqs.layer import Lncosh
             >>> l=Lncosh(input_size=10)
             >>> print(l.n_par)
             0
@@ -520,7 +520,7 @@ void AddLayerModule(py::module m) {
             coefficient-wise to a 10-dimensional input:
 
             ```python
-            >>> from netket.layer import Tanh
+            >>> from nqs.layer import Tanh
             >>> l=Tanh(input_size=10)
             >>> print(l.n_par)
             0
@@ -543,7 +543,7 @@ void AddLayerModule(py::module m) {
             coefficient-wise to a 10-dimensional input:
 
             ```python
-            >>> from netket.layer import Relu
+            >>> from nqs.layer import Relu
             >>> l=Relu(input_size=10)
             >>> print(l.n_par)
             0
@@ -621,7 +621,7 @@ void AddAbstractMachine(py::module m) {
             the case of Restricted Boltzmann Machines.)EOF")
       .def_property_readonly(
           "hilbert", &AbstractMachine::GetHilbert,
-          R"EOF(netket.hilbert.Hilbert: The hilbert space object of the system.)EOF")
+          R"EOF(nqs.hilbert.Hilbert: The hilbert space object of the system.)EOF")
       .def_property_readonly(
           "is_holomorphic", &AbstractMachine::IsHolomorphic,
           R"EOF(bool: Whether the given wave-function is a holomorphic function of
@@ -726,4 +726,4 @@ void AddMachineModule(py::module m) {
   AddDensityMatrixModule(subm);
 }
 
-}  // namespace netket
+}  // namespace nqs

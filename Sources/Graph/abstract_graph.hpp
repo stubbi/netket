@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ABSTRACT_GRAPH_HPP
-#define NETKET_ABSTRACT_GRAPH_HPP
+#ifndef NQS_ABSTRACT_GRAPH_HPP
+#define NQS_ABSTRACT_GRAPH_HPP
 
 #include <array>
 #include <unordered_map>
@@ -21,7 +21,7 @@
 
 #include "Utils/array_hasher.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
     Abstract class for undirected Graphs.
@@ -35,7 +35,7 @@ class AbstractGraph {
   Custom type for unordered_map<array<int,2>, int> w/ a custom hash function
   */
   using Edge = std::array<int, 2>;
-  using ColorMap = std::unordered_map<Edge, int, netket::ArrayHasher>;
+  using ColorMap = std::unordered_map<Edge, int, nqs::ArrayHasher>;
 
   /**
   Member function returning the number of sites (nodes) in the graph.
@@ -183,9 +183,9 @@ std::vector<std::vector<int>> AdjacencyListFromEdges(
 int CheckEdges(std::vector<AbstractGraph::Edge> const &edges);
 }  // namespace detail
 
-}  // namespace netket
+}  // namespace nqs
 
 // Implementation of template functions
 #include "abstract_graph.ipp"
 
-#endif  // NETKET_ABSTRACT_GRAPH_HPP
+#endif  // NQS_ABSTRACT_GRAPH_HPP

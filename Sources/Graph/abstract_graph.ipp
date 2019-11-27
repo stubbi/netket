@@ -17,7 +17,7 @@
 
 #include "Utils/exceptions.hpp"
 
-namespace netket {
+namespace nqs {
 
 template <typename Func>
 void AbstractGraph::BreadthFirstSearch_Impl(int start, int max_depth,
@@ -83,4 +83,4 @@ void AbstractGraph::BreadthFirstSearch(int start, Func visitor_func) const {
 BreadthFirstSearch(start, Nsites(), visitor_func);
 }
 
-}  // namespace netket
+}  // namespace nqs

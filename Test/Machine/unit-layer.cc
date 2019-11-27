@@ -18,7 +18,7 @@
 #include "catch.hpp"
 
 #include "layer_input_tests.hpp"
-#include "netket.hpp"
+#include "nqs.hpp"
 
 TEST_CASE("layers set/get correctly parameters", "[layers]") {
   auto input_tests = GetLayerInputs();
@@ -30,23 +30,23 @@ TEST_CASE("layers set/get correctly parameters", "[layers]") {
       auto pars = input_tests[it];
 
       using MType = Complex;
-      netket::Graph graph(pars);
-      netket::Hilbert hilbert(graph, pars);
+      nqs::Graph graph(pars);
+      nqs::Hilbert hilbert(graph, pars);
 
-      REQUIRE(netket::FieldExists(pars, "Machine"));
-      REQUIRE(netket::FieldExists(pars["Machine"], "Layers"));
+      REQUIRE(nqs::FieldExists(pars, "Machine"));
+      REQUIRE(nqs::FieldExists(pars["Machine"], "Layers"));
       REQUIRE(pars["Machine"]["Layers"].size() > 0);
       std::cout << pars["Machine"]["Layers"][0] << std::endl;
-      netket::Layer<MType> layer(graph, pars["Machine"]["Layers"][0]);
+      nqs::Layer<MType> layer(graph, pars["Machine"]["Layers"][0]);
 
       int seed = 12342;
       double sigma = 1;
       std::cout << layer.Npar() << std::endl;
 
       // BUG Check segmentation fault here
-      netket::Layer<MType>::VectorType params_in(layer.Npar());
-      netket::Layer<MType>::VectorType params_out(layer.Npar());
-      netket::RandomGaussian(params_in, seed, sigma);
+      nqs::Layer<MType>::VectorType params_in(layer.Npar());
+      nqs::Layer<MType>::VectorType params_out(layer.Npar());
+      nqs::RandomGaussian(params_in, seed, sigma);
 
       layer.SetParameters(params_in, 0);
       layer.GetParameters(params_out, 0);
@@ -65,28 +65,28 @@ TEST_CASE("layers set/get correctly parameters", "[layers]") {
 //             input_tests[it]["Machine"].dump()) {
 //       auto pars = input_tests[it];
 //
-//       netket::Graph graph(pars);
-//       netket::Hilbert hilbert(graph, pars);
+//       nqs::Graph graph(pars);
+//       nqs::Hilbert hilbert(graph, pars);
 //
-//       netket::Hamiltonian hamiltonian(hilbert, pars);
+//       nqs::Hamiltonian hamiltonian(hilbert, pars);
 //
 //       using MType = Complex;
 //
-//       netket::Machine<MType> machine(graph, hamiltonian, pars);
+//       nqs::Machine<MType> machine(graph, hamiltonian, pars);
 //
 //       int seed = 12342;
 //       double sigma = 1;
-//       netket::Machine<MType>::VectorType params(machine.Npar());
-//       netket::RandomGaussian(params, seed, sigma);
+//       nqs::Machine<MType>::VectorType params(machine.Npar());
+//       nqs::RandomGaussian(params, seed, sigma);
 //
 //       machine.SetParameters(params);
 //
-//       netket::json pars_out;
+//       nqs::json pars_out;
 //       machine.to_json(pars_out);
 //
 //       machine.from_json(pars_out["Machine"]);
 //
-//       netket::Machine<MType>::VectorType params_out(machine.Npar());
+//       nqs::Machine<MType>::VectorType params_out(machine.Npar());
 //
 //       params_out = machine.GetParameters();
 //
@@ -99,21 +99,21 @@ TEST_CASE("layers set/get correctly parameters", "[layers]") {
 //   auto input_tests = GetLayerInputs();
 //   std::size_t ntests = input_tests.size();
 //
-//   netket::default_random_engine rgen;
+//   nqs::default_random_engine rgen;
 //
 //   for (std::size_t it = 0; it < ntests; it++) {
 //     SECTION("Layer test (" + std::to_string(it) + ") on " +
 //             input_tests[it]["Machine"].dump()) {
 //       auto pars = input_tests[it];
 //
-//       netket::Graph graph(pars);
-//       netket::Hilbert hilbert(graph, pars);
+//       nqs::Graph graph(pars);
+//       nqs::Hilbert hilbert(graph, pars);
 //
-//       netket::Hamiltonian hamiltonian(hilbert, pars);
+//       nqs::Hamiltonian hamiltonian(hilbert, pars);
 //
 //       using MType = Complex;
 //
-//       netket::Machine<MType> machine(graph, hamiltonian, pars);
+//       nqs::Machine<MType> machine(graph, hamiltonian, pars);
 //
 //       double sigma = 1.;
 //       machine.InitRandomPars(1234, sigma);
@@ -132,17 +132,17 @@ TEST_CASE("layers set/get correctly parameters", "[layers]") {
 //         for (int p = 0; p < machine.Npar(); p++) {
 //           machine_pars(p) += eps;
 //           machine.SetParameters(machine_pars);
-//           typename netket::Machine<MType>::StateType valp =
+//           typename nqs::Machine<MType>::StateType valp =
 //           machine.LogVal(v);
 //
 //           machine_pars(p) -= 2 * eps;
 //           machine.SetParameters(machine_pars);
-//           typename netket::Machine<MType>::StateType valm =
+//           typename nqs::Machine<MType>::StateType valm =
 //           machine.LogVal(v);
 //
 //           machine_pars(p) += eps;
 //
-//           typename netket::Machine<MType>::StateType numder =
+//           typename nqs::Machine<MType>::StateType numder =
 //               (-valm + valp) / (eps * 2);
 //
 //           REQUIRE(Approx(std::real(numder)).epsilon(eps * 1000) ==
@@ -159,20 +159,20 @@ TEST_CASE("layers set/get correctly parameters", "[layers]") {
 //   auto input_tests = GetLayerInputs();
 //   std::size_t ntests = input_tests.size();
 //
-//   netket::default_random_engine rgen;
+//   nqs::default_random_engine rgen;
 //
 //   for (std::size_t it = 0; it < ntests; it++) {
 //     SECTION("Layer test (" + std::to_string(it) + ") on " +
 //             input_tests[it]["Machine"].dump()) {
 //       auto pars = input_tests[it];
 //
-//       netket::Graph graph(pars);
-//       netket::Hilbert hilbert(graph, pars);
+//       nqs::Graph graph(pars);
+//       nqs::Hilbert hilbert(graph, pars);
 //
-//       netket::Hamiltonian hamiltonian(hilbert, pars);
+//       nqs::Hamiltonian hamiltonian(hilbert, pars);
 //
 //       using MType = Complex;
-//       using WfType = netket::Machine<MType>;
+//       using WfType = nqs::Machine<MType>;
 //
 //       WfType machine(graph, hamiltonian, pars);
 //

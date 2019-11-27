@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_VARIATIONALMONTECARLO_HPP
-#define NETKET_VARIATIONALMONTECARLO_HPP
+#ifndef NQS_VARIATIONALMONTECARLO_HPP
+#define NQS_VARIATIONALMONTECARLO_HPP
 
 #include <complex>
 #include <string>
@@ -36,7 +36,7 @@
 #include "common_types.hpp"
 
 
-namespace netket {
+namespace nqs {
 
 // Variational Monte Carlo schemes to learn the ground state
 // Available methods:
@@ -253,6 +253,6 @@ class VariationalMonteCarlo {
   const vmc::Result &GetVmcData() const noexcept { return vmc_data_; }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -4,7 +4,7 @@
 #include <iostream>
 #include <memory>
 
-namespace netket {
+namespace nqs {
 namespace detail {
 
 namespace {
@@ -16,7 +16,7 @@ struct Unload {
         std::ostringstream msg;
         msg << "dlclosed() failed: " << dlerror() << '\n'
             << "This should not have happened. Please, submit a bug "
-               "report to https://github.com/netket/netket/issues.";
+               "report to https://github.com/stubbi/nqs/issues.";
         std::cerr << msg.str() << std::endl;
         std::terminate();
       }
@@ -71,7 +71,7 @@ MPIInitializer::MPIInitializer() {
     }
     have_initialized_ = true;
 #if !defined(NDEBUG)
-    std::cerr << "MPI successfully initialized by NetKet." << std::endl;
+    std::cerr << "MPI successfully initialized by Nqs." << std::endl;
 #endif
   }
 }
@@ -81,7 +81,7 @@ MPIInitializer::~MPIInitializer() {
     // We have initialized MPI so it's only right we finalize it.
     MPI_Finalize();
 #if !defined(NDEBUG)
-    std::cerr << "MPI successfully finalized by NetKet." << std::endl;
+    std::cerr << "MPI successfully finalized by Nqs." << std::endl;
 #endif
   }
 }
@@ -90,4 +90,4 @@ MPIInitializer::~MPIInitializer() {
 static MPIInitializer initiaze_mpi_when_loading_the_module{};
 
 }  // namespace detail
-}  // namespace netket
+}  // namespace nqs

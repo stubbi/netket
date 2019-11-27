@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_EXACT_TIME_PROPAGATION_HPP
-#define NETKET_EXACT_TIME_PROPAGATION_HPP
+#ifndef NQS_EXACT_TIME_PROPAGATION_HPP
+#define NQS_EXACT_TIME_PROPAGATION_HPP
 
 #include <unordered_map>
 
@@ -24,7 +24,7 @@
 #include "Output/json_output_writer.hpp"
 #include "Stats/binning.hpp"
 
-namespace netket {
+namespace nqs {
 
 class ExactTimePropagation {
  public:
@@ -142,6 +142,6 @@ class ExactTimePropagation {
   StatsMap observable_stats_;
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_EXACT_TIME_PROPAGATION_HPP
+#endif  // NQS_EXACT_TIME_PROPAGATION_HPP

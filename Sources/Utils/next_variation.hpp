@@ -12,12 +12,12 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_NEXT_VARIATION_HPP
-#define NETKET_NEXT_VARIATION_HPP
+#ifndef NQS_NEXT_VARIATION_HPP
+#define NQS_NEXT_VARIATION_HPP
 
 #include <iterator>
 
-namespace netket {
+namespace nqs {
 
 // From StackOverflow, Matteo Gattanini's code
 // Variations with repetition in lexicographic order
@@ -53,6 +53,6 @@ bool next_variation(Iter first, Iter last,
   return false;
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

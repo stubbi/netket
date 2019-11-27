@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PY_METROPOLISEXCHANGE_HPP
-#define NETKET_PY_METROPOLISEXCHANGE_HPP
+#ifndef NQS_PY_METROPOLISEXCHANGE_HPP
+#define NQS_PY_METROPOLISEXCHANGE_HPP
 
 #include <pybind11/pybind11.h>
 #include "metropolis_exchange.hpp"
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddMetropolisExchange(py::module &subm) {
   py::class_<MetropolisExchange, AbstractSampler>(subm, "MetropolisExchange",
@@ -66,21 +66,21 @@ void AddMetropolisExchange(py::module &subm) {
                  nearest-neighbours exchanges.
 
                  ```python
-                 >>> import netket as nk
+                 >>> import nqs
                  >>>
-                 >>> g=nk.graph.Hypercube(length=10,n_dim=2,pbc=True)
-                 >>> hi=nk.hilbert.Spin(s=0.5,graph=g)
+                 >>> g=nqs.graph.Hypercube(length=10,n_dim=2,pbc=True)
+                 >>> hi=nqs.hilbert.Spin(s=0.5,graph=g)
                  >>>
                  >>> # RBM Spin Machine
-                 >>> ma = nk.machine.RbmSpin(alpha=1, hilbert=hi)
+                 >>> ma = nqs.machine.RbmSpin(alpha=1, hilbert=hi)
                  >>>
                  >>> # Construct a MetropolisExchange Sampler
-                 >>> sa = nk.sampler.MetropolisExchange(machine=ma,graph=g,d_max=1)
+                 >>> sa = nqs.sampler.MetropolisExchange(machine=ma,graph=g,d_max=1)
                  >>> print(sa.hilbert.size)
                  100
 
                  ```
              )EOF");
 }
-}  // namespace netket
+}  // namespace nqs
 #endif

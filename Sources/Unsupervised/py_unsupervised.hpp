@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYQUANTUM_STATE_RECONSTRUCTION_HPP
-#define NETKET_PYQUANTUM_STATE_RECONSTRUCTION_HPP
+#ifndef NQS_PYQUANTUM_STATE_RECONSTRUCTION_HPP
+#define NQS_PYQUANTUM_STATE_RECONSTRUCTION_HPP
 
 #include <mpi.h>
 #include <pybind11/complex.h>
@@ -27,7 +27,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddUnsupervisedModule(py::module &m) {
   auto subm = m.def_submodule("unsupervised");
@@ -112,6 +112,6 @@ void AddUnsupervisedModule(py::module &m) {
                   )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

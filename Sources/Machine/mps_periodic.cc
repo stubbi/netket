@@ -21,7 +21,7 @@
 #include "Utils/json_utils.hpp"
 #include "Utils/messages.hpp"
 
-namespace netket {
+namespace nqs {
 
 MPSPeriodic::MPSPeriodic(std::shared_ptr<const AbstractHilbert> hilbert,
                          int bond_dim, bool diag, int symperiod)
@@ -242,7 +242,7 @@ void MPSPeriodic::SetParametersIdentity(VectorConstRefType pars) {
 void MPSPeriodic::InitRandomPars(int seed, double sigma) {
   VectorType pars(npar_);
 
-  netket::RandomGaussian(pars, seed, sigma);
+  nqs::RandomGaussian(pars, seed, sigma);
   SetParametersIdentity(pars);
 }
 
@@ -578,4 +578,4 @@ void MPSPeriodic::Load(const std::string &filename) {
 
 bool MPSPeriodic::IsHolomorphic() const noexcept { return true; }
 
-}  // namespace netket
+}  // namespace nqs

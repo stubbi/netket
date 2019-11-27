@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PY_NDM_SPIN_PHASE_HPP
-#define NETKET_PY_NDM_SPIN_PHASE_HPP
+#ifndef NQS_PY_NDM_SPIN_PHASE_HPP
+#define NQS_PY_NDM_SPIN_PHASE_HPP
 
 #include <mpi.h>
 #include <pybind11/complex.h>
@@ -28,7 +28,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddNdmSpinPhase(py::module &subm) {
   py::class_<NdmSpinPhase, AbstractDensityMatrix>(subm, "NdmSpinPhase", R"EOF(
@@ -68,9 +68,9 @@ void AddNdmSpinPhase(py::module &subm) {
                        one-dimensional L=9 spin-half system:
 
                        ```python
-                       >>> from netket.machine import NdmSpinPhase
-                       >>> from netket.hilbert import Spin
-                       >>> from netket.graph import Hypercube
+                       >>> from nqs.machine import NdmSpinPhase
+                       >>> from nqs.hilbert import Spin
+                       >>> from nqs.graph import Hypercube
                        >>> g = Hypercube(length=9, n_dim=1)
                        >>> hi = Spin(s=0.5, total_sz=0.5, graph=g)
                        >>> ma = NdmSpinPhase(hilbert=hi,alpha=1, beta=2)
@@ -81,6 +81,6 @@ void AddNdmSpinPhase(py::module &subm) {
                    )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_PY_NDM_SPIN_PHASE_HPP
+#endif  // NQS_PY_NDM_SPIN_PHASE_HPP

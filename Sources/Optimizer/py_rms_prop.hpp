@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYRMSPROP_HPP
-#define NETKET_PYRMSPROP_HPP
+#ifndef NQS_PYRMSPROP_HPP
+#define NQS_PYRMSPROP_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -24,7 +24,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddRmsProp(py::module &subm) {
   py::class_<RMSProp, AbstractOptimizer>(subm, "RmsProp", R"EOF(
@@ -54,13 +54,13 @@ void AddRmsProp(py::module &subm) {
                RmsProp optimizer.
 
                ```python
-               >>> from netket.optimizer import RmsProp
+               >>> from nqs.optimizer import RmsProp
                >>> op = RmsProp(learning_rate=0.02)
 
                ```
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

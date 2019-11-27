@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_JSONUTILS_HPP
-#define NETKET_JSONUTILS_HPP
+#ifndef NQS_JSONUTILS_HPP
+#define NQS_JSONUTILS_HPP
 
 #include <complex>
 
@@ -42,7 +42,7 @@ void from_json(const nlohmann::json& js,
                Matrix<T, Eigen::Dynamic, Eigen::Dynamic>& v);
 }  // namespace Eigen
 
-namespace netket {
+namespace nqs {
 
 using json = nlohmann::json;
 
@@ -78,6 +78,6 @@ Value FieldOrDefaultVal(const JSON& pars, const std::string& field,
   }
 }
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_JSONUTILS_HPP
+#endif  // NQS_JSONUTILS_HPP

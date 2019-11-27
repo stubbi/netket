@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_STATS_HPP
-#define NETKET_STATS_HPP
+#ifndef NQS_STATS_HPP
+#define NQS_STATS_HPP
 
-namespace netket {
+namespace nqs {
 template <class T>
 class OnlineStat;
 template <class T>
 class Binning;
 class ObsManager;
-}  // namespace netket
+}  // namespace nqs
 
 #include "binning.hpp"
 #include "obs_manager.hpp"

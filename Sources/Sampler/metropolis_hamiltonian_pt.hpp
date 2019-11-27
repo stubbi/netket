@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_METROPOLISHAMILTONIAN_PT_HPP
-#define NETKET_METROPOLISHAMILTONIAN_PT_HPP
+#ifndef NQS_METROPOLISHAMILTONIAN_PT_HPP
+#define NQS_METROPOLISHAMILTONIAN_PT_HPP
 
 #include <mpi.h>
 #include <Eigen/Dense>
@@ -22,7 +22,7 @@
 #include "Utils/random_utils.hpp"
 #include "abstract_sampler.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Metropolis sampling generating transitions using the Hamiltonian
 template <class H>
@@ -239,6 +239,6 @@ class MetropolisHamiltonianPt : public AbstractSampler {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

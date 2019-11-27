@@ -18,7 +18,7 @@
 #include <numeric>
 #include <sstream>
 
-namespace netket {
+namespace nqs {
 
 CustomGraph::CustomGraph(std::vector<Edge> edges, ColorMap colors,
                          std::vector<std::vector<int>> automorphisms)
@@ -148,4 +148,4 @@ void CustomGraph::CheckEdgeColors() const {
   // TODO write a meaningful check of edge colors
 }
 
-}  // namespace netket
+}  // namespace nqs

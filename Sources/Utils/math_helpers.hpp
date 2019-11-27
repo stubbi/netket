@@ -1,11 +1,11 @@
-#ifndef NETKET_MATH_HELPERS_HPP
-#define NETKET_MATH_HELPERS_HPP
+#ifndef NQS_MATH_HELPERS_HPP
+#define NQS_MATH_HELPERS_HPP
 
 #include <cmath>
 #include <functional>
 #include <limits>
 
-namespace netket {
+namespace nqs {
 
 /**
  * Returns v if it is in the interval [lo, hi] or the closest of the bounds,
@@ -58,6 +58,6 @@ inline bool CheckSumOverflow(int a, int b) {
     return a > std::numeric_limits<int>::max() - b;
 }
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_MATH_HELPERS_HPP
+#endif  // NQS_MATH_HELPERS_HPP

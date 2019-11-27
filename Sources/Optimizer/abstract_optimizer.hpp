@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ABSTRACT_OPTIMIZER_HPP
-#define NETKET_ABSTRACT_OPTIMIZER_HPP
+#ifndef NQS_ABSTRACT_OPTIMIZER_HPP
+#define NQS_ABSTRACT_OPTIMIZER_HPP
 
 #include <Eigen/Dense>
 #include <complex>
 #include <vector>
 
-namespace netket {
+namespace nqs {
 
 class AbstractOptimizer {
  public:
@@ -64,6 +64,6 @@ class AbstractOptimizer {
  private:
   bool is_holomorphic_;
 };
-}  // namespace netket
+}  // namespace nqs
 
 #endif

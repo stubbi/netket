@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PY_EXACTSAMPLER_HPP
-#define NETKET_PY_EXACTSAMPLER_HPP
+#ifndef NQS_PY_EXACTSAMPLER_HPP
+#define NQS_PY_EXACTSAMPLER_HPP
 
 #include <pybind11/pybind11.h>
 #include "exact_sampler.hpp"
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddExactSampler(py::module &subm) {
   py::class_<ExactSampler, AbstractSampler>(subm, "ExactSampler", R"EOF(
@@ -45,18 +45,18 @@ void AddExactSampler(py::module &subm) {
                  Exact sampling from a RBM machine in a 1D lattice of spin 1/2
 
                  ```python
-                 >>> import netket as nk
+                 >>> import nqs
                  >>>
-                 >>> g=nk.graph.Hypercube(length=8,n_dim=1,pbc=True)
-                 >>> hi=nk.hilbert.Spin(s=0.5,graph=g)
+                 >>> g=nqs.graph.Hypercube(length=8,n_dim=1,pbc=True)
+                 >>> hi=nqs.hilbert.Spin(s=0.5,graph=g)
                  >>>
                  >>> # RBM Spin Machine
-                 >>> ma = nk.machine.RbmSpin(alpha=1, hilbert=hi)
+                 >>> ma = nqs.machine.RbmSpin(alpha=1, hilbert=hi)
                  >>>
-                 >>> sa = nk.sampler.ExactSampler(machine=ma)
+                 >>> sa = nqs.sampler.ExactSampler(machine=ma)
 
                  ```
              )EOF");
 }
-}  // namespace netket
+}  // namespace nqs
 #endif

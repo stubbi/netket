@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYOPTIMIZER_HPP
-#define NETKET_PYOPTIMIZER_HPP
+#ifndef NQS_PYOPTIMIZER_HPP
+#define NQS_PYOPTIMIZER_HPP
 
 #include <pybind11/complex.h>
 #include <pybind11/eigen.h>
@@ -33,7 +33,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddOptimizerModule(py::module &m) {
   auto subm = m.def_submodule("optimizer");
@@ -51,6 +51,6 @@ void AddOptimizerModule(py::module &m) {
   AddAdaDelta(subm);
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

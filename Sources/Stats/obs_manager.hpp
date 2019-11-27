@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_OBS_MANAGER_HPP
-#define NETKET_OBS_MANAGER_HPP
+#ifndef NQS_OBS_MANAGER_HPP
+#define NQS_OBS_MANAGER_HPP
 
 #include <mpi.h>
 #include <Eigen/Core>
@@ -31,7 +31,7 @@
 #include "binning.hpp"
 #include "onlinestat.hpp"
 
-namespace netket {
+namespace nqs {
 
 class ObsManager {
   // TODO(C++14/17): Maybe replace with variant (or e.g. mpark::variant)? In
@@ -117,5 +117,5 @@ void to_json(json &j, const ObsManager &om) {
   }
 }
 
-}  // namespace netket
+}  // namespace nqs
 #endif

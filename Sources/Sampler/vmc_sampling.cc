@@ -1,6 +1,6 @@
 #include "vmc_sampling.hpp"
 
-namespace netket {
+namespace nqs {
 namespace vmc {
 
 Result ComputeSamples(AbstractSampler &sampler, Index nsamples, Index ndiscard,
@@ -181,4 +181,4 @@ VectorXcd GradientOfVariance(const Result &result, AbstractMachine &psi,
 }
 
 }  // namespace vmc
-}  // namespace netket
+}  // namespace nqs

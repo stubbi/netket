@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYMOMENTUM_HPP
-#define NETKET_PYMOMENTUM_HPP
+#ifndef NQS_PYMOMENTUM_HPP
+#define NQS_PYMOMENTUM_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
@@ -24,7 +24,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddMomentum(py::module &subm) {
   py::class_<Momentum, AbstractOptimizer>(subm, "Momentum",
@@ -55,13 +55,13 @@ void AddMomentum(py::module &subm) {
                Momentum optimizer.
 
                ```python
-               >>> from netket.optimizer import Momentum
+               >>> from nqs.optimizer import Momentum
                >>> op = Momentum(learning_rate=0.01)
 
                ```
            )EOF");
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

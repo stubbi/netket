@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ACTIVATIONS_HPP
-#define NETKET_ACTIVATIONS_HPP
+#ifndef NQS_ACTIVATIONS_HPP
+#define NQS_ACTIVATIONS_HPP
 
 #include <Eigen/Dense>
 #include <complex>
@@ -21,7 +21,7 @@
 #include <random>
 #include <vector>
 
-namespace netket {
+namespace nqs {
 
 /**
   Abstract class for Activations.
@@ -161,6 +161,6 @@ class Relu : public AbstractActivation {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

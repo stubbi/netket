@@ -18,7 +18,7 @@
 
 #include "Utils/next_variation.hpp"
 
-namespace netket {
+namespace nqs {
 
 HilbertIndex::HilbertIndex(std::vector<double> localstates, int local_size,
                            int size)
@@ -92,4 +92,4 @@ Eigen::VectorXd HilbertIndex::NumberToState(int i) const {
 
 constexpr int HilbertIndex::MaxStates;
 
-}  // namespace netket
+}  // namespace nqs

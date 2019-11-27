@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_SUMOUTPUT_HH
-#define NETKET_SUMOUTPUT_HH
+#ifndef NQS_SUMOUTPUT_HH
+#define NQS_SUMOUTPUT_HH
 
 #include <time.h>
 #include <Eigen/Dense>
@@ -26,7 +26,7 @@
 #include "Utils/lookup.hpp"
 #include "abstract_layer.hpp"
 
-namespace netket {
+namespace nqs {
 
 class SumOutput : public AbstractLayer {
   int in_size_;   // input size: should be multiple of no. of sites
@@ -128,6 +128,6 @@ class SumOutput : public AbstractLayer {
 
   void from_json(const json & /*j*/) override {}
 };
-}  // namespace netket
+}  // namespace nqs
 
 #endif

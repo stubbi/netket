@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_EXCEPTIONS_HPP
-#define NETKET_EXCEPTIONS_HPP
+#ifndef NQS_EXCEPTIONS_HPP
+#define NQS_EXCEPTIONS_HPP
 
 #include <stdexcept>
 
-namespace netket {
+namespace nqs {
 
 using InvalidInputError = std::invalid_argument;
 using RuntimeError = std::runtime_error;
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_EXCEPTIONS_HPP
+#endif  // NQS_EXCEPTIONS_HPP

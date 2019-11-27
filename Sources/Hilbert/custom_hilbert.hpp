@@ -12,13 +12,13 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_CUSTOM_HILBERT_HPP
-#define NETKET_CUSTOM_HILBERT_HPP
+#ifndef NQS_CUSTOM_HILBERT_HPP
+#define NQS_CUSTOM_HILBERT_HPP
 
 #include "Graph/abstract_graph.hpp"
 #include "Hilbert/abstract_hilbert.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
   User-Define Hilbert space
@@ -43,13 +43,13 @@ class CustomHilbert : public AbstractHilbert {
   const AbstractGraph &GetGraph() const noexcept override;
 
   void RandomVals(Eigen::Ref<Eigen::VectorXd> state,
-                  netket::default_random_engine &rgen) const override;
+                  nqs::default_random_engine &rgen) const override;
 
   void UpdateConf(Eigen::Ref<Eigen::VectorXd> v,
                   nonstd::span<const int> tochange,
                   nonstd::span<const double> newconf) const override;
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_CUSTOM_HILBERT_HPP
+#endif  // NQS_CUSTOM_HILBERT_HPP

@@ -27,7 +27,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 namespace {
 void AddBosons(py::module subm) {
@@ -45,8 +45,8 @@ void AddBosons(py::module subm) {
                Simple boson hilbert space.
 
                ```python
-               >>> from netket.graph import Hypercube
-               >>> from netket.hilbert import Boson
+               >>> from nqs.graph import Hypercube
+               >>> from nqs.hilbert import Boson
                >>> g = Hypercube(length=10,n_dim=2,pbc=True)
                >>> hi = Boson(graph=g, n_max=4)
                >>> print(hi.size)
@@ -68,8 +68,8 @@ void AddBosons(py::module subm) {
                Simple boson hilbert space.
 
                ```python
-               >>> from netket.graph import Hypercube
-               >>> from netket.hilbert import Boson
+               >>> from nqs.graph import Hypercube
+               >>> from nqs.hilbert import Boson
                >>> g = Hypercube(length=10,n_dim=2,pbc=True)
                >>> hi = Boson(graph=g, n_max=5, n_bosons=11)
                >>> print(hi.size)
@@ -96,8 +96,8 @@ void AddCustomHilbert(py::module subm) {
                Simple custom hilbert space.
 
                ```python
-               >>> from netket.graph import Hypercube
-               >>> from netket.hilbert import CustomHilbert
+               >>> from nqs.graph import Hypercube
+               >>> from nqs.hilbert import CustomHilbert
                >>> g = Hypercube(length=10,n_dim=2,pbc=True)
                >>> hi = CustomHilbert(graph=g, local_states=[-1232, 132, 0])
                >>> print(hi.size)
@@ -122,8 +122,8 @@ void AddSpins(py::module subm) {
                Simple spin hilbert space.
 
                ```python
-               >>> from netket.graph import Hypercube
-               >>> from netket.hilbert import Spin
+               >>> from nqs.graph import Hypercube
+               >>> from nqs.hilbert import Spin
                >>> g = Hypercube(length=10,n_dim=2,pbc=True)
                >>> hi = Spin(graph=g, s=0.5)
                >>> print(hi.size)
@@ -145,8 +145,8 @@ void AddSpins(py::module subm) {
                Simple spin hilbert space.
 
                ```python
-               >>> from netket.graph import Hypercube
-               >>> from netket.hilbert import Spin
+               >>> from nqs.graph import Hypercube
+               >>> from nqs.hilbert import Spin
                >>> g = Hypercube(length=10,n_dim=2,pbc=True)
                >>> hi = Spin(graph=g, s=0.5, total_sz=0)
                >>> print(hi.size)
@@ -191,7 +191,7 @@ void AddHilbertModule(py::module m) {
               R"EOF(list[float]: List of discreet local quantum numbers.)EOF")
           .def_property_readonly(
               "graph", &AbstractHilbert::GetGraph,
-              R"EOF(netket.graph.Graph: The Graph used to construct this Hilbert space.)EOF")
+              R"EOF(nqs.graph.Graph: The Graph used to construct this Hilbert space.)EOF")
           .def("random_vals", &AbstractHilbert::RandomVals, py::arg("state"),
                py::arg("rgen"), R"EOF(
        Member function generating uniformely distributed local random states.
@@ -206,11 +206,11 @@ void AddHilbertModule(py::module m) {
            space.
 
            ```python
-           >>> import netket as nk
+           >>> import nqs
            >>> import numpy as np
-           >>> hi = nk.hilbert.Boson(n_max=3, graph=nk.graph.Hypercube(length=5, n_dim=1))
+           >>> hi = nqs.hilbert.Boson(n_max=3, graph=nqs.graph.Hypercube(length=5, n_dim=1))
            >>> rstate = np.zeros(hi.size)
-           >>> rg = nk.utils.RandomEngine(seed=1234)
+           >>> rg = nqs.utils.RandomEngine(seed=1234)
            >>> hi.random_vals(rstate, rg)
            >>> local_states = hi.local_states
            >>> print(rstate[0] in local_states)
@@ -289,4 +289,4 @@ void AddHilbertModule(py::module m) {
   AddCustomHilbert(subm);
 }
 
-}  // namespace netket
+}  // namespace nqs

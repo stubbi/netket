@@ -15,12 +15,12 @@
 //
 // by G. Mazzola, May-Aug 2018
 
-#ifndef NETKET_JAS_SYMM_HPP
-#define NETKET_JAS_SYMM_HPP
+#ifndef NQS_JAS_SYMM_HPP
+#define NQS_JAS_SYMM_HPP
 
 #include "Machine/abstract_machine.hpp"
 
-namespace netket {
+namespace nqs {
 
 // Jastrow with permutation symmetries
 class JastrowSymm : public AbstractMachine {
@@ -88,6 +88,6 @@ class JastrowSymm : public AbstractMachine {
   void SetBareParameters();
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_JAS_SYMM_HPP
+#endif  // NQS_JAS_SYMM_HPP

@@ -17,7 +17,7 @@
 #include "Utils/json_utils.hpp"
 #include "Utils/messages.hpp"
 
-namespace netket {
+namespace nqs {
 
 RbmNQS::RbmNQS(std::shared_ptr<const AbstractHilbert> hilbert, int nhidden,
                  int alpha, bool usea, bool useb)
@@ -80,7 +80,7 @@ void RbmNQS::Init() {
 void RbmNQS::InitRandomPars(int seed, double sigma) {
   VectorType par(npar_);
 
-  netket::RandomGaussian(par, seed, sigma);
+  nqs::RandomGaussian(par, seed, sigma);
 
   SetParameters(par);
 }
@@ -296,4 +296,4 @@ void RbmNQS::Load(const std::string &filename) {
 
 bool RbmNQS::IsHolomorphic() const noexcept { return true; }
 
-}  // namespace netket
+}  // namespace nqs

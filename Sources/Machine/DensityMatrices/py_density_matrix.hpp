@@ -13,8 +13,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PY_DENSITY_MATRIX_HPP
-#define NETKET_PY_DENSITY_MATRIX_HPP
+#ifndef NQS_PY_DENSITY_MATRIX_HPP
+#define NQS_PY_DENSITY_MATRIX_HPP
 
 #include <mpi.h>
 #include <pybind11/complex.h>
@@ -30,12 +30,12 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 void AddDensityMatrixModule(py::module &subm) {
   py::class_<AbstractDensityMatrix, AbstractMachine>(subm, "DensityMatrix")
       .def_property_readonly(
           "hilbert_physical", &AbstractDensityMatrix::GetHilbertPhysical,
-          R"EOF(netket.hilbert.Hilbert: The physical hilbert space object of the density matrix.)EOF")
+          R"EOF(nqs.hilbert.Hilbert: The physical hilbert space object of the density matrix.)EOF")
       .def(
           "to_matrix",
           [](AbstractDensityMatrix &self) -> AbstractDensityMatrix::MatrixType {
@@ -79,6 +79,6 @@ void AddDensityMatrixModule(py::module &subm) {
 
   AddNdmSpinPhase(subm);
 }
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_PY_DENSITY_MATRIX_HPP
+#endif  // NQS_PY_DENSITY_MATRIX_HPP

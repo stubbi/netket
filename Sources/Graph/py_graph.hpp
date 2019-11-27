@@ -12,16 +12,16 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYGRAPH_HPP
-#define NETKET_PYGRAPH_HPP
+#ifndef NQS_PYGRAPH_HPP
+#define NQS_PYGRAPH_HPP
 
 #include <pybind11/pybind11.h>
 #include <pybind11/stl.h>
 
-namespace netket {
+namespace nqs {
 
 void AddGraphModule(pybind11::module m);
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

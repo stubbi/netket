@@ -44,3 +44,6 @@ Thumbs.db
 # Run and Build Directories
 run/
 build/
+
+# Vagrant for Singularity
+vm-singularity/

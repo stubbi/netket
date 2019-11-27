@@ -12,14 +12,14 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_RBM_NQS_HPP
-#define NETKET_RBM_NQS_HPP
+#ifndef NQS_RBM_NQS_HPP
+#define NQS_RBM_NQS_HPP
 
 #include <cmath>
 
 #include "Machine/abstract_machine.hpp"
 
-namespace netket {
+namespace nqs {
 
 /** Restricted Boltzmann machine class with spin 1/2 hidden units.
  *
@@ -138,6 +138,6 @@ class RbmNQS : public AbstractMachine {
   inline void Init();
 };
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

@@ -4,9 +4,9 @@
 #include <vector>
 #include "Utils/json_utils.hpp"
 
-std::vector<netket::json> GetOptimizerInputs() {
-  std::vector<netket::json> input_tests;
-  netket::json pars;
+std::vector<nqs::json> GetOptimizerInputs() {
+  std::vector<nqs::json> input_tests;
+  nqs::json pars;
   // Check that the optimizers are stepping correctly
   // Minimize Matyas function
   pars = {{"Optimizer", {{"Name", "Sgd"}, {"LearningRate", 0.1}}}};

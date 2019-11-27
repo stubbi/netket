@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_GRAPH_HPP
-#define NETKET_GRAPH_HPP
+#ifndef NQS_GRAPH_HPP
+#define NQS_GRAPH_HPP
 
 #include "Graph/abstract_graph.hpp"
 #include "Graph/custom_graph.hpp"

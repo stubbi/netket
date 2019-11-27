@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ONLINESTAT_HPP
-#define NETKET_ONLINESTAT_HPP
+#ifndef NQS_ONLINESTAT_HPP
+#define NQS_ONLINESTAT_HPP
 
 #include <mpi.h>
 #include <Eigen/Core>
@@ -23,7 +23,7 @@
 #include <vector>
 #include "Utils/random_utils.hpp"
 
-namespace netket {
+namespace nqs {
 
 /// Online statistics
 // for general types
@@ -168,5 +168,5 @@ class OnlineStat<Eigen::VectorXd> {
   }
 };
 
-}  // namespace netket
+}  // namespace nqs
 #endif

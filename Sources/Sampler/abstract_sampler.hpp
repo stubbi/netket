@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ABSTRACTSAMPLER_HPP
-#define NETKET_ABSTRACTSAMPLER_HPP
+#ifndef NQS_ABSTRACTSAMPLER_HPP
+#define NQS_ABSTRACTSAMPLER_HPP
 
 #include <functional>
 #include <memory>
 #include <vector>
 #include "Hilbert/abstract_hilbert.hpp"
 
-namespace netket {
+namespace nqs {
 
 class AbstractSampler {
  public:
@@ -85,5 +85,5 @@ class AbstractSampler {
   std::shared_ptr<const AbstractHilbert> hilbert_;
 };
 
-}  // namespace netket
+}  // namespace nqs
 #endif

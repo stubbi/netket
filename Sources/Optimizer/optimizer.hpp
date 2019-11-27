@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_OPTIMIZER_HPP
-#define NETKET_OPTIMIZER_HPP
+#ifndef NQS_OPTIMIZER_HPP
+#define NQS_OPTIMIZER_HPP
 
 #include "Utils/all_utils.hpp"
 #include "abstract_optimizer.hpp"

@@ -17,10 +17,10 @@
 #include "Hilbert/abstract_hilbert.hpp"
 #include "Utils/random_utils.hpp"
 
-#ifndef NETKET_SPIN_HPP
-#define NETKET_SPIN_HPP
+#ifndef NQS_SPIN_HPP
+#define NQS_SPIN_HPP
 
-namespace netket {
+namespace nqs {
 
 /**
   Hilbert space for integer or half-integer spins.
@@ -41,7 +41,7 @@ class Spin : public AbstractHilbert {
   const AbstractGraph &GetGraph() const noexcept override;
 
   void RandomVals(Eigen::Ref<Eigen::VectorXd> state,
-                  netket::default_random_engine &rgen) const override;
+                  nqs::default_random_engine &rgen) const override;
 
   void UpdateConf(Eigen::Ref<Eigen::VectorXd> v,
                   nonstd::span<const int> tochange,
@@ -60,6 +60,6 @@ class Spin : public AbstractHilbert {
   int nspins_;
 };
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_SPIN_HPP
+#endif  // NQS_SPIN_HPP

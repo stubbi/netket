@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ALLUTILS_HPP
-#define NETKET_ALLUTILS_HPP
+#ifndef NQS_ALLUTILS_HPP
+#define NQS_ALLUTILS_HPP
 
 #include "exceptions.hpp"
 #include "json_utils.hpp"

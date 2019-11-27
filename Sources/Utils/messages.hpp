@@ -12,15 +12,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_MESSAGES_HPP
-#define NETKET_MESSAGES_HPP
+#ifndef NQS_MESSAGES_HPP
+#define NQS_MESSAGES_HPP
 
 #include <mpi.h>
 #include <iostream>
 #include <streambuf>
 #include <string>
 
-namespace netket {
+namespace nqs {
 
 class NullBuffer : public std::streambuf {
  public:
@@ -100,6 +100,6 @@ inline std::ostream& DebugMessage(const std::string& comment = "# DEBUG: ") {
 #endif
 }
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_MESSAGES_HPP
+#endif  // NQS_MESSAGES_HPP

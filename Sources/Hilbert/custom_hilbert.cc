@@ -14,7 +14,7 @@
 
 #include "custom_hilbert.hpp"
 
-namespace netket {
+namespace nqs {
 
 CustomHilbert::CustomHilbert(const AbstractGraph &graph,
                              const std::vector<double> &localstates)
@@ -32,7 +32,7 @@ int CustomHilbert::Size() const { return size_; }
 std::vector<double> CustomHilbert::LocalStates() const { return local_; }
 
 void CustomHilbert::RandomVals(Eigen::Ref<Eigen::VectorXd> state,
-                               netket::default_random_engine &rgen) const {
+                               nqs::default_random_engine &rgen) const {
   std::uniform_int_distribution<int> distribution(0, nstates_ - 1);
 
   assert(state.size() == size_);
@@ -57,4 +57,4 @@ void CustomHilbert::UpdateConf(Eigen::Ref<Eigen::VectorXd> v,
 
 const AbstractGraph &CustomHilbert::GetGraph() const noexcept { return graph_; }
 
-}  // namespace netket
+}  // namespace nqs

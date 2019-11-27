@@ -13,15 +13,15 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_ABSTRACT_DENSITY_MATRIX_HPP
-#define NETKET_ABSTRACT_DENSITY_MATRIX_HPP
+#ifndef NQS_ABSTRACT_DENSITY_MATRIX_HPP
+#define NQS_ABSTRACT_DENSITY_MATRIX_HPP
 
 #include "Graph/custom_graph.hpp"
 #include "Hilbert/custom_hilbert.hpp"
 #include "Machine/abstract_machine.hpp"
 #include "Utils/memory_utils.hpp"
 
-namespace netket {
+namespace nqs {
 
 /* Abstract base class for Density Matrices.
  * Contains the physical hilbert space and the doubled hilbert
@@ -104,6 +104,6 @@ class AbstractDensityMatrix : public AbstractMachine {
     return *hilbert_physical_;
   }
 };
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_ABSTRACT_DENSITY_MATRIX_HPP
+#endif  // NQS_ABSTRACT_DENSITY_MATRIX_HPP

@@ -1,5 +1,5 @@
-#ifndef NETKET_JSON_OUTPUT_WRITER_HPP
-#define NETKET_JSON_OUTPUT_WRITER_HPP
+#ifndef NQS_JSON_OUTPUT_WRITER_HPP
+#define NQS_JSON_OUTPUT_WRITER_HPP
 
 #include <cassert>
 #include <fstream>
@@ -12,7 +12,7 @@
 #include "Utils/json_utils.hpp"
 #include "Utils/messages.hpp"
 
-namespace netket {
+namespace nqs {
 
 /**
  * The JsonOutputWriter class is responsible for writing log files containing
@@ -129,6 +129,6 @@ class JsonOutputWriter {
 
 std::string JsonOutputWriter::_s_start = "{\"Output\": [  ]}";
 
-}  // namespace netket
+}  // namespace nqs
 
-#endif  // NETKET_JSON_OUTPUT_WRITER_HPP
+#endif  // NQS_JSON_OUTPUT_WRITER_HPP

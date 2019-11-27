@@ -12,8 +12,8 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 
-#ifndef NETKET_PYOPERATOR_HPP
-#define NETKET_PYOPERATOR_HPP
+#ifndef NQS_PYOPERATOR_HPP
+#define NQS_PYOPERATOR_HPP
 
 #include <pybind11/complex.h>
 #include <pybind11/eigen.h>
@@ -29,7 +29,7 @@
 
 namespace py = pybind11;
 
-namespace netket {
+namespace nqs {
 
 void AddOperatorModule(py::module m) {
   auto subm = m.def_submodule("operator");
@@ -54,7 +54,7 @@ void AddOperatorModule(py::module m) {
        )EOF")
           .def_property_readonly(
               "hilbert", &AbstractOperator::GetHilbert,
-              R"EOF(netket.hilbert.Hilbert: ``Hilbert`` space of operator.)EOF")
+              R"EOF(nqs.hilbert.Hilbert: ``Hilbert`` space of operator.)EOF")
           .def("to_sparse", &AbstractOperator::ToSparse,
                R"EOF(
          Returns the sparse matrix representation of the operator. Note that, in general,
@@ -107,6 +107,6 @@ void AddOperatorModule(py::module m) {
   AddGraphOperator(subm);
 }
 
-}  // namespace netket
+}  // namespace nqs
 
 #endif

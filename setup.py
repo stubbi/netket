@@ -17,7 +17,7 @@ def steal_cmake_flags(args):
     strings usually equal to ``sys.argv``. All arguments of the form
     ``--cmake-args=...`` are extracted (i.e. removed from ``args``!) and
     accumulated. If there are no arguments of the specified form,
-    ``NETKET_CMAKE_FLAGS`` environment variable is used instead.
+    ``NQS_CMAKE_FLAGS`` environment variable is used instead.
     """
     _ARG_PREFIX = "--cmake-args="
 
@@ -40,7 +40,7 @@ def steal_cmake_flags(args):
         )
     else:
         try:
-            cmake_args = shlex.split(os.environ["NETKET_CMAKE_FLAGS"])
+            cmake_args = shlex.split(os.environ["NQS_CMAKE_FLAGS"])
         except KeyError:
             cmake_args = []
     return cmake_args
@@ -102,7 +102,7 @@ class CMakeBuild(build_ext):
             # Options to pass to CMake during configuration
             cmake_args = _CMAKE_FLAGS
             cmake_args.append(
-                "-DNETKET_PYTHON_VERSION={}.{}.{}".format(*sys.version_info[:3])
+                "-DNQS_PYTHON_VERSION={}.{}.{}".format(*sys.version_info[:3])
             )
             cmake_args.append("-DCMAKE_LIBRARY_OUTPUT_DIRECTORY={}".format(lib_dir))
             if not _generator_specified(cmake_args) and _have_ninja():
@@ -152,17 +152,16 @@ class CMakeBuild(build_ext):
 
 
 setup(
-    name="netket",
-    version="2.0",
-    author="Giuseppe Carleo et al.",
-    url="http://github.com/netket/netket",
-    author_email="netket@netket.org",
+    name="nqs",
+    version="0.1",
+    author="Jannes Stubbemann",
+    url="http://github.com/stubbi/nqs",
+    author_email="mail@stubbi.xyz",
     license="Apache 2.0",
-    packages=["netket"],
-    ext_modules=[CMakeExtension("netket._C_netket")],
-    long_description="""NetKet is an open - source project delivering cutting - edge
-         methods for the study of many - body quantum systems with artificial
-         neural networks and machine learning techniques.""",
+    packages=["nqs"],
+    ext_modules=[CMakeExtension("nqs._C_nqs")],
+    long_description="""NQS is built on top of Netket for the classical
+     simulation of Quantum Circuits with Restricted Boltzmann Machines.""",
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
     install_requires=["numpy>=1.16", "cmake>=3.10.3", "scipy>=1.2.1"],
