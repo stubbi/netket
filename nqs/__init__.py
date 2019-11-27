@@ -15,21 +15,6 @@
 from __future__ import absolute_import
 from . import (
     _C_nqs,
-    dynamics,
-    exact,
-    graph,
-    hilbert,
-    layer,
-    machine,
-    nqs,
-    operator,
-    optimizer,
-    output,
-    sampler,
-    stats,
-    supervised,
-    unsupervised,
-    utils,
-    variational,
+    nqs
 )
 from ._C_nqs import MPI, LookupReal, LookupComplex
