@@ -17,13 +17,42 @@
 
 #include <nqs.hpp>
 #include "NQS/py_nqs.hpp"
+#include "Dynamics/py_dynamics.hpp"
+#include "Graph/py_graph.hpp"
+#include "GroundState/py_ground_state.hpp"
+#include "Hilbert/py_hilbert.hpp"
+#include "Machine/py_machine.hpp"
+#include "Operator/py_operator.hpp"
+#include "Optimizer/py_optimizer.hpp"
+#include "Output/py_output.hpp"
+#include "Sampler/py_sampler.hpp"
+#include "Stats/py_stats.hpp"
+#include "Supervised/py_supervised.hpp"
+#include "Unsupervised/py_unsupervised.hpp"
+#include "Utils/mpi_interface.hpp"  // for MPIInitializer
+#include "Utils/py_utils.hpp"
+#include "Utils/pybind_helpers.hpp"
 
 namespace nqs {
 
 PYBIND11_MODULE(_C_nqs, m) {
+  AddDynamicsModule(m);
+  AddGraphModule(m);
+  AddGroundStateModule(m);
+  AddHilbertModule(m);
+  AddMachineModule(m);
   AddNQSModule(m);
+  AddOperatorModule(m);
+  AddOptimizerModule(m);
+  AddOutputModule(m);
+  AddSamplerModule(m);
+  AddStatsModule(m);
+  AddUtilsModule(m);
+  AddSupervisedModule(m);
+  AddUnsupervisedModule(m);
 }  // PYBIND11_MODULE
 
 }  // namespace nqs
+
 
 #endif
