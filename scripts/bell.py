@@ -4,7 +4,7 @@ import cmath
 import numpy as np
 
 nqs = nqs.nqs.NQS(2)
-nqs.applyControlledZRotation(cmath.pi)
+nqs.applyControlledZRotation(0, 1, cmath.pi)
 nqs.applyHadamard(1, 100, 100000)
 
 a = 0
