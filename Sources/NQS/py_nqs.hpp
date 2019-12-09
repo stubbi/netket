@@ -133,6 +133,10 @@ void AddNQSModule(py::module &m) {
 
            Args:
                v: configuration of qubits to calculate wave function for.
+           )EOF")
+      .def("truthTable", &NQS::truthTable,
+            R"EOF(
+           prints the truth table for the current circuit and has an exponential runtime!
            )EOF");
 }
 

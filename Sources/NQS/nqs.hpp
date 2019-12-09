@@ -7,6 +7,7 @@
 #include "Supervised/supervised.hpp"
 #include "Operator/local_operator.hpp"
 #include <vector>
+#include <iostream>
 
 
 namespace nqs {
@@ -223,8 +224,53 @@ class NQS {
             return std::exp(psi_.LogVal(v));
         }
 
+        /*
+        *
+        * This function is for debug purpose only. It prints the truth table for
+        * the current circuit and has an exponential runtime!
+        */
+        void truthTable() {
+            std::map<std::vector<int>, float> occurences;
+            InfoMessage() << "Truth table:" << std::endl;
+            for(int i = 0; i < 1000; i++) {
+               sa_.Reset(true);
+               sa_.Sweep();
+               std::vector<int> v(sa_.Visible().data(), sa_.Visible().data() + sa_.Visible().size());
+               try {
+                   occurences.at(v) = occurences.at(v) + 1.0/1000.0;
+               } catch (...) {
+                   occurences.insert(std::pair<std::vector<int>,float>(v,1.0/1000.0));
+               }
+            }
+
+            std::vector<int> v(sa_.Visible().data(), sa_.Visible().data() + sa_.Visible().size());
+            for(int i = 0; i < std::pow(2.0, sa_.Visible().size()); i++) {
+                convertToBinary(i, v);
+                std::ostringstream vts;
+                std::copy(v.begin(), v.end(), std::ostream_iterator<int>(vts, "")); 
+                try {
+                    float o = occurences.at(v);
+                    InfoMessage() << vts.str() << " " << o << std::endl;
+               } catch (...) {
+                    InfoMessage() << vts.str() << " 0.0" << std::endl;
+               }
+            }
+            InfoMessage() << std::endl;
+        }
 
     private:
+
+        void convertToBinary(unsigned int n, std::vector<int> &v) {
+            int remainder, i = 1, step = 0;
+
+            while (n!=0) {
+                v[step++] =n%2;
+                n /= 2;
+            }
+            while(step < v.size()) {
+                v[step++] = 0;
+            }
+        }
      
         VectorType getPsi_a() {
             RbmNQS::VectorType pars = psi_.GetParameters();
