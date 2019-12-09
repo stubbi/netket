@@ -59,7 +59,7 @@ for x in range(2):
             print(f/10000.0)
             print(g/10000.0)
             print(h/10000.0)
-            print()
+            print('')
 
 
 
@@ -103,4 +103,4 @@ for x in range(2):
             print(f/10000.0)
             print(g/10000.0)
             print(h/10000.0)
-            print()
+            print('')
