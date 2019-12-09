@@ -1,5 +1,5 @@
 #create Bell state
-import nqs
+import nqs as nq
 import cmath
 import numpy as np
 
@@ -7,7 +7,7 @@ import numpy as np
 for x in range(2):
     for y in range(2):
         for z in range(2):
-            nqs = nqs.nqs.NQS(3)
+            nqs = nq.nqs.NQS(3)
 
             # init to 000
             nqs.applyHadamard(0,100,100000)
