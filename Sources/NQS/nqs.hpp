@@ -198,9 +198,7 @@ class NQS {
             applyControlledZRotation(qubit1, qubit2, M_PI);
             applyHadamard(qubit2, numSamples, numIterations);
 
-            //applyHadamard(qubit3, numSamples, numIterations);
-            //TODO this should not be
-            applyPauliX(qubit3);
+            applyHadamard(qubit3, numSamples, numIterations);
 
             applyT(qubit1);
             applyTDagger(qubit2);
