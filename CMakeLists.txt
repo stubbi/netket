@@ -109,7 +109,7 @@ target_include_directories(pybind11 SYSTEM INTERFACE ${SOURCE_DIR}/include)
 target_include_directories(pybind11 SYSTEM INTERFACE ${PYTHON_INCLUDE_DIRS})
 target_link_libraries(pybind11 INTERFACE ${PYTHON_LIBRARIES})
 # Greatly reduces the code bloat
-target_compile_options(pybind11 INTERFACE "-fvisibility=hidden -O3 -march=skylake-avx512")
+target_compile_options(pybind11 INTERFACE "-fvisibility=hidden -O3 -march=skylake-avx512 -pg -g")
 
 
 # MPI
