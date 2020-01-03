@@ -2,9 +2,13 @@
 import nqs as nq
 import cmath
 import numpy as np
+import time
 
+start = time.time()
 nqs = nq.nqs.NQS(2)
 nqs.applyControlledZRotation(0, 1, cmath.pi)
 nqs.applyHadamard(1, 100, 100000)
 
 nqs.truthTable()
+end = time.time()
+print(end - start)
