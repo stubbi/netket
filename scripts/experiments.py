@@ -26,7 +26,7 @@ for nodes in number_of_nodes:
 #SBATCH -A hpc-prf-nqs
 #SBATCH -p {noctua_partition}
 #SBATCH -t {max_wall_time}
-#SBATCH --mail-type all
+#SBATCH --mail-type fail
 #SBATCH --mail-user {email}
 
 module reset
@@ -61,7 +61,7 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                         iterations=iterations
                     )
                     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-                    
+
                     print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations job.slurm".format(
                         experiment_name=experiment_name,
                         nodes=nodes,
