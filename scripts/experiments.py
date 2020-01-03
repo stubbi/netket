@@ -7,9 +7,9 @@ max_wall_time = '00:10:00'
 email = 'stubbi@mail.upb.de'
 
 # parameters to be tested
-number_of_nodes = range(1,40)
+number_of_nodes = range(1,10)
 number_of_tasks_per_node = range(1,10)
-number_of_omp_threads = range(1,40)
+number_of_omp_threads = range(1,10)
 
 number_of_training_samples = [1000]#range(1000, 100000, 1000)
 number_of_training_iterations = [1000]#range(1000, 100000, 1000)
