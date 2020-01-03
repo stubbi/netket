@@ -20,28 +20,24 @@ for nodes in number_of_nodes:
             for samples in number_of_training_samples:
                 for iterations in number_of_training_iterations:
 
-                    batch_script = """
-                    #!/bin/bash
-                    #SBATCH -N {number_of_nodes}
-                    #SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations
-                    #SBATCH -A hpc-prf-nqs
-                    #SBATCH -p {noctua_partition}
-                    #SBATCH -t {max_wall_time}
-                    #SBATCH --mail-type all
-                    #SBATCH --mail-user {email}
+                    batch_script ="""#!/bin/bash
+#SBATCH -N {nodes}
+#SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations
+#SBATCH -A hpc-prf-nqs
+#SBATCH -p {noctua_partition}
+#SBATCH -t {max_wall_time}
+#SBATCH --mail-type all
+#SBATCH --mail-user {email}
 
-                    module reset
-                    module load singularity
-                    module load mpi/OpenMPI/3.1.4-GCC-8.3.0
-                    export OMP_NUM_THREADS={number_of_omp_threads}
+module reset
+module load singularity
+module load mpi/OpenMPI/3.1.4-GCC-8.3.0
+export OMP_NUM_THREADS={threads}
 
-                    singularity pull --name nqs.sif shub://stubbi/nqs
-                    mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err
-                    
-                    """.format(
-                        number_of_nodes=number_of_nodes,
-                        experiment_name=experiment_name,
+singularity pull --name nqs.sif shub://stubbi/nqs
+mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err""".format(
                         nodes=nodes,
+                        experiment_name=experiment_name,
                         tasks=tasks,
                         threads=threads,
                         samples=samples,
@@ -49,7 +45,6 @@ for nodes in number_of_nodes:
                         noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
                         email=email,
-                        number_of_omp_threads=number_of_omp_threads,
                         script=script
                     )
 
