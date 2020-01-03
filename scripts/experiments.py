@@ -51,5 +51,12 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                     f = open('job.slurm','w')
                     print >>f, batch_script
 
-                    bashCommand = "sbatch -D $PC2PFS/hpc-prf-nqs/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations job.slurm"
+                    bashCommand = "sbatch -D $PC2PFS/hpc-prf-nqs/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations job.slurm".format(
+                        experiment_name=experiment_name,
+                        nodes=nodes,
+                        tasks=tasks,
+                        threads=threads,
+                        samples=samples,
+                        iterations=iterations
+                    )
                     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
