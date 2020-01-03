@@ -6,6 +6,7 @@
 #include "Sampler/metropolis_local_hadamard.hpp"
 #include "Supervised/supervised.hpp"
 #include "Operator/local_operator.hpp"
+#include "Utils/parallel_utils.hpp"
 #include <vector>
 #include <iostream>
 
@@ -25,6 +26,9 @@ class NQS {
     MetropolisLocalHadamard& saHadamard_;
     AdaMax& op_;
 
+    // Total number of computational nodes to run on
+    int totalnodes_;
+
     public:
 
         NQS(int nqubits)
@@ -42,23 +46,27 @@ class NQS {
                 }
 
                 setPsiParams(a,b,W);
+
+                MPI_Comm_size(MPI_COMM_WORLD, &totalnodes_);
             }
 
         void applyHadamard(int qubit, int numSamples = 100, int numIterations = 1000) {
-            std::vector<Eigen::VectorXd> trainingSamples;
-            std::vector<Eigen::VectorXcd> trainingTargets;
+            int numSamples_ = int(std::ceil(double(numSamples) / double(totalnodes_)));
+            std::vector<Eigen::VectorXd> trainingSamples(numSamples_);
+            std::vector<Eigen::VectorXcd> trainingTargets(numSamples_);
             
             int countOne = 0;
 
-            for(int i = 0; i < numSamples; i++) {
+
+            for(int i = 0; i < numSamples_; i++) {
                 saHadamard_.Reset(true);
                 saHadamard_.Sweep(qubit);
 
-                trainingSamples.push_back(saHadamard_.Visible());
+                trainingSamples[i] = saHadamard_.Visible();
 
                 Eigen::VectorXcd target(1);
                 target(0) = std::log(saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit));
-                trainingTargets.push_back(target);
+                trainingTargets[i] = target;
 
                 //InfoMessage() << saHadamard_.Visible() << " " << target << std::endl;
 
@@ -68,19 +76,19 @@ class NQS {
             }
 
             // in these cases, the gradient factors out and collapses
-            if(countOne == 0 || countOne == numSamples) {
+            if(countOne == 0 || countOne == numSamples_) {
                 // we have to add more samples, say 1%
-                for(int i = 0; i < numSamples/100.0; i++) {
+                for(int i = 0; i < numSamples_/100.0; i++) {
                     saHadamard_.Reset(true);
                     saHadamard_.Sweep(qubit);
 
                     auto sample = saHadamard_.Visible();
                     sample(qubit) = 1.0 - sample(qubit);
-                    trainingSamples.push_back(sample);
+                    trainingSamples[numSamples_ + i] = sample;
 
                     Eigen::VectorXcd target(1);
                     target(0) = std::log(saHadamard_.PsiValueAfterHadamard(sample, qubit));
-                    trainingTargets.push_back(target);
+                    trainingTargets[numSamples_ + i] = target;
 
                     //InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
                 }
