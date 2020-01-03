@@ -14,6 +14,8 @@ set(CMAKE_CXX_STANDARD 11)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
 
+set(CMAKE_CXX_FLAGS "-O3 -march=skylake-avx512 -pg -g")
+
 option(NQS_BUILD_TESTING "Build unit tests." OFF)
 option(NQS_USE_OPENMP "Use OpenMP for multithreading" ON)
 option(NQS_USE_SANITIZER "Build test suite with Clang sanitizer" OFF)
@@ -109,7 +111,7 @@ target_include_directories(pybind11 SYSTEM INTERFACE ${SOURCE_DIR}/include)
 target_include_directories(pybind11 SYSTEM INTERFACE ${PYTHON_INCLUDE_DIRS})
 target_link_libraries(pybind11 INTERFACE ${PYTHON_LIBRARIES})
 # Greatly reduces the code bloat
-target_compile_options(pybind11 INTERFACE "-fvisibility=hidden -O3 -march=skylake-avx512 -pg -g")
+target_compile_options(pybind11 INTERFACE "-fvisibility=hidden")
 
 
 # MPI
