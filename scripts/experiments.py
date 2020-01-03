@@ -20,7 +20,7 @@ for nodes in number_of_nodes:
             for samples in number_of_training_samples:
                 for iterations in number_of_training_iterations:
 
-                    batch_script = f'''
+                    batch_script = """
                     #!/bin/bash
                     #SBATCH -N {number_of_nodes}
                     #SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations
@@ -36,10 +36,25 @@ for nodes in number_of_nodes:
                     export OMP_NUM_THREADS={number_of_omp_threads}
 
                     singularity pull --name nqs.sif shub://stubbi/nqs
-                    mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err'''
+                    mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err
+                    
+                    """.format(
+                        number_of_nodes=number_of_nodes,
+                        experiment_name=experiment_name,
+                        nodes=nodes,
+                        tasks=tasks,
+                        threads=threads,
+                        samples=samples,
+                        iterations=iterations,
+                        noctua_partition=noctua_partition,
+                        max_wall_time=max_wall_time,
+                        email=email,
+                        number_of_omp_threads=number_of_omp_threads,
+                        script=script
+                    )
 
                     f = open('job.slurm','w')
-                    print(batch_script, file=f)
+                    print >>f, batch_script
 
                     bashCommand = "sbatch -D $PC2PFS/hpc-prf-nqs/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations job.slurm"
                     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
