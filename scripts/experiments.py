@@ -61,3 +61,12 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                         iterations=iterations
                     )
                     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+                    
+                    print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations job.slurm".format(
+                        experiment_name=experiment_name,
+                        nodes=nodes,
+                        tasks=tasks,
+                        threads=threads,
+                        samples=samples,
+                        iterations=iterations
+                    )
