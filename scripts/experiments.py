@@ -36,8 +36,7 @@ for nodes in number_of_nodes:
                     export OMP_NUM_THREADS={number_of_omp_threads}
 
                     singularity pull --name nqs.sif shub://stubbi/nqs
-                    mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err
-                    '''
+                    mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err'''
 
                     f = open('job.slurm','w')
                     print(batch_script, file=f)
