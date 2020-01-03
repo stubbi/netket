@@ -1,4 +1,4 @@
-import subprocess
+import subprocess, os
 
 script = 'bell.py'
 experiment_name = 'bell-test-scaling'
@@ -51,7 +51,8 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                     f = open('job.slurm','w')
                     print >>f, batch_script
 
-                    bashCommand = "sbatch -D $PC2PFS/hpc-prf-nqs/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations job.slurm".format(
+                    bashCommand = "sbatch -D {pc2pfs}/hpc-prf-nqs/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations job.slurm".format(
+                        pc2pfs=os.environ["PC2PFS"],
                         experiment_name=experiment_name,
                         nodes=nodes,
                         tasks=tasks,
