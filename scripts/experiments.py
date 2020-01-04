@@ -2,7 +2,7 @@ import subprocess, os
 
 script = 'bell.py'
 experiment_name = 'bell-test-scaling'
-noctua_partition = 'batch'
+noctua_partition = 'test'
 max_wall_time = '00:10:00'
 email = 'stubbi@mail.upb.de'
 
