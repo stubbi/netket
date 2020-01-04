@@ -2,13 +2,13 @@ import subprocess, os, errno
 
 script = 'bell.py'
 experiment_name = 'bell-test-scaling'
-noctua_partition = 'test'
+noctua_partition = 'short'
 max_wall_time = '00:30:00'
 email = 'stubbi@mail.upb.de'
 noctua_user = 'hpc-prf-nqs'
 
 # parameters to be tested
-number_of_nodes = range(1,10)
+number_of_nodes = range(1,3)
 number_of_tasks_per_node = range(1,10)
 number_of_omp_threads = range(1,10)
 
