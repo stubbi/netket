@@ -43,6 +43,7 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                         threads=threads,
                         samples=samples,
                         iterations=iterations,
+                        noctua_user=noctua_user,
                         noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
                         email=email,
