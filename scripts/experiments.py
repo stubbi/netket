@@ -3,8 +3,9 @@ import subprocess, os
 script = 'bell.py'
 experiment_name = 'bell-test-scaling'
 noctua_partition = 'test'
-max_wall_time = '00:10:00'
+max_wall_time = '00:30:00'
 email = 'stubbi@mail.upb.de'
+noctua_user = 'hpc-prf-nqs'
 
 # parameters to be tested
 number_of_nodes = range(1,10)
@@ -23,7 +24,7 @@ for nodes in number_of_nodes:
                     batch_script ="""#!/bin/bash
 #SBATCH -N {nodes}
 #SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations
-#SBATCH -A hpc-prf-nqs
+#SBATCH -A {noctua_user}
 #SBATCH -p {noctua_partition}
 #SBATCH -t {max_wall_time}
 #SBATCH --mail-type fail
@@ -51,7 +52,8 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                     f = open('job.slurm','w')
                     print >>f, batch_script
 
-                    bashCommand = "sbatch -D {pc2pfs}/hpc-prf-nqs/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations job.slurm".format(
+                    directory = "{pc2pfs}/{noctua_user}/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations".format(
+                        noctua_user=noctua_user,
                         pc2pfs=os.environ["PC2PFS"],
                         experiment_name=experiment_name,
                         nodes=nodes,
@@ -60,6 +62,9 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                         samples=samples,
                         iterations=iterations
                     )
+                    os.mkdir(directory)
+
+                    bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
                     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
                     print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations job.slurm".format(
