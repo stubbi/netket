@@ -1,4 +1,4 @@
-import subprocess, os
+import subprocess, os, errno
 
 script = 'bell.py'
 experiment_name = 'bell-test-scaling'
@@ -63,7 +63,12 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                         samples=samples,
                         iterations=iterations
                     )
-                    os.mkdir(directory)
+
+                    try: os.makedirs(directory)
+                    except OSError, err:
+                        # Reraise the error unless it's about an already existing directory 
+                        if err.errno != errno.EEXIST or not os.path.isdir(newdir): 
+                            raise
 
                     bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
                     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
