@@ -67,7 +67,7 @@ mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> er
                     try: os.makedirs(directory)
                     except OSError, err:
                         # Reraise the error unless it's about an already existing directory 
-                        if err.errno != errno.EEXIST or not os.path.isdir(newdir): 
+                        if err.errno != errno.EEXIST or not os.path.isdir(directory): 
                             raise
 
                     bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
