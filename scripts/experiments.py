@@ -23,6 +23,7 @@ for nodes in number_of_nodes:
 
                     batch_script ="""#!/bin/bash
 #SBATCH -N {nodes}
+#SBATCH --ntasks-per-node={tasks}
 #SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations
 #SBATCH -A {noctua_user}
 #SBATCH -p {noctua_partition}
@@ -36,7 +37,7 @@ module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS={threads}
 
 singularity pull --name nqs.sif shub://stubbi/nqs
-mpirun singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err""".format(
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err""".format(
                         nodes=nodes,
                         experiment_name=experiment_name,
                         tasks=tasks,
