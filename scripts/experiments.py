@@ -6,6 +6,9 @@ noctua_partition = 'short'
 max_wall_time = '00:30:00'
 email = 'stubbi@mail.upb.de'
 noctua_user = 'hpc-prf-nqs'
+singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
+                        noctua_user=noctua_user,
+                        pc2pfs=os.environ["PC2PFS"])
 
 # parameters to be tested
 number_of_nodes = range(1,3)
@@ -36,8 +39,7 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS={threads}
 
-singularity pull --name nqs.sif shub://stubbi/nqs
-mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec nqs.sif python2.7 $HOME/nqs/scripts/{script} > out 2> err""".format(
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/{script} > out 2> err""".format(
                         nodes=nodes,
                         experiment_name=experiment_name,
                         tasks=tasks,
@@ -48,7 +50,8 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec nqs.sif pyth
                         noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
                         email=email,
-                        script=script
+                        script=script,
+                        singularity_image_location=singularity_image_location
                     )
 
                     f = open('job.slurm','w')
