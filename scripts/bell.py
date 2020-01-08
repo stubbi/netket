@@ -4,11 +4,11 @@ import cmath
 import numpy as np
 import time
 
-start = time.time()
+
 nqs = nq.nqs.NQS(2)
 nqs.applyControlledZRotation(0, 1, cmath.pi)
+start = time.time()
 nqs.applyHadamard(1, 100, 100000)
-
-nqs.truthTable()
 end = time.time()
+nqs.truthTable()
 print(end - start)
