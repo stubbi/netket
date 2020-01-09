@@ -57,7 +57,6 @@ class NQS {
             
             int countOne = 0;
 
-
             for(int i = 0; i < numSamples_; i++) {
                 saHadamard_.Reset(true);
                 saHadamard_.Sweep(qubit);
@@ -93,8 +92,8 @@ class NQS {
                     //InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
                 }
             }
-    
-            Supervised spvsd = *new Supervised(psi_, op_, sa_, trainingSamples.size()/10.0, trainingSamples, trainingTargets);
+
+            Supervised spvsd = *new Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
             spvsd.Run(numIterations, "Overlap_phi");
         }
 
