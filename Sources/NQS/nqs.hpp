@@ -9,6 +9,7 @@
 #include "Utils/parallel_utils.hpp"
 #include <vector>
 #include <iostream>
+#include <chrono>
 
 
 namespace nqs {
@@ -57,6 +58,7 @@ class NQS {
             
             int countOne = 0;
 
+            auto start = std::chrono::high_resolution_clock::now();
             for(int i = 0; i < numSamples_; i++) {
                 saHadamard_.Reset(true);
                 saHadamard_.Sweep(qubit);
@@ -92,9 +94,16 @@ class NQS {
                     //InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
                 }
             }
+            auto finish = std::chrono::high_resolution_clock::now();
+            std::chrono::duration<double> elapsed = finish - start;
+            InfoMessage() << "Elapsed time sampling: " << elapsed.count() << std::endl;
 
             Supervised spvsd = *new Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
+            start = std::chrono::high_resolution_clock::now();
             spvsd.Run(numIterations, "Overlap_phi");
+            finish = std::chrono::high_resolution_clock::now();
+            elapsed = finish - start;
+            InfoMessage() << "Elapsed time supervised: " << elapsed.count() << std::endl;
         }
 
         void applyPauliX(int qubit){
