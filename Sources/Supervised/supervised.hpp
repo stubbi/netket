@@ -379,7 +379,7 @@ class Supervised {
     } else if (lossFunction == "Overlap_phi") {
       DerLogOverlap_phi(batchSamples, batchTargets);
       UpdateParameters();
-      ComputeLosses();
+      //ComputeLosses();
     } else {
       std::cout << "Supervised loss function \" " << lossFunction
                 << "\" undefined!" << std::endl;
@@ -397,18 +397,21 @@ class Supervised {
 
     /// Writer to the output
     /// This optional will contain a value iff the MPI rank is 0.
+    /*
     nonstd::optional<JsonOutputWriter> writer;
     if (mynode_ == 0) {
       /// Initializes the output log and wavefunction files
       writer.emplace(output_prefix + ".log", output_prefix + ".wf",
                      save_params_every);
     }
+    */
 
     opt_.Reset();
     for (int i = 0; i < n_iter; i++) {
       Advance(lossFunction);
       // writer.has_value() iff the MPI rank is 0, so the output is only
       // written once
+      /*
       if (writer.has_value()) {
         json out_data;
         out_data["log_overlap"] = loss_log_overlap_;
@@ -418,6 +421,7 @@ class Supervised {
         writer->WriteLog(i, out_data);
         writer->WriteState(i, psi_);
       }
+      */
       MPI_Barrier(MPI_COMM_WORLD);
     }
   }
