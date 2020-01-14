@@ -61,38 +61,38 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         singularity_image_location=singularity_image_location
                     )
 
-                    f = open('job.slurm','w')
-                    print >>f, batch_script
+                            f = open('job.slurm','w')
+                            print >>f, batch_script
 
-                    directory = "{pc2pfs}/{noctua_user}/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}".format(
-                        noctua_user=noctua_user,
-                        pc2pfs=os.environ["PC2PFS"],
-                        experiment_name=experiment_name,
-                        nodes=nodes,
-                        tasks=tasks,
-                        threads=threads,
-                        samples=samples,
-                        iterations=iterations,
-                        initial_hidden=initial_hidden,
-                        sample_steps=sample_steps
-                    )
+                            directory = "{pc2pfs}/{noctua_user}/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps".format(
+                                noctua_user=noctua_user,
+                                pc2pfs=os.environ["PC2PFS"],
+                                experiment_name=experiment_name,
+                                nodes=nodes,
+                                tasks=tasks,
+                                threads=threads,
+                                samples=samples,
+                                iterations=iterations,
+                                initial_hidden=initial_hidden,
+                                sample_steps=sample_steps
+                            )
 
-                    try: os.makedirs(directory)
-                    except OSError, err:
-                        # Reraise the error unless it's about an already existing directory 
-                        if err.errno != errno.EEXIST or not os.path.isdir(directory): 
-                            raise
+                            try: os.makedirs(directory)
+                            except OSError, err:
+                                # Reraise the error unless it's about an already existing directory 
+                                if err.errno != errno.EEXIST or not os.path.isdir(directory): 
+                                    raise
 
-                    bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
-                    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+                            bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
+                            process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
-                    print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps".format(
-                        experiment_name=experiment_name,
-                        nodes=nodes,
-                        tasks=tasks,
-                        threads=threads,
-                        samples=samples,
-                        iterations=iterations,
-                        initial_hidden=initial_hidden,
-                        sample_steps=sample_steps
-                    )
+                            print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps".format(
+                                experiment_name=experiment_name,
+                                nodes=nodes,
+                                tasks=tasks,
+                                threads=threads,
+                                samples=samples,
+                                iterations=iterations,
+                                initial_hidden=initial_hidden,
+                                sample_steps=sample_steps
+                            )
