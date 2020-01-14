@@ -94,6 +94,7 @@ class NQS {
                     //InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
                 }
             }
+            /*
             auto finish = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> elapsed = finish - start;
             InfoMessage() << "Elapsed time sampling: " << elapsed.count() << std::endl;
@@ -116,6 +117,7 @@ class NQS {
             finish = std::chrono::high_resolution_clock::now();
             elapsed = finish - start;
             InfoMessage() << "Elapsed time LogVal: " << elapsed.count() << std::endl;
+            */
         }
 
         void applyPauliX(int qubit){

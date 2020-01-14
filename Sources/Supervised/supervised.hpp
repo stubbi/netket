@@ -131,13 +131,13 @@ class Supervised {
 
     if (method == "Gd") {
       dosr_ = false;
-      InfoMessage() << "Using a gradient-descent based method" << std::endl;
+      //InfoMessage() << "Using a gradient-descent based method" << std::endl;
     } else {
       setSrParameters(diag_shift, use_iterative, use_cholesky);
     }
 
-    InfoMessage() << "Supervised learning running on " << totalnodes_
-                  << " processes" << std::endl;
+    //InfoMessage() << "Supervised learning running on " << totalnodes_
+    //              << " processes" << std::endl;
 
     MPI_Barrier(MPI_COMM_WORLD);
   }
