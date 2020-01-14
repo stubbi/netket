@@ -3,8 +3,8 @@ import nqs as nq
 import cmath
 import numpy as np
 
-samples = 1000
-epochs = 1000000
+samples = int(sys.argv[1])
+epochs = int(sys.argv[2])
 
 for x in range(2):
     for y in range(2):
@@ -17,11 +17,11 @@ for x in range(2):
             nqs.applyHadamard(2,samples,epochs)
 
             if(x == 1):
-                nqs.applyPauliX(0)
+                nqs.applyPauliX(2)
             if(y == 1):
                 nqs.applyPauliX(1)
             if(z == 1):
-                nqs.applyPauliX(2)
+                nqs.applyPauliX(0)
 
             nqs.truthTable()
             nqs.applyToffoli(0,1,2,samples,epochs)
