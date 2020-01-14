@@ -98,6 +98,10 @@ class NQS {
                     //InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
                 }
             }
+
+            Supervised spvsd = *new Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
+            spvsd.Run(numIterations, "Overlap_phi");
+
             /*
             auto finish = std::chrono::high_resolution_clock::now();
             std::chrono::duration<double> elapsed = finish - start;
