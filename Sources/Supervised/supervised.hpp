@@ -216,18 +216,12 @@ class Supervised {
     double max_target = -std::numeric_limits<double>::infinity();
     /// [TODO] avoid going through psi twice.
     for (int i = 0; i < batchsize_node_; i++) {
-      //sa_.Reset(true);
-      //sa_.Sweep();
-      Complex value(psi_.LogVal(batchSamples[i]));//Complex value(psi_.LogVal(sa_.Visible()));
+      Complex value(psi_.LogVal(batchSamples[i]));
       if (max_log_psi < std::abs(value)) {
         max_log_psi = std::abs(value);
-        //InfoMessage() << "max_log_psi " << max_log_psi << std::endl;
-        //InfoMessage() << "value " << value << std::endl;
       }
       if (max_target < std::abs(batchTargets[i][0])) {
         max_target = std::abs(batchTargets[i][0]);
-        //InfoMessage() << "max_target " << max_target << std::endl;
-        //InfoMessage() << "batchTargets[i] " << batchTargets[i] << std::endl;
       }
     }
 
@@ -238,40 +232,22 @@ class Supervised {
     for (int i = 0; i < batchsize_node_; i++) {
       // Extract log(config)
       Eigen::VectorXd sample(batchSamples[i]);
-      //InfoMessage() << "sample " << sample << std::endl;
       // And the corresponding target
       Eigen::VectorXcd target(batchTargets[i]);
       Complex t = target[0] - max_target;
-      //InfoMessage() << "t " << t << std::endl;
       // Undo log
       t = exp(t);
-      //InfoMessage() << "exp(t) " << t << std::endl;
-      //InfoMessage() << "max_target " << max_target << std::endl;
 
 
       Complex value(psi_.LogVal(sample));
       // Undo Log
       value = value - max_log_psi;
-      //InfoMessage() << "value " << value << std::endl;
       value = exp(value);
-      //InfoMessage() << "exp(value) " << value << std::endl << std::endl;
-      //InfoMessage() << "max_log_psi " << max_log_psi << std::endl << std::endl;
-
 
       // Compute derivative of log
       auto der = psi_.DerLog(sample);
       Ok_.row(i) = der;
       der = der.conjugate();
-
-      /*
-      InfoMessage() << std::endl << "index " << i << std::endl;
-      InfoMessage() << "der " << der << std::endl;
-      InfoMessage() << "value " << value << std::endl;
-      InfoMessage() << "max_log_psi " << max_log_psi << std::endl;
-      InfoMessage() << "t " << t << std::endl;
-      InfoMessage() << "target " << target << std::endl;
-      InfoMessage() << "sample " << sample << std::endl;
-      */
 
       grad_part_1_ = grad_part_1_ + der * std::norm(value);
       grad_num_1_ = grad_num_1_ + std::norm(value);
@@ -281,14 +257,6 @@ class Supervised {
 
       grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
       grad_num_3_ = grad_num_3_ + std::norm(value);
-      
-
-      /*
-      grad_part_1_ = grad_part_1_ + der * std::norm(value / t);
-      grad_num_1_ = grad_num_1_ + std::norm(value / t);
-      grad_part_2_ = grad_part_2_ + der * std::conj(value / t);
-      grad_num_2_ = grad_num_2_ + std::conj(value / t);
-      */
       
     }
 
