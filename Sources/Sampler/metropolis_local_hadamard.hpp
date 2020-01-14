@@ -48,8 +48,8 @@ class MetropolisLocalHadamard : public AbstractSampler {
   int sweep_size_;
 
  public:
-  explicit MetropolisLocalHadamard(AbstractMachine& psi)
-      : AbstractSampler(psi), nv_(GetHilbert().Size()) {
+  explicit MetropolisLocalHadamard(AbstractMachine& psi, int sweep_size)
+      : AbstractSampler(psi), nv_(GetHilbert().Size()), sweep_size_(sweep_size) {
     Init();
   }
 
@@ -72,13 +72,6 @@ class MetropolisLocalHadamard : public AbstractSampler {
     localstates_ = GetHilbert().LocalStates();
 
     Reset(true);
-
-    // Always use odd sweep size to avoid possible ergodicity problems
-    if (nv_ % 2 == 0) {
-      sweep_size_ = nv_ + 1;
-    } else {
-      sweep_size_ = nv_;
-    }
 
     InfoMessage() << "Local Metropolis sampler is ready " << std::endl;
   }

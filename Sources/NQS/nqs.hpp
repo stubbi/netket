@@ -32,11 +32,11 @@ class NQS {
 
     public:
 
-        NQS(int nqubits, int initialHidden)
+        NQS(int nqubits, int initialHidden, int sampleSteps)
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), 0, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)),
-            saHadamard_(*new MetropolisLocalHadamard(psi_)),
+            saHadamard_(*new MetropolisLocalHadamard(psi_, sampleSteps)),
             op_(*new AdaMax()) {
                 VectorType a = getPsi_a();
                 VectorType b = getPsi_b();
