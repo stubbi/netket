@@ -35,15 +35,17 @@ void AddNQSModule(py::module &m) {
   py::class_<NQS>(
       subm, "NQS",
       R"EOF(Neural Quantum state for classical simulation of quantum circuits using RBMs.)EOF")
-      .def(py::init([](int nqubits) {
-             return NQS{nqubits};
+      .def(py::init([](int nqubits, int initialHidden) {
+             return NQS{nqubits, initialHidden};
            }),
            py::arg("nqubits"),
+           py::arg("initialHidden"),
            R"EOF(
            Construct a NQS object with the given number of qubits.
 
            Args:
                nqubits: Number of Qubits of the circuit to be simulated.
+               initialHidden: Initial number of hidden units of the underlying Boltzmann machine.
            )EOF")
       .def("applyHadamard", &NQS::applyHadamard, py::arg("qubit"),
                             py::arg("numSamples"), py::arg("numIterations"),

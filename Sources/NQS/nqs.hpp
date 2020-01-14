@@ -32,7 +32,7 @@ class NQS {
 
     public:
 
-        NQS(int nqubits)
+        NQS(int nqubits, int initialHidden)
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), 0, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)),
@@ -47,6 +47,10 @@ class NQS {
                 }
 
                 setPsiParams(a,b,W);
+
+                for(int j = 0; j < initialHidden; j++) {
+                    psi_.addHidden();
+                }
 
                 MPI_Comm_size(MPI_COMM_WORLD, &totalnodes_);
             }
