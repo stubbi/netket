@@ -3,6 +3,7 @@ import nqs as nq
 import cmath
 import numpy as np
 import time
+import sys
 
 samples = int(sys.argv[1])
 epochs = int(sys.argv[2])
