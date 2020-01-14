@@ -104,6 +104,18 @@ class NQS {
             finish = std::chrono::high_resolution_clock::now();
             elapsed = finish - start;
             InfoMessage() << "Elapsed time supervised: " << elapsed.count() << std::endl;
+
+            start = std::chrono::high_resolution_clock::now();
+            psi_.DerLog(trainingSamples[0]);
+            finish = std::chrono::high_resolution_clock::now();
+            elapsed = finish - start;
+            InfoMessage() << "Elapsed time DerLog: " << elapsed.count() << std::endl;
+
+            start = std::chrono::high_resolution_clock::now();
+            psi_.LogVal(trainingSamples[0]);
+            finish = std::chrono::high_resolution_clock::now();
+            elapsed = finish - start;
+            InfoMessage() << "Elapsed time LogVal: " << elapsed.count() << std::endl;
         }
 
         void applyPauliX(int qubit){
