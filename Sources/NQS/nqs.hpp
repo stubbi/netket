@@ -185,11 +185,11 @@ class NQS {
             VectorType b = getPsi_b();
             MatrixType W = getPsi_W();
 
-            W(controlQubit, W.cols()-1) = -2.0 * A_theta;
-            W(qubit, W.cols()-1) = 2.0 * A_theta;
+            W(qubit, W.cols()-1) = -2.0 * A_theta;
+            W(controlQubit, W.cols()-1) = 2.0 * A_theta;
         
-            a(controlQubit) += std::complex<double>(0, theta/2.0) + A_theta;
-            a(qubit) += std::complex<double>(0, theta/2.0) - A_theta;
+            a(qubit) += std::complex<double>(0, theta/2.0) + A_theta;
+            a(controlQubit) += std::complex<double>(0, theta/2.0) - A_theta;
 
             setPsiParams(a,b,W);
         }
