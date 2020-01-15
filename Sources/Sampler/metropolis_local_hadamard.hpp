@@ -108,7 +108,7 @@ class MetropolisLocalHadamard : public AbstractSampler {
       psi = std::norm(psi1 - psi2);
     }
 
-    return psi.real() > 0.0 ? psi : std::complex<double>(0.0001, psi.imag());
+    return psi.real() != 0.0 ? psi : std::complex<double>(0.0001, psi.imag());
   }
 
   void Sweep(int qubit) {
