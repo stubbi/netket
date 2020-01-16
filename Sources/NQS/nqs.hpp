@@ -100,7 +100,7 @@ class NQS {
             }
 
             Supervised spvsd = *new Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
-            spvsd.Run(numIterations, "Overlap_phi");
+            spvsd.Run(numIterations, "Overlap_uni");
 
             /*
             auto finish = std::chrono::high_resolution_clock::now();
