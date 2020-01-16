@@ -257,6 +257,10 @@ class Supervised {
 
       grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
       grad_num_3_ = grad_num_3_ + std::norm(value);
+
+      InfoMessage() << "der " << der << std::endl;
+      InfoMessage() << "value " << der << std::endl;
+      InfoMessage() << "t " << der << std::endl << std::endl;
       
     }
 
@@ -268,6 +272,7 @@ class Supervised {
     SumOnNodes(grad_num_3_);
     /// No need to devide by totalnodes_
     grad_ = grad_part_1_ / grad_num_1_ - (grad_part_2_ / grad_num_2_ * grad_num_3_ / grad_part_3_);
+    InfoMessage() << "grad_ " << grad_ << std::endl;
   }
 
   /// Computes the gradient of the loss function with respect to
