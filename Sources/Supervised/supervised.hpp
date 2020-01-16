@@ -259,8 +259,8 @@ class Supervised {
       grad_num_3_ = grad_num_3_ + std::norm(value);
 
       InfoMessage() << "der " << der << std::endl;
-      InfoMessage() << "value " << der << std::endl;
-      InfoMessage() << "t " << der << std::endl << std::endl;
+      InfoMessage() << "value " << value << std::endl;
+      InfoMessage() << "t " << t << std::endl << std::endl;
       
     }
 
