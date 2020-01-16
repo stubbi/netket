@@ -214,11 +214,13 @@ class Supervised {
 
     double max_log_psi = -std::numeric_limits<double>::infinity();
     double max_target = -std::numeric_limits<double>::infinity();
+    Eigen::VectorXcd sampleForMaxLogPsi(batchSamples[0]);
     /// [TODO] avoid going through psi twice.
     for (int i = 0; i < batchsize_node_; i++) {
       Complex value(psi_.LogVal(batchSamples[i]));
       if (max_log_psi < std::abs(value)) {
         max_log_psi = std::abs(value);
+        sampleForMaxLogPsi = batchSamples[i];
       }
       if (max_target < std::abs(batchTargets[i][0])) {
         max_target = std::abs(batchTargets[i][0]);
@@ -260,6 +262,8 @@ class Supervised {
 
       InfoMessage() << "der " << der << std::endl;
       InfoMessage() << "value " << value << std::endl;
+      InfoMessage() << "max_log_psi " << max_log_psi << std::endl;
+      InfoMessage() << "sampleForMaxLogPsi " << sampleForMaxLogPsi << std::endl;
       InfoMessage() << "t " << t << std::endl << std::endl;
       
     }
