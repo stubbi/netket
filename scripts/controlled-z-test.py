@@ -24,6 +24,7 @@ for x in range(2):
             nqs.applyPauliX(1)
 
         nqs.truthTable()
+        nqs.applyHadamard(1,samples,epochs)
         nqs.applyControlledZRotation(0, 1, cmath.pi)
         nqs.applyHadamard(1,samples,epochs)
         nqs.truthTable()
