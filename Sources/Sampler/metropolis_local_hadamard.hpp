@@ -102,10 +102,10 @@ class MetropolisLocalHadamard : public AbstractSampler {
     //if qubit in sample is 0 ..
     if(valueOfQubit == 0.0) {
       //... add psi1 and psi2 (|0> -> |+>)
-      psi = std::norm(psi1 + psi2);
+      psi = psi1 + psi2;
     } else {
       //... else substract (|1> -> |->)
-      psi = std::norm(psi1 - psi2);
+      psi = psi1 - psi2;
     }
 
     return psi.real() != 0.0 ? psi : std::complex<double>(0.0001, psi.imag());
