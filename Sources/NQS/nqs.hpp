@@ -73,7 +73,7 @@ class NQS {
                 target(0) = std::log(saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit));
                 trainingTargets[i] = target;
 
-                InfoMessage() << saHadamard_.Visible() << " " << target << std::endl;
+                //InfoMessage() << saHadamard_.Visible() << " " << target << std::endl;
 
                 if(saHadamard_.Visible()(qubit) == 1) {
                     countOne++;
