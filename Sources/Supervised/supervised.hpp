@@ -236,14 +236,14 @@ class Supervised {
       Eigen::VectorXd sample(batchSamples[i]);
       // And the corresponding target
       Eigen::VectorXcd target(batchTargets[i]);
-      Complex t = target[0] - max_target;
+      Complex t = target[0];// - max_target;
       // Undo log
       t = exp(t);
 
 
       Complex value(psi_.LogVal(sample));
       // Undo Log
-      value = value - max_log_psi;
+      value = value;// - max_log_psi;
       value = exp(value);
 
       // Compute derivative of log
@@ -260,11 +260,13 @@ class Supervised {
       grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
       grad_num_3_ = grad_num_3_ + std::norm(value);
 
+      /*
       InfoMessage() << "der " << der << std::endl;
       InfoMessage() << "value " << value << std::endl;
       InfoMessage() << "max_log_psi " << max_log_psi << std::endl;
       InfoMessage() << "sampleForMaxLogPsi " << sampleForMaxLogPsi << std::endl;
       InfoMessage() << "t " << t << std::endl << std::endl;
+      */
       
     }
 

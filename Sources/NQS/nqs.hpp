@@ -95,7 +95,7 @@ class NQS {
                     target(0) = std::log(saHadamard_.PsiValueAfterHadamard(sample, qubit));
                     trainingTargets[numSamples_ + i] = target;
 
-                    InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
+                    //InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
                 }
             }
 
