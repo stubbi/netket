@@ -111,7 +111,7 @@ void AddNQSModule(py::module &m) {
            Args:
                qubit: The index of the qubit the gate will be applied to
            )EOF")
-      .def("applyToffoli", &NQS::applyToffoli,
+      .def("applyToffolli", &NQS::applyToffolli,
             py::arg("qubit1"), py::arg("qubit2"), py::arg("qubit3"), py::arg("numSamples"), py::arg("numIterations"),
             R"EOF(
            Apply dagger of T gate as defined in Nielsen and Chuang to qubit.

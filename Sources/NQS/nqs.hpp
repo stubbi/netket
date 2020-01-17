@@ -207,7 +207,7 @@ class NQS {
             applySingleZRotation(qubit, -M_PI/4.0);
         }
 
-        void applyToffoli(int qubit1, int qubit2, int qubit3, int numSamples = 100, int numIterations = 1000) {
+        void applyToffolli(int qubit1, int qubit2, int qubit3, int numSamples = 100, int numIterations = 1000) {
             applyControlledZRotation(qubit2, qubit3, M_PI);
             applyHadamard(qubit3, numSamples, numIterations);
 
