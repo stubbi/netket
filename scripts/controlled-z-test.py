@@ -25,6 +25,9 @@ for x in range(2):
 
         nqs.truthTable()
         nqs.applyHadamard(1,samples,epochs)
+        nqs.truthTable()
         nqs.applyControlledZRotation(0, 1, cmath.pi)
+        nqs.truthTable()
         nqs.applyHadamard(1,samples,epochs)
         nqs.truthTable()
+        print("next \n \n \n")
