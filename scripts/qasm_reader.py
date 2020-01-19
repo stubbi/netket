@@ -3,6 +3,7 @@ import numpy as np
 import nqs as nq
 import collections
 import json
+import sys
 
 samples = int(sys.argv[1])
 epochs = int(sys.argv[2])
