@@ -39,6 +39,7 @@ class QASMReader:
             return qubits
 
         line = line.split('#')[0].strip()
+        print(line)
         if(line.startswith('qubits')):
             qubits = int(line[7:])
             self.nqs = nq.nqs.NQS(qubits, self.numInitialHidden, self.numSampleSteps)
