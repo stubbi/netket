@@ -91,7 +91,7 @@ class QASMReader:
             json.dump(histogram, f)
 
         with open('parameters.json', 'w') as f:
-            json.dump(self.nqs.getPsiParams().tolist(), f)
+            json.dump([str(a) for a in self.nqs.getPsiParams().tolist()), f)
 
 
 
