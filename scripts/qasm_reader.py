@@ -58,6 +58,7 @@ class QASMReader:
                 self.nqs.applyPauliZ(q)
         elif(line.startswith('H')):
             for q in self.readQubits(line.strip('H')):
+                print("Hadamard on " + str(q))
                 self.nqs.applyHadamard(q, self.numSamples, self.numIterations)
         elif(line.startswith('Rz')):
             for q in self.readQubits(line.split(',')[0].strip('Rz')):
