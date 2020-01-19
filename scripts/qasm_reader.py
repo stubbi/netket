@@ -81,7 +81,7 @@ class QASMReader:
 
     def display(self, suffix):
         #TODO use suffix
-        raw_data = (toDecimal(self.nqs.sample()) for _ in range(shots))
+        raw_data = (self.toDecimal(self.nqs.sample()) for _ in range(shots))
         histogram = collections.Counter(raw_data)
 
         with open('raw_data.json', 'w') as f:
