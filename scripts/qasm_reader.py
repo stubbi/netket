@@ -105,6 +105,7 @@ H q[1]"""
 
 f = open('in.qc','w')
 print >>f, program
+f.close()
 
 qasm = QASMReader("in.qc", 100, 10000, 0, 0)
 qasm.buildCircuit()
