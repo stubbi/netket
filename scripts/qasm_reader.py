@@ -105,7 +105,7 @@ f = open('in.qc','w')
 print >>f, program
 f.close()
 
-qasm = QASMReader("in.qc", 100, 10000, 0, 0)
+qasm = QASMReader("in.qc", samples, epochs, initialHidden, sampleSteps)
 qasm.buildCircuit()
 qasm.display("")
         
