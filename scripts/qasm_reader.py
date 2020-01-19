@@ -71,7 +71,6 @@ class QASMReader:
         elif(line.startswith('CZ')):
             q0 = self.readQubits(line.strip('CZ').split(',')[0])[0]
             q1 = self.readQubits(line.strip('CZ').split(',')[1])[0]
-            print("CZ from " + str(q0) + " to " + str(q1))
             self.nqs.applyControlledZRotation(q0, q1, cmath.pi)
         else:
             # no CNOT, named and repeated subcircuits among others...
