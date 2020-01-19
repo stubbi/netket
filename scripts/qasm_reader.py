@@ -39,12 +39,10 @@ class QASMReader:
             return qubits
 
         line = line.split('#')[0].strip()
-        print(line)
         if(line.startswith('qubits')):
             qubits = int(line[7:])
             self.nqs = nq.nqs.NQS(qubits, self.numInitialHidden, self.numSampleSteps)
-            print("init")
-            for q in qubits:
+            for q in range(qubits):
                 self.nqs.applyHadamard(q, self.numSamples, self.numIterations)
         #elif(line.startswith('prep_z')):
         #    for q in self.readQubits(line.strip('prep_z')):
@@ -109,7 +107,6 @@ f.close()
 
 qasm = QASMReader("in.qc", 100, 10000, 0, 0)
 qasm.buildCircuit()
-qasm.nqs.truthTable()
-#qasm.display("")
+qasm.display("")
         
 
