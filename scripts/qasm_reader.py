@@ -106,6 +106,7 @@ print >>f, program
 
 qasm = QASMReader("in.qc", 100, 10000, 0, 0)
 qasm.buildCircuit()
-qasm.display("")
+qasm.nqs.truthTable()
+#qasm.display("")
         
 
