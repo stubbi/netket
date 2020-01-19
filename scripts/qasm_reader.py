@@ -77,8 +77,7 @@ class QASMReader:
             pass
 
     def toDecimal(self, sample):
-        print(sample)
-        return int("".join(str(x) for x in sample), 2)
+        return int("".join(str(int(x)) for x in sample), 2)
 
     def display(self, suffix):
         #TODO use suffix
