@@ -26,18 +26,18 @@ class QASMReader:
             self.circuitFromLine(line)
         f.close()
 
-    def circuitFromLine(self, line):
-        def readQubits(self, line):
-            line = line.strip(' q[]')
-            qubits = []
-            for s in line.split(','):
-                if(len(s.split(':')) > 1):
-                    for i in range(int(s.split(':')[0]), int(s.split(':')[1]) + 1):
-                        qubits.append(i)
-                else:
-                    qubits.append(int(s))
-            return qubits
+    def readQubits(self, line):
+        line = line.strip(' q[]')
+        qubits = []
+        for s in line.split(','):
+            if(len(s.split(':')) > 1):
+                for i in range(int(s.split(':')[0]), int(s.split(':')[1]) + 1):
+                    qubits.append(i)
+            else:
+                qubits.append(int(s))
+        return qubits
 
+    def circuitFromLine(self, line):
         line = line.split('#')[0].strip()
         if(line.startswith('qubits')):
             qubits = int(line[7:])
@@ -76,11 +76,11 @@ class QASMReader:
             # no CNOT, named and repeated subcircuits among others...
             pass
 
+    def toDecimal(self, sample):
+        return int(bin(int(sample)), 2)
 
     def display(self, suffix):
         #TODO use suffix
-        def toDecimal(self, sample):
-            return int(bin(int(sample)), 2)
         raw_data = (toDecimal(self.nqs.sample()) for _ in range(shots))
         histogram = collections.Counter(raw_data)
 
