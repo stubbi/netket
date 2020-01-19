@@ -8,7 +8,7 @@ samples = int(sys.argv[1])
 epochs = int(sys.argv[2])
 initialHidden = int(sys.argv[3])
 sampleSteps = int(sys.argv[4])
-shots = int(sys.argv[5])
+shots = 1000#int(sys.argv[5])
 
 class QASMReader:
     def __init__(self, filename, numSamples, numIterations, numInitialHidden, numSampleSteps):
@@ -87,6 +87,20 @@ class QASMReader:
 
         with open('histogram.json', 'w') as f:
             json.dump(histogram, f)
+
+
+
+program = """version 1.0
+# number of qubits for this backend is limited to 5 Qubits
+qubits 2
+
+# Create the Bell state with CZ gate
+H q[0:1]
+CZ q[0], q[1]
+H q[1]"""
+
+f = open('in.qc','w')
+print >>f, program
 
 qasm = QASMReader("in.qc", 100, 10000, 0, 0)
 qasm.buildCircuit()

@@ -1,7 +1,7 @@
 import subprocess, os, errno
 
-script = 'bell.py'
-experiment_name = 'bell-test-scaling'
+script = 'qasm_reader.py'
+experiment_name = 'bell-test-qasm'
 noctua_partition = 'short'
 max_wall_time = '00:30:00'
 email = 'stubbi@mail.upb.de'
@@ -15,11 +15,11 @@ number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
 
-number_of_training_samples = [50,100,500,1000]
-number_of_training_iterations = range(1000,10001,1000)
+number_of_training_samples = [100]
+number_of_training_iterations = [10000]
 
-number_of_initial_hidden_units = range(4)
-number_of_sample_steps = range(4)
+number_of_initial_hidden_units = [0]
+number_of_sample_steps = [0]
 
 for nodes in number_of_nodes:
     for tasks in number_of_tasks_per_node:
