@@ -18,6 +18,7 @@ class QASMReader:
         self.numIterations = numIterations
         self.numInitialHidden = numInitialHidden
         self.numSampleSteps = numSampleSteps
+        self.nqs = None
 
     def buildCircuit(self):
         f = open(self.filename)
