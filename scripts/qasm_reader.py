@@ -73,6 +73,11 @@ class QASMReader:
             q0 = self.readQubits(line.strip('CZ').split(',')[0])[0]
             q1 = self.readQubits(line.strip('CZ').split(',')[1])[0]
             self.nqs.applyControlledZRotation(q0, q1, cmath.pi)
+        elif(line.startswith('Toffoli')):
+            q0 = self.readQubits(line.strip('Toffoli').split(',')[0])[0]
+            q1 = self.readQubits(line.strip('Toffoli').split(',')[1])[0]
+            q2 = self.readQubits(line.strip('Toffoli').split(',')[2])[0]
+            self.nqs.applyToffolli(q0, q1, cmath.pi)
         else:
             # no CNOT, named and repeated subcircuits among others...
             pass
