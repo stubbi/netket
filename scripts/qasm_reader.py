@@ -17,7 +17,7 @@ directory = int(sys.argv[6])
 shots = 1000
 
 class QASMReader:
-    def __init__(self, method='nqs', numSamples, numIterations, numInitialHidden, numSampleSteps, directory):
+    def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps, directory):
         assert(method == 'nqs' or method == 'exact')
         self.filename = filename
         self.numSamples = numSamples
