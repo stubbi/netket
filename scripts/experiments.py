@@ -20,6 +20,7 @@ number_of_training_iterations = [10000]
 
 number_of_initial_hidden_units = [0]
 number_of_sample_steps = [0]
+number_of_runs = 10
 
 for nodes in number_of_nodes:
     for tasks in number_of_tasks_per_node:
@@ -28,11 +29,12 @@ for nodes in number_of_nodes:
                 for iterations in number_of_training_iterations:
                     for initial_hidden in number_of_initial_hidden_units:
                         for sample_steps in number_of_sample_steps:
+                            for run in range(number_of_runs):
 
-                            batch_script ="""#!/bin/bash
+                                batch_script ="""#!/bin/bash
 #SBATCH -N {nodes}
 #SBATCH --ntasks-per-node={tasks}
-#SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations
+#SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations-run{run}
 #SBATCH -A {noctua_user}
 #SBATCH -p {noctua_partition}
 #SBATCH -t {max_wall_time}
@@ -58,41 +60,44 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         max_wall_time=max_wall_time,
                         email=email,
                         script=script,
-                        singularity_image_location=singularity_image_location
+                        singularity_image_location=singularity_image_location,
+                        run=run
                     )
 
-                            f = open('job.slurm','w')
-                            print >>f, batch_script
+                                directory = "{pc2pfs}/{noctua_user}/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
+                                    noctua_user=noctua_user,
+                                    pc2pfs=os.environ["PC2PFS"],
+                                    experiment_name=experiment_name,
+                                    nodes=nodes,
+                                    tasks=tasks,
+                                    threads=threads,
+                                    samples=samples,
+                                    iterations=iterations,
+                                    initial_hidden=initial_hidden,
+                                    sample_steps=sample_steps,
+                                    run=run
+                                )
 
-                            directory = "{pc2pfs}/{noctua_user}/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps".format(
-                                noctua_user=noctua_user,
-                                pc2pfs=os.environ["PC2PFS"],
-                                experiment_name=experiment_name,
-                                nodes=nodes,
-                                tasks=tasks,
-                                threads=threads,
-                                samples=samples,
-                                iterations=iterations,
-                                initial_hidden=initial_hidden,
-                                sample_steps=sample_steps
-                            )
+                                try: os.makedirs(directory)
+                                except OSError, err:
+                                    # Reraise the error unless it's about an already existing directory 
+                                    if err.errno != errno.EEXIST or not os.path.isdir(directory): 
+                                        raise
 
-                            try: os.makedirs(directory)
-                            except OSError, err:
-                                # Reraise the error unless it's about an already existing directory 
-                                if err.errno != errno.EEXIST or not os.path.isdir(directory): 
-                                    raise
+                                f = open("{directory}/job.slurm".format(directory=directory),'w')
+                                print >>f, batch_script
 
-                            bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
-                            process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+                                bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
+                                process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
-                            print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps".format(
-                                experiment_name=experiment_name,
-                                nodes=nodes,
-                                tasks=tasks,
-                                threads=threads,
-                                samples=samples,
-                                iterations=iterations,
-                                initial_hidden=initial_hidden,
-                                sample_steps=sample_steps
-                            )
+                                print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps run {run}".format(
+                                    experiment_name=experiment_name,
+                                    nodes=nodes,
+                                    tasks=tasks,
+                                    threads=threads,
+                                    samples=samples,
+                                    iterations=iterations,
+                                    initial_hidden=initial_hidden,
+                                    sample_steps=sample_steps,
+                                    run=run
+                                )
