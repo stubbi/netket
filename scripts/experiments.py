@@ -1,6 +1,6 @@
 import subprocess, os, errno
 
-circuit_generator_script = 'bell.py'
+circuit_generator_script = 'bell.qc'
 experiment_name = 'bell-test-qasm'
 noctua_partition = 'short'
 max_wall_time = '00:30:00'
@@ -23,6 +23,18 @@ number_of_sample_steps = [0]
 number_of_runs = 10
 
 
+directory = "{pc2pfs}/{noctua_user}/{experiment_name}".format(noctua_user=noctua_user,
+                                    pc2pfs=os.environ["PC2PFS"],
+                                    experiment_name=experiment_name)
+try: os.makedirs(directory)
+except OSError, err:
+    # Reraise the error unless it's about an already existing directory 
+    if err.errno != errno.EEXIST or not os.path.isdir(directory): 
+        raise
+
+bashCommand = "python {home}/nqs/scripts/{circuit_generator_script}".format(home=os.environ["HOME"], circuit_generator_script=circuit_generator_script)
+process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+
 batch_script ="""#!/bin/bash
 #SBATCH -N 1
 #SBATCH --ntasks-per-node=1
@@ -38,31 +50,19 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS=1
 
+cp $HOME/nqs/scripts/in.qc {directory}/in.qc
 mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact > out 2> err""".format(
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
                         noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
                         email=email,
-                        circuit_generator_script=circuit_generator_script,
-                        singularity_image_location=singularity_image_location
+                        singularity_image_location=singularity_image_location,
+                        directory=directory
                     )
 
 f = open("job.slurm",'w')
 print >>f, batch_script
-directory = "{pc2pfs}/{noctua_user}/{experiment_name}".format(noctua_user=noctua_user,
-                                    pc2pfs=os.environ["PC2PFS"],
-                                    experiment_name=experiment_name)
-try: os.makedirs(directory)
-except OSError, err:
-    # Reraise the error unless it's about an already existing directory 
-    if err.errno != errno.EEXIST or not os.path.isdir(directory): 
-        raise
-
-bashCommand = "python {home}/nqs/scripts/{circuit_generator_script}".format(circuit_generator_script=circuit_generator_script,
-                                    home=os.environ["HOME"])
-process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-
 
 bashCommand = "sbatch -D {pc2pfs}/{noctua_user}/{experiment_name} job.slurm".format(noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
@@ -113,7 +113,7 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS={threads}
 
-cp {pc2pfs}/{noctua_user}/{experiment_name}/in.qc {directory}/in.qc
+cp $HOME/nqs/scripts/in.qc {directory}/in.qc
 mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs > out 2> err""".format(
                         nodes=nodes,
                         experiment_name=experiment_name,
@@ -127,7 +127,6 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
                         email=email,
-                        circuit_generator_script=circuit_generator_script,
                         singularity_image_location=singularity_image_location,
                         run=run,
                         pc2pfs=os.environ["PC2PFS"],
