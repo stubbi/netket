@@ -61,10 +61,12 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         directory=directory
                     )
 
-f = open("job.slurm",'w')
+f = open("{pc2pfs}/{noctua_user}/{experiment_name}/job.slurm".format(noctua_user=noctua_user,
+                                    pc2pfs=os.environ["PC2PFS"],
+                                    experiment_name=experiment_name),'w')
 print >>f, batch_script
 
-bashCommand = "sbatch -D {pc2pfs}/{noctua_user}/{experiment_name} job.slurm".format(noctua_user=noctua_user,
+bashCommand = "sbatch -D {pc2pfs}/{noctua_user}/{experiment_name} {pc2pfs}/{noctua_user}/{experiment_name}/job.slurm".format(noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
                                     experiment_name=experiment_name)
 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
@@ -133,10 +135,10 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         directory=directory
                     )
 
-                                f = open("job.slurm",'w')
+                                f = open("{directory}/job.slurm".format(directory=directory),'w')
                                 print >>f, batch_script
 
-                                bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
+                                bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
                                 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)                
 
                                 print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps run {run}".format(
