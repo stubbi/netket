@@ -24,7 +24,7 @@ class QASMReader:
         self.numSampleSteps = numSampleSteps
         self.nqs = None
         self.exact = None
-        self.type = method
+        self.method = method
 
     def is_nqs(self):
         return self.method == 'nqs'
