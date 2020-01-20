@@ -51,6 +51,13 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
 
 f = open("job.slurm",'w')
 print >>f, batch_script
+try: os.makedirs("{pc2pfs}/{noctua_user}/{experiment_name}".format(noctua_user=noctua_user,
+                                    pc2pfs=os.environ["PC2PFS"],
+                                    experiment_name=experiment_name))
+except OSError, err:
+    # Reraise the error unless it's about an already existing directory 
+    if err.errno != errno.EEXIST or not os.path.isdir(directory): 
+        raise
 bashCommand = "sbatch -D {pc2pfs}/{noctua_user}/{experiment_name} job.slurm".format(noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
                                     experiment_name=experiment_name)
