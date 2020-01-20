@@ -73,40 +73,6 @@ for nodes in number_of_nodes:
                         for sample_steps in number_of_sample_steps:
                             for run in range(number_of_runs):
 
-                                batch_script ="""#!/bin/bash
-#SBATCH -N {nodes}
-#SBATCH --ntasks-per-node={tasks}
-#SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations-run{run}
-#SBATCH -A {noctua_user}
-#SBATCH -p {noctua_partition}
-#SBATCH -t {max_wall_time}
-#SBATCH --mail-type fail
-#SBATCH --mail-user {email}
-
-module reset
-module load singularity
-module load mpi/OpenMPI/3.1.4-GCC-8.3.0
-export OMP_NUM_THREADS={threads}
-
-python $HOME/nqs/scripts/{circuit_generator_script}
-mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs > out 2> err""".format(
-                        nodes=nodes,
-                        experiment_name=experiment_name,
-                        tasks=tasks,
-                        threads=threads,
-                        samples=samples,
-                        initial_hidden = initial_hidden,
-                        sample_steps = sample_steps,
-                        iterations=iterations,
-                        noctua_user=noctua_user,
-                        noctua_partition=noctua_partition,
-                        max_wall_time=max_wall_time,
-                        email=email,
-                        circuit_generator_script=circuit_generator_script,
-                        singularity_image_location=singularity_image_location,
-                        run=run
-                    )
-
                                 directory = "{pc2pfs}/{noctua_user}/{experiment_name}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
                                     noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
@@ -126,6 +92,42 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                     # Reraise the error unless it's about an already existing directory 
                                     if err.errno != errno.EEXIST or not os.path.isdir(directory): 
                                         raise
+
+                                batch_script ="""#!/bin/bash
+#SBATCH -N {nodes}
+#SBATCH --ntasks-per-node={tasks}
+#SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations-run{run}
+#SBATCH -A {noctua_user}
+#SBATCH -p {noctua_partition}
+#SBATCH -t {max_wall_time}
+#SBATCH --mail-type fail
+#SBATCH --mail-user {email}
+
+module reset
+module load singularity
+module load mpi/OpenMPI/3.1.4-GCC-8.3.0
+export OMP_NUM_THREADS={threads}
+
+cp {pc2pfs}/{noctua_user}/{experiment_name}/in.qc {directory}/in.qc
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs > out 2> err""".format(
+                        nodes=nodes,
+                        experiment_name=experiment_name,
+                        tasks=tasks,
+                        threads=threads,
+                        samples=samples,
+                        initial_hidden = initial_hidden,
+                        sample_steps = sample_steps,
+                        iterations=iterations,
+                        noctua_user=noctua_user,
+                        noctua_partition=noctua_partition,
+                        max_wall_time=max_wall_time,
+                        email=email,
+                        circuit_generator_script=circuit_generator_script,
+                        singularity_image_location=singularity_image_location,
+                        run=run,
+                        pc2pfs=os.environ["PC2PFS"],
+                        directory=directory
+                    )
 
                                 f = open("job.slurm",'w')
                                 print >>f, batch_script
