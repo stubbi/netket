@@ -60,7 +60,7 @@ except OSError, err:
         raise
 
 bashCommand = "python {home}/nqs/scripts/{circuit_generator_script}".format(circuit_generator_script=circuit_generator_script,
-                                    home=pc2pfs=os.environ["HOME"])
+                                    home=os.environ["HOME"])
 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
 
