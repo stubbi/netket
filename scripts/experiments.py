@@ -22,9 +22,36 @@ number_of_initial_hidden_units = [0]
 number_of_sample_steps = [0]
 number_of_runs = 10
 
-bashCommand = "python2.7 {home}/nqs/scripts/qasm_reader.py 0 0 0 0 exact {pc2pfs}/{noctua_user}/{experiment_name}".format(
-                                    home=os.environ["HOME"],
-                                    noctua_user=noctua_user,
+
+batch_script ="""#!/bin/bash
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH -J {experiment_name}-exact
+#SBATCH -A {noctua_user}
+#SBATCH -p {noctua_partition}
+#SBATCH -t {max_wall_time}
+#SBATCH --mail-type fail
+#SBATCH --mail-user {email}
+
+module reset
+module load singularity
+module load mpi/OpenMPI/3.1.4-GCC-8.3.0
+export OMP_NUM_THREADS=1
+
+python $HOME/nqs/scripts/{circuit_generator_script}
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact > out 2> err""".format(
+                        experiment_name=experiment_name,
+                        noctua_user=noctua_user,
+                        noctua_partition=noctua_partition,
+                        max_wall_time=max_wall_time,
+                        email=email,
+                        circuit_generator_script=circuit_generator_script,
+                        singularity_image_location=singularity_image_location
+                    )
+
+f = open("job.slurm",'w')
+print >>f, batch_script
+bashCommand = "sbatch -D {pc2pfs}/{noctua_user}/{experiment_name} job.slurm".format(noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
                                     experiment_name=experiment_name)
 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
@@ -54,7 +81,7 @@ module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS={threads}
 
 python $HOME/nqs/scripts/{circuit_generator_script}
-mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs none > out 2> err""".format(
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs > out 2> err""".format(
                         nodes=nodes,
                         experiment_name=experiment_name,
                         tasks=tasks,

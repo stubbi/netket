@@ -13,11 +13,10 @@ epochs = int(sys.argv[2])
 initialHidden = int(sys.argv[3])
 sampleSteps = int(sys.argv[4])
 method = int(sys.argv[5])
-directory = int(sys.argv[6])
 shots = 1000
 
 class QASMReader:
-    def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps, directory):
+    def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps):
         assert(method == 'nqs' or method == 'exact')
         self.filename = filename
         self.numSamples = numSamples
@@ -27,7 +26,6 @@ class QASMReader:
         self.nqs = None
         self.exact = None
         self.type = method
-        self.directory = directory
 
     def is_nqs(self):
         return self.method == 'nqs'
@@ -164,9 +162,9 @@ class QASMReader:
             with open('parameters.json', 'w') as f:
                 pickle.dump([a for a in self.nqs.getPsiParams().tolist()], f)
         else:
-            with open(self.directory + '/exact.json', 'w') as f:
+            with open('exact.json', 'w') as f:
                 pickle.dump(self.exact.get_state(), f)
 
-qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps, directory)
+qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps)
 qasm.buildCircuit("in.qc")
 qasm.display()
