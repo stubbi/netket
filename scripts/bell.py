@@ -1,19 +1,14 @@
-#create Bell state
-import nqs as nq
-import cmath
-import numpy as np
-import time
-import sys
+#program for Bell state creation.
+#expected file name is 'in.qc'
 
-samples = int(sys.argv[1])
-epochs = int(sys.argv[2])
-initialHidden = int(sys.argv[3])
-sampleSteps = int(sys.argv[4])
+program = """version 1.0
+qubits 2
 
-nqs = nq.nqs.NQS(2, initialHidden, sampleSteps)
-nqs.applyControlledZRotation(0, 1, cmath.pi)
-start = time.time()
-nqs.applyHadamard(1, samples, epochs)
-end = time.time()
-nqs.truthTable()
-print(end - start)
+# Create the Bell state with CZ gate
+H q[0:1]
+CZ q[0], q[1]
+H q[1]"""
+
+f = open('in.qc','w')
+print >>f, program
+f.close()

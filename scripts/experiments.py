@@ -1,6 +1,6 @@
 import subprocess, os, errno
 
-script = 'qasm_reader.py'
+circuit_generator_script = 'bell.py'
 experiment_name = 'bell-test-qasm'
 noctua_partition = 'short'
 max_wall_time = '00:30:00'
@@ -46,7 +46,8 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS={threads}
 
-mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/{script} {samples} {iterations} {initial_hidden} {sample_steps} > out 2> err""".format(
+python $HOME/nqs/scripts/{circuit_generator_script}
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} > out 2> err""".format(
                         nodes=nodes,
                         experiment_name=experiment_name,
                         tasks=tasks,
@@ -59,7 +60,7 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
                         email=email,
-                        script=script,
+                        circuit_generator_script=circuit_generator_script,
                         singularity_image_location=singularity_image_location,
                         run=run
                     )

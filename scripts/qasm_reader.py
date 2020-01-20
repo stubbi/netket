@@ -94,23 +94,6 @@ class QASMReader:
         with open('parameters.json', 'w') as f:
             pickle.dump([a for a in self.nqs.getPsiParams().tolist()], f)
 
-
-
-program = """version 1.0
-# number of qubits for this backend is limited to 5 Qubits
-qubits 2
-
-# Create the Bell state with CZ gate
-H q[0:1]
-CZ q[0], q[1]
-H q[1]"""
-
-f = open('in.qc','w')
-print >>f, program
-f.close()
-
 qasm = QASMReader("in.qc", samples, epochs, initialHidden, sampleSteps)
 qasm.buildCircuit()
 qasm.display("")
-        
-
