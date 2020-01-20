@@ -1,7 +1,7 @@
 import subprocess, os, errno
 
-circuit_generator_script = 'toffoli.py'
-experiment_name = 'toffoli-test-qasm'
+circuit_generator_script = 'bell.py'
+experiment_name = 'bell-test-qasm'
 noctua_partition = 'short'
 max_wall_time = '00:30:00'
 email = 'stubbi@mail.upb.de'
@@ -21,6 +21,12 @@ number_of_training_iterations = [100000]
 number_of_initial_hidden_units = [0]
 number_of_sample_steps = [0]
 number_of_runs = 10
+
+bashCommand = "python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact {pc2pfs}/{noctua_user}/{experiment_name}".format(
+                                    noctua_user=noctua_user,
+                                    pc2pfs=os.environ["PC2PFS"],
+                                    experiment_name=experiment_name)
+process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
 for nodes in number_of_nodes:
     for tasks in number_of_tasks_per_node:
@@ -47,7 +53,7 @@ module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS={threads}
 
 python $HOME/nqs/scripts/{circuit_generator_script}
-mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} > out 2> err""".format(
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs none > out 2> err""".format(
                         nodes=nodes,
                         experiment_name=experiment_name,
                         tasks=tasks,
@@ -89,7 +95,7 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                 print >>f, batch_script
 
                                 bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
-                                process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+                                process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)                
 
                                 print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps run {run}".format(
                                     experiment_name=experiment_name,
