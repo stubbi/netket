@@ -18,7 +18,6 @@ shots = 1000
 class QASMReader:
     def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps):
         assert(method == 'nqs' or method == 'exact')
-        self.filename = filename
         self.numSamples = numSamples
         self.numIterations = numIterations
         self.numInitialHidden = numInitialHidden
