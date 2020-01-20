@@ -50,7 +50,7 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS=1
 
-cp $HOME/nqs/scripts/in.qc {directory}/in.qc
+cp $HOME/in.qc {directory}/in.qc
 mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact > out 2> err""".format(
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
@@ -113,7 +113,7 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS={threads}
 
-cp $HOME/nqs/scripts/in.qc {directory}/in.qc
+cp $HOME/in.qc {directory}/in.qc
 mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs > out 2> err""".format(
                         nodes=nodes,
                         experiment_name=experiment_name,
