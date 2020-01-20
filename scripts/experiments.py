@@ -38,7 +38,6 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS=1
 
-python $HOME/nqs/scripts/{circuit_generator_script}
 mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact > out 2> err""".format(
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
@@ -59,6 +58,11 @@ except OSError, err:
     # Reraise the error unless it's about an already existing directory 
     if err.errno != errno.EEXIST or not os.path.isdir(directory): 
         raise
+
+bashCommand = "python $HOME/nqs/scripts/{circuit_generator_script}".format(circuit_generator_script=circuit_generator_script)
+process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+
+
 bashCommand = "sbatch -D {pc2pfs}/{noctua_user}/{experiment_name} job.slurm".format(noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
                                     experiment_name=experiment_name)
