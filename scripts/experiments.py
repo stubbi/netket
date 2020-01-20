@@ -85,10 +85,10 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                     if err.errno != errno.EEXIST or not os.path.isdir(directory): 
                                         raise
 
-                                f = open("{directory}/job.slurm".format(directory=directory),'w')
+                                f = open("job.slurm",'w')
                                 print >>f, batch_script
 
-                                bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
+                                bashCommand = "sbatch -D {directory} job.slurm".format(directory=directory)
                                 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
                                 print "started job {experiment_name} for {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps run {run}".format(
