@@ -1,7 +1,7 @@
 import subprocess, os, errno
 
-circuit_generator_script = 'bell.py'
-experiment_name = 'bell-test-qasm'
+circuit_generator_script = 'toffoli.py'
+experiment_name = 'toffoli-test-qasm'
 noctua_partition = 'short'
 max_wall_time = '00:30:00'
 email = 'stubbi@mail.upb.de'
