@@ -12,7 +12,7 @@ samples = int(sys.argv[1])
 epochs = int(sys.argv[2])
 initialHidden = int(sys.argv[3])
 sampleSteps = int(sys.argv[4])
-method = int(sys.argv[5])
+method = str(sys.argv[5])
 shots = 1000
 
 class QASMReader:
