@@ -22,7 +22,8 @@ number_of_initial_hidden_units = [0]
 number_of_sample_steps = [0]
 number_of_runs = 10
 
-bashCommand = "python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact {pc2pfs}/{noctua_user}/{experiment_name}".format(
+bashCommand = "python2.7 {home}/nqs/scripts/qasm_reader.py 0 0 0 0 exact {pc2pfs}/{noctua_user}/{experiment_name}".format(
+                                    home=os.environ["HOME"],
                                     noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
                                     experiment_name=experiment_name)
