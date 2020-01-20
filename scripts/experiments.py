@@ -1,6 +1,6 @@
 import subprocess, os, errno
 
-circuit_generator_script = 'bell.qc'
+circuit_generator_script = 'bell.py'
 experiment_name = 'bell-test-qasm'
 noctua_partition = 'short'
 max_wall_time = '00:30:00'
