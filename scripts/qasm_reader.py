@@ -4,6 +4,7 @@ import nqs as nq
 import collections
 import json
 import sys
+import pickle
 
 samples = int(sys.argv[1])
 epochs = int(sys.argv[2])
@@ -91,7 +92,7 @@ class QASMReader:
             json.dump(histogram, f)
 
         with open('parameters.json', 'w') as f:
-            json.dump([str(a) for a in self.nqs.getPsiParams().tolist()], f)
+            pickle.dump([a for a in self.nqs.getPsiParams().tolist()], f)
 
 
 
