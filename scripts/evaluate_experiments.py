@@ -26,7 +26,7 @@ batch_script ="""#!/bin/bash
 #SBATCH --ntasks-per-node=1
 #SBATCH -J {experiment_name}-evaluation
 #SBATCH -A {noctua_user}
-#SBATCH -p {noctua_partition}
+#SBATCH -p short
 #SBATCH -t {max_wall_time}
 #SBATCH --mail-type fail
 #SBATCH --mail-user {email}
@@ -35,7 +35,6 @@ python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} 2 1 1 1 100 100000 0
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
-                        noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
                         email=email)
 
