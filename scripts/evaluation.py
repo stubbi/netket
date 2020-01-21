@@ -2,6 +2,7 @@ import matplotlib.pyplot as plt
 import collections
 import pickle
 import sys
+import json
 
 # evaluation of a specific configuration
 
