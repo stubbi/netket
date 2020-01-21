@@ -41,5 +41,5 @@ python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} 2 1 1 1 100 100000 0
 f = open("{epxperiment_folder}/evaluation.slurm".format(epxperiment_folder=epxperiment_folder),'w')
 print >>f, batch_script
 
-bashCommand = "sbatch -D {epxperiment_folder} {epxperiment_folder}/job.slurm".format(epxperiment_folder=epxperiment_folder)
+bashCommand = "sbatch -D {epxperiment_folder} {epxperiment_folder}/evaluation.slurm".format(epxperiment_folder=epxperiment_folder)
 process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
