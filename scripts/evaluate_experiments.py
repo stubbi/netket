@@ -5,7 +5,7 @@ noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
 
 # parameters which should be evaluated
-system_size = [2] #number of qubits
+system_sizes = [2] #number of qubits
 number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
