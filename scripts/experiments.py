@@ -27,7 +27,7 @@ directory = "{pc2pfs}/{noctua_user}/{experiment_name}".format(noctua_user=noctua
                                     pc2pfs=os.environ["PC2PFS"],
                                     experiment_name=experiment_name)
 try: os.makedirs(directory)
-except OSError, err:
+except OSError:
     # Reraise the error unless it's about an already existing directory 
     if err.errno != errno.EEXIST or not os.path.isdir(directory): 
         raise
@@ -95,7 +95,7 @@ for nodes in number_of_nodes:
                                 )
 
                                 try: os.makedirs(directory)
-                                except OSError, err:
+                                except OSError:
                                     # Reraise the error unless it's about an already existing directory 
                                     if err.errno != errno.EEXIST or not os.path.isdir(directory): 
                                         raise
