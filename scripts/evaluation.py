@@ -96,7 +96,7 @@ class Evaluation:
         c = collections.Counter({})
         for h in histograms:
             c = c+collections.Counter(h)
-        total = sum(c.values)
+        total = sum(c.values())
         for key in c:
             c[key] /= total
         return c
