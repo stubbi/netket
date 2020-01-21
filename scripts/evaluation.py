@@ -61,7 +61,7 @@ class Evaluation:
     def generateAll(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write('system_size,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd')
+            f.write('system_size,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd\n')
         
         for size in self.systemSizes:
             for nodes in self.listOMPNodes:
@@ -75,7 +75,7 @@ class Evaluation:
                                         histograms = self.loadHistograms(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps)
                                         tvd = self.tvd(self.loadExact(), self.mergeAndNormalise(histograms))
 
-                                        line = "{},{},{},{},{},{},{},{},{}".format(size, nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd)
+                                        line = "{},{},{},{},{},{},{},{},{}\n".format(size, nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd)
                                         with open(results_file, 'a') as f:
                                             f.write(line)
 
