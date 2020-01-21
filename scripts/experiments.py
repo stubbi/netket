@@ -66,11 +66,6 @@ f = open("{pc2pfs}/{noctua_user}/{experiment_name}/job.slurm".format(noctua_user
                                     experiment_name=experiment_name),'w')
 print >>f, batch_script
 
-bashCommand = "sbatch -D {pc2pfs}/{noctua_user}/{experiment_name} {pc2pfs}/{noctua_user}/{experiment_name}/job.slurm".format(noctua_user=noctua_user,
-                                    pc2pfs=os.environ["PC2PFS"],
-                                    experiment_name=experiment_name)
-process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
-
 for nodes in number_of_nodes:
     for tasks in number_of_tasks_per_node:
         for threads in number_of_omp_threads:
@@ -152,3 +147,8 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                     sample_steps=sample_steps,
                                     run=run
                                 )
+
+bashCommand = "sbatch -D {pc2pfs}/{noctua_user}/{experiment_name} {pc2pfs}/{noctua_user}/{experiment_name}/job.slurm".format(noctua_user=noctua_user,
+                                    pc2pfs=os.environ["PC2PFS"],
+                                    experiment_name=experiment_name)
+process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
