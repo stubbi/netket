@@ -47,7 +47,7 @@ class Evaluation:
         return histograms
 
     def loadExact(self):
-        with open("{directory}/exact.json".format(directory=self.experimentFolder), "r") as f:
+        with open("{directory}/exact.json".format(directory=self.experimentFolder), "rb") as f:
              return pickle.load(f)
 
     def tvd(self, exact, histogram):

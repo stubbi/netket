@@ -161,7 +161,7 @@ class QASMReader:
             with open('parameters.json', 'w') as f:
                 pickle.dump([a for a in self.nqs.getPsiParams().tolist()], f)
         else:
-            with open('exact.json', 'w') as f:
+            with open('exact.json', 'wb') as f:
                 pickle.dump(self.exact.get_state(), f)
 
 qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps)
