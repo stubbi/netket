@@ -73,7 +73,7 @@ class Evaluation:
                                     for numSampleSteps in self.listSampleSteps:
 
                                         histograms = self.loadHistograms(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps)
-                                        tvd = tvd(self.loadExact(), self.mergeAndNormalise(histograms))
+                                        tvd = self.tvd(self.loadExact(), self.mergeAndNormalise(histograms))
 
                                         line = "{},{},{},{},{},{},{},{},{}".format(size, nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd)
                                         with open(results_file, 'a') as f:
