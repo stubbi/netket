@@ -17,10 +17,7 @@ listSampleSteps = sys.argv[9].split(',')
 numRuns = int(sys.argv[10])
 
 class Evaluation:
-    def __init__(self, experimentFolder, systemSizes,
-                listOMPNodes, listOMPTasks, listOMPThreads,
-                listSamples, listIterations, listInitialHidden,
-                listSampleSteps, numRuns):
+    def __init__(self, experimentFolder, systemSizes, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns):
         self.experimentFolder=experimentFolder
         self.systemSizes=systemSizes
         self.listOMPNodes=listOMPNodes
@@ -41,14 +38,10 @@ class Evaluation:
     def plotTVDSamplesIterations(self):
         pass
 
-    def loadHistograms(self, nodes, tasks, threads,
-                        numSamples, numIterations,
-                        numInitialHidden, numSampleSteps):
+    def loadHistograms(self, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps):
         histograms=[]
         for r in range(self.numRuns):
-            with open("{directory}/histogram.json".format(directory=self.directory(nodes,
-                        tasks, threads, numSamples, numIterations,
-                        numInitialHidden, numSampleSteps, r)), 'r') as f:
+            with open("{directory}/histogram.json".format(directory=self.directory(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, r)), 'r') as f:
                 histograms.append(json.load(f))
         return histograms
 
@@ -67,9 +60,7 @@ class Evaluation:
     def generateAll(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write("system_size,nodes,tasks,"+
-                "threads,numSamples,numIterations,"+
-                "numInitialHidden,numSampleSteps,tvd")
+            f.write('system_size,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd')
         
         for size in self.systemSizes:
             for nodes in self.listOMPNodes:
@@ -80,26 +71,15 @@ class Evaluation:
                                 for numInitialHidden in self.listInitialHidden:
                                     for numSampleSteps in self.listSampleSteps:
 
-                                        histograms = self.loadHistograms(nodes, tasks, threads,
-                                                            numSamples, numIterations,
-                                                            numInitialHidden, numSampleSteps)
+                                        histograms = self.loadHistograms(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps)
                                         tvd = tvd(self.loadExact(), self.mergeAndNormalise(histograms))
 
-                                        line = "{},{},{},{},{},{},{},{},{}".format(size,nodes,tasks,threads,
-                                                                                numSamples,numIterations,
-                                                                                numInitialHidden,numSampleSteps,
-                                                                                tvd)
+                                        line = "{},{},{},{},{},{},{},{},{}".format(size, nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd)
                                         with open(results_file, 'a') as f:
                                             f.write(line)
 
-    def directory(self, nodes, tasks, threads,
-                    numSamples, numIterations,
-                    numInitialHidden, numSampleSteps,
-                    run):
-        return "{experimentFolder}/{nodes}nodes/{tasks}tasks/"+
-                    "{threads}threads/{samples}samples/{iterations}"+
-                    "iterations/{initial_hidden}initialHidden/"+
-                    "{sample_steps}sampleSteps/run{run}".format(
+    def directory(self, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
+        return "{experimentFolder}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
                 experimentFolder=self.experimentFolder,
                 nodes=nodes,
                 tasks=tasks,
