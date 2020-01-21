@@ -46,8 +46,7 @@ class Evaluation:
                         numInitialHidden, numSampleSteps):
         histograms=[]
         for r in range(self.numRuns):
-            with open("{directory}/histogram.json"
-                    .format(directory=self.directory(nodes,
+            with open("{directory}/histogram.json".format(directory=self.directory(nodes,
                         tasks, threads, numSamples, numIterations,
                         numInitialHidden, numSampleSteps, r)), 'r') as f:
                 histograms.append(json.load(f))
@@ -66,8 +65,7 @@ class Evaluation:
         return tvd
         
     def generateAll(self):
-        results_file = "{directory}/results.csv"
-                .format(directory=self.experimentFolder)
+        results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
             f.write("system_size,nodes,tasks,"+
                 "threads,numSamples,numIterations,"+
