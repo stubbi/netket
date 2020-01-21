@@ -56,9 +56,6 @@ class Evaluation:
             exact_prob = abs(exact[i])**2
             nqs_prob = histogram.get(str(i), 0.0)
             tvd += abs(exact_prob-nqs_prob)
-            print(exact_prob)
-            print(nqs_prob)
-            print(tvd)
         return tvd
         
     def generateAll(self):
@@ -77,9 +74,6 @@ class Evaluation:
 
                                         histograms = self.loadHistograms(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps)
                                         tvd = self.tvd(self.loadExact(), self.mergeAndNormalise(histograms))
-                                        print(self.mergeAndNormalise(histograms))
-                                        print(self.loadExact())
-                                        print("")
 
                                         line = "{},{},{},{},{},{},{},{},{}\n".format(size, nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd)
                                         with open(results_file, 'a') as f:
