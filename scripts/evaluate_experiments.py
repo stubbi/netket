@@ -32,7 +32,7 @@ batch_script ="""#!/bin/bash
 #SBATCH --mail-type fail
 #SBATCH --mail-user {email}
 
-python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} 2 1 1 1 100 100000 0 0 10 > out 2> err""".format(
+python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} 2 1 1 1 100 100000 0 0 10 > evaluation_out 2> evaluation_err""".format(
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
