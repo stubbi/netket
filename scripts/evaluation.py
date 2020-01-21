@@ -93,9 +93,9 @@ class Evaluation:
             )
 
     def mergeAndNormalise(self, histograms):
-        c = collections.Counter()
+        c = collections.Counter({})
         for h in histograms:
-            c = c+h
+            c = c+collections.Counter(h)
         total = sum(c.values)
         for key in c:
             c[key] /= total
