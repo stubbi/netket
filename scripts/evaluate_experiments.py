@@ -40,7 +40,7 @@ python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {systemSizes} {listO
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
                         email=email,
-                        systemSizes=','.join(map(str, systemSizes)),
+                        systemSizes=','.join(map(str, system_sizes)),
                         listOMPNodes=','.join(map(str, number_of_nodes)),
                         listOMPTasks=','.join(map(str, number_of_tasks_per_node)),
                         listOMPThreads=','.join(map(str, number_of_omp_threads)),
