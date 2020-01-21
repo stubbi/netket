@@ -100,5 +100,5 @@ class Evaluation:
             c[key] /= total
         return c
 
-ev = Evaluation(xperimentFolder, systemSizes, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
+ev = Evaluation(experimentFolder, systemSizes, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
 ev.generateAll()
