@@ -51,7 +51,7 @@ class Evaluation:
              return pickle.load(f, encoding='latin1')
 
     def tvd(self, exact, histogram):
-        tvd = 0
+        tvd = 0.0
         for i in range(len(exact)):
             exact_prob = abs(exact[i])**2
             nqs_prob = histogram.get(i, 0.0)
@@ -74,6 +74,8 @@ class Evaluation:
 
                                         histograms = self.loadHistograms(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps)
                                         tvd = self.tvd(self.loadExact(), self.mergeAndNormalise(histograms))
+                                        print(self.mergeAndNormalise(histograms))
+                                        print("")
 
                                         line = "{},{},{},{},{},{},{},{},{}\n".format(size, nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd)
                                         with open(results_file, 'a') as f:
