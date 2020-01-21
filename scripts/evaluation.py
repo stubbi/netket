@@ -99,3 +99,6 @@ class Evaluation:
         for key in c:
             c[key] /= total
         return c
+
+ev = Evaluation(xperimentFolder, systemSizes, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
+ev.generateAll()
