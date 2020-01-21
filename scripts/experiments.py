@@ -15,8 +15,8 @@ number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
 
-number_of_training_samples = [100,200,300,400,500]
-number_of_training_iterations = [100,1000,10000,100000]
+number_of_training_samples = range(100,1001,100)
+number_of_training_iterations = range(1000, 100001,1000)
 
 number_of_initial_hidden_units = [0]
 number_of_sample_steps = [0]
