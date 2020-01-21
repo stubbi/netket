@@ -2,6 +2,7 @@ import subprocess, os, errno
 
 experiment_name = 'bell-test-qasm'
 noctua_user = 'hpc-prf-nqs'
+email = 'stubbi@mail.upb.de'
 
 # parameters which should be evaluated
 number_of_nodes = [1]
@@ -27,7 +28,7 @@ batch_script ="""#!/bin/bash
 #SBATCH -J {experiment_name}-evaluation
 #SBATCH -A {noctua_user}
 #SBATCH -p short
-#SBATCH -t {max_wall_time}
+#SBATCH -t 00:30:00
 #SBATCH --mail-type fail
 #SBATCH --mail-user {email}
 
@@ -35,7 +36,6 @@ python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} 2 1 1 1 100 100000 0
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
-                        max_wall_time=max_wall_time,
                         email=email)
 
 f = open("{epxperiment_folder}/evaluation.slurm".format(epxperiment_folder=epxperiment_folder),'w')
