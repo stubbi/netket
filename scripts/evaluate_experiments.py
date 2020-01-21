@@ -5,6 +5,7 @@ noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
 
 # parameters which should be evaluated
+system_size = [2] #number of qubits
 number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
@@ -34,11 +35,21 @@ batch_script ="""#!/bin/bash
 
 module reset
 module load vis/matplotlib
-python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} 2 1 1 1 100 100000 0 0 10 > evaluation_out 2> evaluation_err""".format(
+python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {systemSizes} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} > evaluation_out 2> evaluation_err""".format(
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
-                        email=email)
+                        email=email,
+                        systemSizes=','.join(map(str, systemSizes)),
+                        listOMPNodes=','.join(map(str, number_of_nodes)),
+                        listOMPTasks=','.join(map(str, number_of_tasks_per_node)),
+                        listOMPThreads=','.join(map(str, number_of_omp_threads)),
+                        listSamples=','.join(map(str, number_of_training_samples)),
+                        listIterations=','.join(map(str, number_of_training_iterations)),
+                        listInitialHidden=','.join(map(str, number_of_initial_hidden_units)),
+                        listSampleSteps=','.join(map(str, number_of_sample_steps)),
+                        numRuns=number_of_runs
+                        )
 
 f = open("{epxperiment_folder}/evaluation.slurm".format(epxperiment_folder=epxperiment_folder),'w')
 print >>f, batch_script
