@@ -75,6 +75,7 @@ class Evaluation:
                                         histograms = self.loadHistograms(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps)
                                         tvd = self.tvd(self.loadExact(), self.mergeAndNormalise(histograms))
                                         print(self.mergeAndNormalise(histograms))
+                                        print(self.loadExact())
                                         print("")
 
                                         line = "{},{},{},{},{},{},{},{},{}\n".format(size, nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd)
