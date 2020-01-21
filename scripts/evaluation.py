@@ -48,7 +48,7 @@ class Evaluation:
 
     def loadExact(self):
         with open("{directory}/exact.json".format(directory=self.experimentFolder), "rb") as f:
-             return pickle.load(f)
+             return pickle.load(f, encoding='latin1')
 
     def tvd(self, exact, histogram):
         tvd = 0
