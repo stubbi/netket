@@ -66,7 +66,7 @@ class Evaluation:
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
-                for circuits in self.NumCircuits:
+                for circuits in range(self.NumCircuits):
                     for nodes in self.listOMPNodes:
                         for tasks in self.listOMPTasks:
                             for threads in self.listOMPThreads:
