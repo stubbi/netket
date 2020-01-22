@@ -47,8 +47,8 @@ class Evaluation:
         with open("{directory}/histogram.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)), 'r') as f:
             return json.load(f)
 
-    def loadExact(self):
-        with open("{directory}/exact.json".format(directory=self.experimentFolder), "rb") as f:
+    def loadExact(self,size, cycles, circuits):
+        with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
              return pickle.load(f, encoding='latin1')
 
     def tvd(self, exact, histogram):
@@ -77,7 +77,7 @@ class Evaluation:
                                                 for run in range(self.numRuns):
 
                                                     histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
-                                                    tvd = self.tvd(self.loadExact(), self.normalise(histogram))
+                                                    tvd = self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram))
 
                                                     line = "{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
                                                     with open(results_file, 'a') as f:
