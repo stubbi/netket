@@ -4,20 +4,20 @@ experiment_name = 'random-circuit-test'
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
 
-# parameters which should be evaluated
-number_of_qubits = [4]
-number_of_cycles = [2]
-number_of_circuits = 2 #number of random circuits with same number of qubits and cycles
+# parameters to be tested
+number_of_qubits = [10]
+number_of_cycles = [20]
+number_of_circuits = 10 #number of random circuits with same number of qubits and cycles
 
 number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
 
-number_of_training_samples = [100]
-number_of_training_iterations = [100000]
+number_of_training_samples = [100,1000,10000]
+number_of_training_iterations = [100000, 1000000]
 
 number_of_initial_hidden_units = [0]
-number_of_sample_steps = [0]
+number_of_sample_steps = [11]
 number_of_runs = 10 #number of runs for a specific circuit
 
 
