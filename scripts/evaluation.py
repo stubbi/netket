@@ -47,7 +47,7 @@ class Evaluation:
         with open("{directory}/histogram.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)), 'r') as f:
             return json.load(f)
 
-    def loadExact(self,size, cycles, circuits):
+    def loadExact(self,qubits, cycles, circuit):
         with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
              return pickle.load(f, encoding='latin1')
 
