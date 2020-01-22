@@ -3,8 +3,8 @@
 import random
 import sys
 
-numQubits = sys.argv[1]
-numCycles = sys.argv[2]
+numQubits = int(sys.argv[1])
+numCycles = int(sys.argv[2])
 qasmFile = sys.argv[3]
 
 singleGates = ['X','Y','Z','H','T','Tdag']
