@@ -13,12 +13,12 @@ number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
 
-number_of_training_samples = range(100,1001,100)
-number_of_training_iterations = range(1000, 100001,1000)
+number_of_training_samples = [100]
+number_of_training_iterations = [100000]
 
 number_of_initial_hidden_units = [0]
 number_of_sample_steps = [0]
-number_of_runs = 10
+number_of_runs = 10 #number of runs for a specific circuit
 
 
 epxperiment_folder = "{pc2pfs}/{noctua_user}/{experiment_name}".format(noctua_user=noctua_user,
