@@ -8,7 +8,7 @@ import json
 
 experimentFolder = sys.argv[1]
 listSystemSizes = sys.argv[2].split(',')
-listCyles = sys.argv[3].split(',')
+listCycles = sys.argv[3].split(',')
 NumCircuits = int(sys.argv[4])
 listOMPNodes = sys.argv[5].split(',')
 listOMPTasks = sys.argv[6].split(',')
