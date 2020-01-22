@@ -144,7 +144,7 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                             f = open("{directory}/job.slurm".format(directory=directory),'w')
                                             print >>f, batch_script
 
-                                            time.sleep(1)
+                                            print(directory)
 
                                             bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
                                             process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)                
