@@ -9,7 +9,7 @@ import json
 experimentFolder = sys.argv[1]
 listSystemSizes = sys.argv[2].split(',')
 listCycles = sys.argv[3].split(',')
-NumCircuits = int(sys.argv[4])
+numCircuits = int(sys.argv[4])
 listOMPNodes = sys.argv[5].split(',')
 listOMPTasks = sys.argv[6].split(',')
 listOMPThreads = sys.argv[7].split(',')
@@ -20,11 +20,11 @@ listSampleSteps = sys.argv[11].split(',')
 numRuns = int(sys.argv[12])
 
 class Evaluation:
-    def __init__(self, experimentFolder, listSystemSizes, listCycles, NumCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns):
-        self.experimentFolder=experimentFolder
+    def __init__(self, experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns):
+        self.experimentFolder=experimentFolder,
         self.listSystemSizes=listSystemSizes,
         self.listCycles=listCycles,
-        self.NumCircuits=NumCircuits,
+        self.numCircuits=numCircuits,
         self.listOMPNodes=listOMPNodes
         self.listOMPTasks=listOMPTasks
         self.listOMPThreads=listOMPThreads
@@ -66,7 +66,7 @@ class Evaluation:
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
-                for circuits in range(self.NumCircuits):
+                for circuits in range(self.numCircuits):
                     for nodes in self.listOMPNodes:
                         for tasks in self.listOMPTasks:
                             for threads in self.listOMPThreads:
@@ -105,5 +105,5 @@ class Evaluation:
             histogram[key] /= total
         return histogram
 
-ev = Evaluation(experimentFolder, listSystemSizes, listCycles, NumCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
+ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
 ev.generateAll()
