@@ -66,7 +66,7 @@ class Evaluation:
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
-                for ciruits in self.NumCircuits:
+                for circuits in self.NumCircuits:
                     for nodes in self.listOMPNodes:
                         for tasks in self.listOMPTasks:
                             for threads in self.listOMPThreads:
@@ -76,8 +76,8 @@ class Evaluation:
                                             for numSampleSteps in self.listSampleSteps:
                                                 for run in range(self.numRuns):
 
-                                                    histograms = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
-                                                    tvd = self.tvd(self.loadExact(), self.normalise(histograms))
+                                                    histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
+                                                    tvd = self.tvd(self.loadExact(), self.normalise(histogram))
 
                                                     line = "{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
                                                     with open(results_file, 'a') as f:
