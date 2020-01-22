@@ -84,7 +84,7 @@ class Evaluation:
                                                         f.write(line)
 
     def directory(self, qubits, cycles, circuit, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
-        return "{experimentFolder}/{}qubits/{}cycles/circuit{}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
+        return "{experimentFolder}/{qubits}qubits/{cycles}cycles/circuit{circuit}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
                 experimentFolder=self.experimentFolder,
                 nodes=nodes,
                 tasks=tasks,
