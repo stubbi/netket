@@ -36,5 +36,5 @@ for m in range(numCycles):
     circuit = circuit + generateCycle(m)
 
 f = open(qasmFile,'w')
-print >>f, program
+print >>f, circuit
 f.close()
