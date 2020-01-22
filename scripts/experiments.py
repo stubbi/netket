@@ -46,28 +46,28 @@ for qubits in number_of_qubits:
             process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
             batch_script ="""#!/bin/bash
-            #SBATCH -N 1
-            #SBATCH --ntasks-per-node=1
-            #SBATCH -J {experiment_name}-exact
-            #SBATCH -A {noctua_user}
-            #SBATCH -p {noctua_partition}
-            #SBATCH -t {max_wall_time}
-            #SBATCH --mail-type fail
-            #SBATCH --mail-user {email}
+#SBATCH -N 1
+#SBATCH --ntasks-per-node=1
+#SBATCH -J {experiment_name}-exact
+#SBATCH -A {noctua_user}
+#SBATCH -p {noctua_partition}
+#SBATCH -t {max_wall_time}
+#SBATCH --mail-type fail
+#SBATCH --mail-user {email}
 
-            module reset
-            module load singularity
-            module load mpi/OpenMPI/3.1.4-GCC-8.3.0
-            export OMP_NUM_THREADS=1
+module reset
+module load singularity
+module load mpi/OpenMPI/3.1.4-GCC-8.3.0
+export OMP_NUM_THREADS=1
 
-            mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact > out 2> err""".format(
-                                    experiment_name=experiment_name,
-                                    noctua_user=noctua_user,
-                                    noctua_partition=noctua_partition,
-                                    max_wall_time=max_wall_time,
-                                    email=email,
-                                    singularity_image_location=singularity_image_location
-                                )
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact > out 2> err""".format(
+                        experiment_name=experiment_name,
+                        noctua_user=noctua_user,
+                        noctua_partition=noctua_partition,
+                        max_wall_time=max_wall_time,
+                        email=email,
+                        singularity_image_location=singularity_image_location
+                    )
 
             f = open("{circuitDirectory}/job.slurm".format(circuitDirectory=circuitDirectory),'w')
             print >>f, batch_script
@@ -103,40 +103,40 @@ for qubits in number_of_qubits:
                                                     raise
 
                                             batch_script ="""#!/bin/bash
-            #SBATCH -N {nodes}
-            #SBATCH --ntasks-per-node={tasks}
-            #SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations-run{run}
-            #SBATCH -A {noctua_user}
-            #SBATCH -p {noctua_partition}
-            #SBATCH -t {max_wall_time}
-            #SBATCH --mail-type fail
-            #SBATCH --mail-user {email}
+#SBATCH -N {nodes}
+#SBATCH --ntasks-per-node={tasks}
+#SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations-run{run}
+#SBATCH -A {noctua_user}
+#SBATCH -p {noctua_partition}
+#SBATCH -t {max_wall_time}
+#SBATCH --mail-type fail
+#SBATCH --mail-user {email}
 
-            module reset
-            module load singularity
-            module load mpi/OpenMPI/3.1.4-GCC-8.3.0
-            export OMP_NUM_THREADS={threads}
+module reset
+module load singularity
+module load mpi/OpenMPI/3.1.4-GCC-8.3.0
+export OMP_NUM_THREADS={threads}
 
-            cp {circuitDirectory}/in.qc {directory}/in.qc
-            mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs > out 2> err""".format(
-                                    nodes=nodes,
-                                    experiment_name=experiment_name,
-                                    tasks=tasks,
-                                    threads=threads,
-                                    samples=samples,
-                                    initial_hidden = initial_hidden,
-                                    sample_steps = sample_steps,
-                                    iterations=iterations,
-                                    noctua_user=noctua_user,
-                                    noctua_partition=noctua_partition,
-                                    max_wall_time=max_wall_time,
-                                    email=email,
-                                    singularity_image_location=singularity_image_location,
-                                    run=run,
-                                    pc2pfs=os.environ["PC2PFS"],
-                                    directory=directory,
-                                    circuitDirectory=circuitDirectory
-                                )
+cp {circuitDirectory}/in.qc {directory}/in.qc
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs > out 2> err""".format(
+                        nodes=nodes,
+                        experiment_name=experiment_name,
+                        tasks=tasks,
+                        threads=threads,
+                        samples=samples,
+                        initial_hidden = initial_hidden,
+                        sample_steps = sample_steps,
+                        iterations=iterations,
+                        noctua_user=noctua_user,
+                        noctua_partition=noctua_partition,
+                        max_wall_time=max_wall_time,
+                        email=email,
+                        singularity_image_location=singularity_image_location,
+                        run=run,
+                        pc2pfs=os.environ["PC2PFS"],
+                        directory=directory,
+                        circuitDirectory=circuitDirectory
+                    )
 
                                             f = open("{directory}/job.slurm".format(directory=directory),'w')
                                             print >>f, batch_script
