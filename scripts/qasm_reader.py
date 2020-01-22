@@ -116,18 +116,17 @@ class QASMReader:
                 self.exact.gate(Tdag, target = q1)
                 self.exact.gate(X, target = q1, control=q0)
 
+        elif(line.startswith('Tdag')):
+            for q in self.readQubits(line.strip('Tdag')):
+                if(self.is_nqs()):
+                    self.nqs.applyTDagger(q)
+                else:
+                    self.exact.gate(T, target=q)
 
         elif(line.startswith('T')):
             for q in self.readQubits(line.strip('T')):
                 if(self.is_nqs()):
                     self.nqs.applyT(q)
-                else:
-                    self.exact.gate(T, target=q)
-
-        elif(line.startswith('Tdag')):
-            for q in self.readQubits(line.strip('Tdag')):
-                if(self.is_nqs()):
-                    self.nqs.applyTDagger(q)
                 else:
                     self.exact.gate(T, target=q)
 
