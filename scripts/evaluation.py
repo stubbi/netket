@@ -21,10 +21,10 @@ numRuns = int(sys.argv[12])
 
 class Evaluation:
     def __init__(self, experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns):
-        self.experimentFolder=experimentFolder,
-        self.listSystemSizes=listSystemSizes,
-        self.listCycles=listCycles,
-        self.numCircuits=numCircuits,
+        self.experimentFolder=experimentFolder
+        self.listSystemSizes=listSystemSizes
+        self.listCycles=listCycles
+        self.numCircuits=numCircuits
         self.listOMPNodes=listOMPNodes
         self.listOMPTasks=listOMPTasks
         self.listOMPThreads=listOMPThreads
