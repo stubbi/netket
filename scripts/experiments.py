@@ -1,4 +1,4 @@
-import subprocess, os, errno
+import subprocess, os, errno, time
 
 circuit_generator_script = 'random_circuit.py'
 experiment_name = 'random-circuit-test'
@@ -143,6 +143,8 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
 
                                             f = open("{directory}/job.slurm".format(directory=directory),'w')
                                             print >>f, batch_script
+
+                                            time.sleep(0.01)
 
                                             bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
                                             process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)                
