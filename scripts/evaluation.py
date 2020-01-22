@@ -7,20 +7,24 @@ import json
 # evaluation of a specific configuration
 
 experimentFolder = sys.argv[1]
-systemSizes = sys.argv[2].split(',')
-listOMPNodes = sys.argv[3].split(',')
-listOMPTasks = sys.argv[4].split(',')
-listOMPThreads = sys.argv[5].split(',')
-listSamples = sys.argv[6].split(',')
-listIterations = sys.argv[7].split(',')
-listInitialHidden = sys.argv[8].split(',')
-listSampleSteps = sys.argv[9].split(',')
-numRuns = int(sys.argv[10])
+listSystemSizes = sys.argv[2].split(',')
+listCyles = sys.argv[3].split(',')
+NumCircuits = int(sys.argv[4])
+listOMPNodes = sys.argv[5].split(',')
+listOMPTasks = sys.argv[6].split(',')
+listOMPThreads = sys.argv[7].split(',')
+listSamples = sys.argv[8].split(',')
+listIterations = sys.argv[9].split(',')
+listInitialHidden = sys.argv[10].split(',')
+listSampleSteps = sys.argv[11].split(',')
+numRuns = int(sys.argv[12])
 
 class Evaluation:
-    def __init__(self, experimentFolder, systemSizes, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns):
+    def __init__(self, experimentFolder, listSystemSizes, listCycles, NumCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns):
         self.experimentFolder=experimentFolder
-        self.systemSizes=systemSizes
+        self.listSystemSizes=listSystemSizes,
+        self.listCycles=listCycles,
+        self.NumCircuits=NumCircuits,
         self.listOMPNodes=listOMPNodes
         self.listOMPTasks=listOMPTasks
         self.listOMPThreads=listOMPThreads
@@ -39,12 +43,9 @@ class Evaluation:
     def plotTVDSamplesIterations(self):
         pass
 
-    def loadHistograms(self, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps):
-        histograms=[]
-        for r in range(self.numRuns):
-            with open("{directory}/histogram.json".format(directory=self.directory(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, r)), 'r') as f:
-                histograms.append(json.load(f))
-        return histograms
+    def loadHistogram(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
+        with open("{directory}/histogram.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, r)), 'r') as f:
+            return histograms.append(json.load(f))
 
     def loadExact(self):
         with open("{directory}/exact.json".format(directory=self.experimentFolder), "rb") as f:
@@ -61,26 +62,29 @@ class Evaluation:
     def generateAll(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write('system_size,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd\n')
+            f.write('qubits,cycles,circuit,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd\n')
         
-        for size in self.systemSizes:
-            for nodes in self.listOMPNodes:
-                for tasks in self.listOMPTasks:
-                    for threads in self.listOMPThreads:
-                        for numSamples in self.listSamples:
-                            for numIterations in self.listIterations:
-                                for numInitialHidden in self.listInitialHidden:
-                                    for numSampleSteps in self.listSampleSteps:
+        for size in self.listSystemSizes:
+            for cycles in self.listCycles:
+                for ciruits in self.NumCircuits:
+                    for nodes in self.listOMPNodes:
+                        for tasks in self.listOMPTasks:
+                            for threads in self.listOMPThreads:
+                                for numSamples in self.listSamples:
+                                    for numIterations in self.listIterations:
+                                        for numInitialHidden in self.listInitialHidden:
+                                            for numSampleSteps in self.listSampleSteps:
+                                                for run in range(self.numRuns):
 
-                                        histograms = self.loadHistograms(nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps)
-                                        tvd = self.tvd(self.loadExact(), self.mergeAndNormalise(histograms))
+                                                    histograms = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
+                                                    tvd = self.tvd(self.loadExact(), self.normalise(histograms))
 
-                                        line = "{},{},{},{},{},{},{},{},{}\n".format(size, nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,tvd)
-                                        with open(results_file, 'a') as f:
-                                            f.write(line)
+                                                    line = "{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
+                                                    with open(results_file, 'a') as f:
+                                                        f.write(line)
 
-    def directory(self, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
-        return "{experimentFolder}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
+    def directory(self, qubits, cycles, circuit, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
+        return "{experimentFolder}/{}qubits/{}cycles/circuit{}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
                 experimentFolder=self.experimentFolder,
                 nodes=nodes,
                 tasks=tasks,
@@ -89,17 +93,17 @@ class Evaluation:
                 iterations=numIterations,
                 initial_hidden=numInitialHidden,
                 sample_steps=numSampleSteps,
-                run=run
+                run=run,
+                qubits=qubits,
+                cycles=cycles,
+                circuit=circuit
             )
 
-    def mergeAndNormalise(self, histograms):
-        c = collections.Counter({})
-        for h in histograms:
-            c = c+collections.Counter(h)
-        total = sum(c.values())
-        for key in c:
-            c[key] /= total
-        return c
+    def normalise(self, histogram):
+        total = sum(histogram.values())
+        for key in histogram:
+            histogram[key] /= total
+        return histogram
 
-ev = Evaluation(experimentFolder, systemSizes, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
+ev = Evaluation(experimentFolder, listSystemSizes, listCycles, NumCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
 ev.generateAll()

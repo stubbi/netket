@@ -1,11 +1,14 @@
 import subprocess, os, errno
 
-experiment_name = 'bell-test-qasm'
+experiment_name = 'random-circuit-test'
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
 
 # parameters which should be evaluated
-system_sizes = [2] #number of qubits
+number_of_qubits = [4]
+number_of_cycles = [2]
+number_of_circuits = 2 #number of random circuits with same number of qubits and cycles
+
 number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
@@ -35,12 +38,14 @@ batch_script ="""#!/bin/bash
 
 module reset
 module load vis/matplotlib
-python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {systemSizes} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} > evaluation_out 2> evaluation_err""".format(
+python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} > evaluation_out 2> evaluation_err""".format(
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
                         email=email,
-                        systemSizes=','.join(map(str, system_sizes)),
+                        number_of_qubits=','.join(map(str, number_of_qubits)),
+                        number_of_cycles=','.join(map(str, number_of_cycles)),
+                        number_of_circuits=number_of_circuits,
                         listOMPNodes=','.join(map(str, number_of_nodes)),
                         listOMPTasks=','.join(map(str, number_of_tasks_per_node)),
                         listOMPThreads=','.join(map(str, number_of_omp_threads)),
