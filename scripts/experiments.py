@@ -144,7 +144,7 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                             bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
                                             process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)                
 
-                                            print "started job {experiment_name} for {qubits}qubits {cycles}cycles {circuit}circuit {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps run {run}".format(
+                                            print "started job {experiment_name} for {qubits}qubits {cycles}cycles circuit{circuit} {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps run {run}".format(
                                                 experiment_name=experiment_name,
                                                 nodes=nodes,
                                                 tasks=tasks,
