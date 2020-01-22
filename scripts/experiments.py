@@ -105,7 +105,7 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                             batch_script ="""#!/bin/bash
 #SBATCH -N {nodes}
 #SBATCH --ntasks-per-node={tasks}
-#SBATCH -J {experiment_name}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations-run{run}
+#SBATCH -J {experiment_name}-{qubits}qubits-{cycles}cycles-circuit{circuit}-{nodes}nodes-{tasks}tasks-{threads}threads-{samples}samples-{iterations}iterations-run{run}
 #SBATCH -A {noctua_user}
 #SBATCH -p {noctua_partition}
 #SBATCH -t {max_wall_time}
@@ -135,7 +135,10 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         run=run,
                         pc2pfs=os.environ["PC2PFS"],
                         directory=directory,
-                        circuitDirectory=circuitDirectory
+                        circuitDirectory=circuitDirectory,
+                        qubits=qubits,
+                        cycles=cycles,
+                        circuit=circuit
                     )
 
                                             f = open("{directory}/job.slurm".format(directory=directory),'w')
