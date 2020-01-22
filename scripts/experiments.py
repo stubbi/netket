@@ -36,10 +36,10 @@ for qubits in number_of_qubits:
                                                 qubits=qubits,
                                                 cycles=cycles,
                                                 circuit=circuit)
-            try: os.makedirs(directory)
+            try: os.makedirs(circuitDirectory)
             except OSError, err:
                 # Reraise the error unless it's about an already existing directory 
-                if err.errno != errno.EEXIST or not os.path.isdir(directory): 
+                if err.errno != errno.EEXIST or not os.path.isdir(circuitDirectory): 
                     raise
 
             bashCommand = "python {home}/nqs/scripts/{circuit_generator_script} {qubits} {cycles} {circuitDirectory}/in.qc".format(home=os.environ["HOME"], circuit_generator_script=circuit_generator_script, qubits=qubits, cycles=cycles, circuitDirectory=circuitDirectory)
