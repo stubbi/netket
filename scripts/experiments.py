@@ -26,6 +26,9 @@ number_of_initial_hidden_units = [0]
 number_of_sample_steps = [0]
 number_of_runs = 10 #number of runs for a specific circuit
 
+
+
+jobDirs = []
 for qubits in number_of_qubits:
     for cycles in number_of_cycles:
         for circuit in range(number_of_circuits):
@@ -143,26 +146,11 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
 
                                             f = open("{directory}/job.slurm".format(directory=directory),'w')
                                             print >>f, batch_script
+                                            jobDirs.append(directory)
+                                            
+            jobDirs.append(circuitDirectory)
 
-                                            print(directory)
-
-                                            bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
-                                            process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)                
-
-                                            print "started job {experiment_name} for {qubits}qubits {cycles}cycles circuit{circuit} {nodes}nodes {tasks}tasks {threads}threads {samples}samples {iterations}iterations {initial_hidden}initialHidden {sample_steps}sampleSteps run {run}".format(
-                                                experiment_name=experiment_name,
-                                                nodes=nodes,
-                                                tasks=tasks,
-                                                threads=threads,
-                                                samples=samples,
-                                                iterations=iterations,
-                                                initial_hidden=initial_hidden,
-                                                sample_steps=sample_steps,
-                                                run=run,
-                                                qubits=qubits,
-                                                cycles=cycles,
-                                                circuit=circuit
-                                            )
-
-            bashCommand = "sbatch -D {circuitDirectory} {circuitDirectory}/job.slurm".format(circuitDirectory=circuitDirectory)
-            process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
+for directory in jobDirs:
+    bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
+    process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)  
+    print "started job in {}".format(directory)           
