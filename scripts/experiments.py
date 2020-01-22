@@ -66,8 +66,7 @@ for qubits in number_of_qubits:
                                     noctua_partition=noctua_partition,
                                     max_wall_time=max_wall_time,
                                     email=email,
-                                    singularity_image_location=singularity_image_location,
-                                    directory=directory
+                                    singularity_image_location=singularity_image_location
                                 )
 
             f = open("{circuitDirectory}/job.slurm".format(circuitDirectory=circuitDirectory),'w')
