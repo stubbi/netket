@@ -21,6 +21,8 @@ def generateCycle(m):
     controls = [q for q in range(numQubits) if q%4 == m%4]
     for c in controls:
         cycle = cycle + "CZ q[{}], q[{}]\n".format(c, (c+1)%numQubits)
+
+    return cycle
     
 
 
