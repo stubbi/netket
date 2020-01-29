@@ -76,8 +76,11 @@ class Evaluation:
                                             for numSampleSteps in self.listSampleSteps:
                                                 for run in range(self.numRuns):
 
-                                                    histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
-                                                    tvd = self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram))
+                                                    try:
+                                                        histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
+                                                        tvd = self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram))
+                                                    except:
+                                                        tvd = '-'
 
                                                     line = "{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
                                                     with open(results_file, 'a') as f:
