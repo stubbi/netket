@@ -3,7 +3,7 @@ import subprocess, os, errno, time
 circuit_generator_script = 'random_circuit.py'
 experiment_name = 'random-circuit-test'
 noctua_partition = 'short'
-max_wall_time = '00:30:00'
+max_wall_time = '00:05:00'
 email = 'stubbi@mail.upb.de'
 noctua_user = 'hpc-prf-nqs'
 singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
@@ -11,7 +11,7 @@ singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         pc2pfs=os.environ["PC2PFS"])
 
 # parameters to be tested
-number_of_qubits = [10]
+number_of_qubits = range(2,11)
 number_of_cycles = [10]
 number_of_circuits = 10 #number of random circuits with same number of qubits and cycles
 
