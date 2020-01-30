@@ -47,6 +47,10 @@ class Evaluation:
         with open("{directory}/histogram.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)), 'r') as f:
             return json.load(f)
 
+    def loadDuration(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
+        with open("{directory}/duration.time".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)), 'r') as f:
+            return float(f.readline)
+
     def loadExact(self,qubits, cycles, circuit):
         with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
             return pickle.load(f, encoding='latin1')
@@ -70,7 +74,7 @@ class Evaluation:
     def generateAll(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write('qubits,cycles,circuit,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd\n')
+            f.write('qubits,cycles,circuit,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration (secs)\n')
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
@@ -88,10 +92,12 @@ class Evaluation:
                                                     try:
                                                         histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
                                                         tvd = '{:f}'.format(self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram)))
+                                                        duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
                                                     except:
                                                         tvd = '-'
+                                                        duration = '-'
 
-                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd)
+                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration)
                                                     with open(results_file, 'a') as f:
                                                         f.write(line)
 
