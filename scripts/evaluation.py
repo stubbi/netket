@@ -82,7 +82,7 @@ class Evaluation:
                                                     except:
                                                         tvd = -1.0
 
-                                                    line = "{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:f}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
+                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{:f}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
                                                     with open(results_file, 'a') as f:
                                                         f.write(line)
 
