@@ -57,7 +57,7 @@ class Evaluation:
 
     def numberOfHadamards(self, qubits, cycles, circuit):
         hadamards = 0
-        with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/in.qc".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
+        with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/in.qc".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "r") as f:
             for line in f:
                 if(line[0] == 'H'):
                     hadamards = hadamards + 1
