@@ -49,7 +49,15 @@ class Evaluation:
 
     def loadExact(self,qubits, cycles, circuit):
         with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
-             return pickle.load(f, encoding='latin1')
+            return pickle.load(f, encoding='latin1')
+
+    def numberOfHadamards(self, qubits, cycles, circuit):
+        hadamards = 0
+        with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/in.qc".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
+            for line in f:
+                if(line[0] == 'H'):
+                    hadamards = hadamards + 1
+        return hadamards
 
     def tvd(self, exact, histogram):
         tvd = 0.0
@@ -62,11 +70,12 @@ class Evaluation:
     def generateAll(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write('qubits,cycles,circuit,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd\n')
+            f.write('qubits,cycles,circuit,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd\n')
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
                 for circuits in range(self.numCircuits):
+                    hadamards = self.numberOfHadamards(size, cycles, circuits)
                     for nodes in self.listOMPNodes:
                         for tasks in self.listOMPTasks:
                             for threads in self.listOMPThreads:
@@ -82,7 +91,7 @@ class Evaluation:
                                                     except:
                                                         tvd = '-'
 
-                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
+                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd)
                                                     with open(results_file, 'a') as f:
                                                         f.write(line)
 
