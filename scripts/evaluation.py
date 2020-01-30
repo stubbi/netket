@@ -57,6 +57,14 @@ class Evaluation:
             exact_prob = abs(exact[i])**2
             nqs_prob = histogram.get(str(i), 0.0)
             tvd += abs(exact_prob-nqs_prob)
+
+        if(tvd/2.0 == 479):
+            for i in range(len(exact)):
+            exact_prob = abs(exact[i])**2
+            nqs_prob = histogram.get(str(i), 0.0)
+            print('exact: {}, exact_prob: {}, nqs: {}'.format(exact[i], exact_prob, nqs_prob))
+
+
         return tvd/2.0
         
     def generateAll(self):
