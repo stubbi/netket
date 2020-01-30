@@ -97,7 +97,7 @@ class Evaluation:
                                                         tvd = '-'
                                                         duration = '-'
 
-                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration)
+                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration)
                                                     with open(results_file, 'a') as f:
                                                         f.write(line)
 
