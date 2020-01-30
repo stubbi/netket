@@ -105,7 +105,7 @@ class Evaluation:
     def normalise(self, histogram):
         total = sum(histogram.values())
         for key in histogram:
-            histogram[key] /= total
+            histogram[key] = float(histogram[key])/float(total)
         return histogram
 
 ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
