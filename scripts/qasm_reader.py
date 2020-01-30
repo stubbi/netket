@@ -7,6 +7,7 @@ import sys
 import pickle
 from qupy import Qubits
 from qupy.operator import H, X, Y, Z, T, Tdag, rz, swap
+import time
 
 samples = int(sys.argv[1])
 epochs = int(sys.argv[2])
@@ -25,6 +26,8 @@ class QASMReader:
         self.nqs = None
         self.exact = None
         self.method = method
+        self.start = None
+        self.end = None
 
     def is_nqs(self):
         return self.method == 'nqs'
@@ -146,7 +149,6 @@ class QASMReader:
         return int("".join(str(int(x)) for x in sample), 2)
 
     def display(self):
-        #TODO use suffix
         if(self.is_nqs()):
             raw_data = [self.toDecimal(self.nqs.sample()) for _ in range(shots)]
             histogram = collections.Counter(raw_data)
@@ -163,6 +165,11 @@ class QASMReader:
             with open('exact.json', 'wb') as f:
                 pickle.dump(self.exact.get_state(), f)
 
+        with open('duration.time', 'w') as f:
+            f.write(str(self.end-self.start))
+
 qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps)
+qasm.start = time.time()
 qasm.buildCircuit("in.qc")
+qasm.end = time.time()
 qasm.display()
