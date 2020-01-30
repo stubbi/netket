@@ -78,11 +78,11 @@ class Evaluation:
 
                                                     try:
                                                         histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
-                                                        tvd = self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram))
+                                                        tvd = '{:f}'.format(self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram)))
                                                     except:
-                                                        tvd = -1.0
+                                                        tvd = '-'
 
-                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{:f}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
+                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
                                                     with open(results_file, 'a') as f:
                                                         f.write(line)
 
