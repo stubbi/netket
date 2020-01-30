@@ -74,7 +74,7 @@ class Evaluation:
     def generateAll(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write('qubits,cycles,circuit,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration (secs)\n')
+            f.write('qubits,cycles,circuit,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,#hadamards,tvd,duration (secs)\n')
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
