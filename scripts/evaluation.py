@@ -57,14 +57,6 @@ class Evaluation:
             exact_prob = abs(exact[i])**2
             nqs_prob = histogram.get(str(i), 0.0)
             tvd += abs(exact_prob-nqs_prob)
-
-        if(tvd/2.0 < 1.0):
-            for i in range(len(exact)):
-                exact_prob = abs(exact[i])**2
-                nqs_prob = histogram.get(str(i), 0.0)
-                print('exact: {}, exact_prob: {}, nqs: {}'.format(exact[i], exact_prob, nqs_prob))
-
-
         return tvd/2.0
         
     def generateAll(self):
@@ -88,9 +80,9 @@ class Evaluation:
                                                         histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
                                                         tvd = self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram))
                                                     except:
-                                                        tvd = '-'
+                                                        tvd = -1.0
 
-                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
+                                                    line = "{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:d},{:f}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,tvd)
                                                     with open(results_file, 'a') as f:
                                                         f.write(line)
 
