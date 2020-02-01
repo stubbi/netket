@@ -71,10 +71,10 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
         
-    def generateAll(self):
+    def generateCSV(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write('qubits,cycles,circuit,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,#hadamards,tvd,duration (secs)\n')
+            f.write('qubits,cycles,circuit,nodes,tasks,threads,#samples,#iterations,#initialHidden,#sampleSteps,run,#hadamards,tvd,duration,success\n')
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
@@ -93,11 +93,13 @@ class Evaluation:
                                                         histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
                                                         tvd = '{:f}'.format(self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram)))
                                                         duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
+                                                        success = True
                                                     except:
                                                         tvd = '-'
                                                         duration = '-'
+                                                        success = False
 
-                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration)
+                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration,success)
                                                     with open(results_file, 'a') as f:
                                                         f.write(line)
 
@@ -124,4 +126,4 @@ class Evaluation:
         return histogram
 
 ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
-ev.generateAll()
+ev.generateCSV()
