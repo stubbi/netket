@@ -3,6 +3,7 @@ import collections
 import pickle
 import sys
 import json
+import pandas
 
 # evaluation of a specific configuration
 
@@ -70,7 +71,11 @@ class Evaluation:
             nqs_prob = histogram.get(str(i), 0.0)
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
-        
+
+    def generatePlots(self):
+        results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
+        df = pandas.read_csv(results_file)
+                
     def generateCSV(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
@@ -127,3 +132,4 @@ class Evaluation:
 
 ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
 ev.generateCSV()
+ev.generatePlots()
