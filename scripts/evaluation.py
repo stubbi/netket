@@ -76,7 +76,7 @@ class Evaluation:
         df.groupby(['#qubits','#cycles']).mean()
         for c in pandas.unique(df['#cycles']):
             filtered = df[df['#cycles'] == c]
-            ax.plot(filtered['#qubits'], filtered['tvd'], label = '{} cycles'.format())
+            ax.plot(filtered['#qubits'], filtered['tvd'], label = '{} cycles'.format(c))
         plt.legend()
         plt.savefig('qubits_tvd.pdf')
 
