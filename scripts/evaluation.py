@@ -72,14 +72,33 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
+    def plotQubitsVSTVD(self, df, fig, ax):
+        df.groupby(['#qubits','#cycles']).mean()
+        for c in pandas.unique(df['#cycles']):
+            filtered = df.mask('#cycles', c)
+            ax.plot(filtered['#qubits'], filtered['tvd'], label = '{} cycles'.format())
+        plt.legend()
+        plt.savefig('qubits_tvd.pdf')
+
+
+    def plotCyclesVSTVD(self, df, fig, ax):
+        pass
+
     def generatePlots(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         df = pandas.read_csv(results_file)
+        successful = df['success'] == True
+        df = df[successful]
+        fig, ax = plt.subplots()
+        self.plotQubitsVSTVD(df.copy(), fig, ax)
+        self.plotCyclesVSTVD(df.copy(), fig, ax)
+
+
                 
     def generateCSV(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write('qubits,cycles,circuit,nodes,tasks,threads,#samples,#iterations,#initialHidden,#sampleSteps,run,#hadamards,tvd,duration,success\n')
+            f.write('#qubits,#cycles,circuit,#nodes,#tasks,#threads,#samples,#iterations,#initialHidden,#sampleSteps,run,#hadamards,tvd,duration,success\n')
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
