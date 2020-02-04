@@ -75,7 +75,7 @@ class Evaluation:
     def plotQubitsVSTVD(self, df, fig, ax):
         df.groupby(['#qubits','#cycles']).mean()
         for c in pandas.unique(df['#cycles']):
-            filtered = df.mask('#cycles', c)
+            filtered = df.query('#cycles' == c)
             ax.plot(filtered['#qubits'], filtered['tvd'], label = '{} cycles'.format())
         plt.legend()
         plt.savefig('qubits_tvd.pdf')
