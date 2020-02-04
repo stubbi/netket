@@ -82,7 +82,12 @@ class Evaluation:
 
 
     def plotCyclesVSTVD(self, df, fig, ax):
-        pass
+        df.groupby(['#qubits','#cycles']).mean()
+        for q in pandas.unique(df['#qubits']):
+            filtered = df[df['#qubits'] == q]
+            ax.plot(filtered['#cycles'], filtered['tvd'], label = '{} qubits'.format(q))
+        plt.legend()
+        plt.savefig('cycles_tvd.pdf')
 
     def generatePlots(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
