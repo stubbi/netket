@@ -74,7 +74,7 @@ class Evaluation:
 
     def plot(self, df, groupby, unique, filtered, x, y, label):
         fig, ax = plt.subplots()
-        def = df.groupby(groupby).mean()
+        df = df.groupby(groupby).mean()
         for u in pandas.unique(df[unique]):
             filtered = df[df[filtered] == u]
             ax.plot(filtered[x], filtered[y], label = '{} {}'.format(u, label))
