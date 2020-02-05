@@ -72,7 +72,7 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
-    def plot(self, df, groupby, unique, filtered, x, y, label):
+    def plot(self, df, groupby, unique, x, y, label):
         fig, ax = plt.subplots()
         df = df.groupby(groupby).mean()
         for u in pandas.unique(df[unique]):
