@@ -87,8 +87,7 @@ class Evaluation:
     def generatePlots(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         df = pandas.read_csv(results_file)
-        successful = df['success'] == True
-        df = df[successful]
+        df = df[df['success'] == True]
         self.plot(df.copy(), ['#qubits','#cycles'], '#cycles', '#qubits', 'tvd', 'cycles')
         self.plot(df.copy(), ['#qubits','#cycles'], '#cycles', '#qubits', 'duration', 'cycles')
         self.plot(df.copy(), ['#qubits','#cycles'], '#qubits', '#cycles', 'tvd', 'qubits')
