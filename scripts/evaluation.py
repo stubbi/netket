@@ -92,6 +92,8 @@ class Evaluation:
         self.plot(df.copy(), ['#qubits','#cycles'], '#cycles', '#qubits', 'duration', 'cycles')
         self.plot(df.copy(), ['#qubits','#cycles'], '#qubits', '#cycles', 'tvd', 'qubits')
         self.plot(df.copy(), ['#qubits','#cycles'], '#qubits', '#cycles', 'duration', 'qubits')
+        self.plot(df.copy(), ['#qubits','#hadamards'], '#qubits', '#hadamards', 'tvd', 'qubits')
+        self.plot(df.copy(), ['#qubits','#hadamards'], '#qubits', '#hadamards', 'duration', 'qubits')
 
           
     def generateCSV(self):
