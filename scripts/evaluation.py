@@ -85,6 +85,18 @@ class Evaluation:
         plt.ylim(0,1)
         plt.savefig('qubits_tvd.pdf')
 
+    def plotQubitsVSDuration(self, df):
+        fig, ax = plt.subplots()
+        df = df.groupby(['#qubits','#cycles']).mean()
+        for c in pandas.unique(df['#cycles']):
+            filtered = df[df['#cycles'] == c]
+            ax.plot(filtered['#qubits'], filtered['duration'], label = '{} cycles'.format(c))
+        plt.legend()
+        plt.title(self.experimentFolder.split('/')[-1])
+        plt.xlabel("#Qubits")
+        plt.ylabel("Duration")
+        plt.savefig('qubits_duration.pdf')
+
     def plotCyclesVSTVD(self, df):
         fig, ax = plt.subplots()
         df = df.groupby(['#qubits','#cycles']).mean()
@@ -98,6 +110,19 @@ class Evaluation:
         plt.ylim(0,1)
         plt.savefig('cycles_tvd.pdf')
 
+    def plotCyclesVSDuration(self, df):
+        fig, ax = plt.subplots()
+        df = df.groupby(['#qubits','#cycles']).mean()
+        for q in pandas.unique(df['#qubits']):
+            filtered = df[df['#qubits'] == q]
+            ax.plot(filtered['#cycles'], filtered['duration'], label = '{} qubits'.format(q))
+        plt.legend()
+        plt.title(self.experimentFolder.split('/')[-1])
+        plt.xlabel("#Cycles")
+        plt.ylabel("Duration")
+        plt.ylim(0,1)
+        plt.savefig('cycles_duration.pdf')
+
     def generatePlots(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         df = pandas.read_csv(results_file)
@@ -105,6 +130,8 @@ class Evaluation:
         df = df[successful]
         self.plotQubitsVSTVD(df.copy())
         self.plotCyclesVSTVD(df.copy())
+        self.plotQubitsVSDuration(df.copy())
+        self.plotCyclesVSDuration(df.copy())
           
     def generateCSV(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
