@@ -1,23 +1,23 @@
 import subprocess, os, errno
 
-experiment_name = 'random-circuit-test'
+experiment_name = 'plotting-test'
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
 
 # parameters to be tested
-number_of_qubits = [10]
-number_of_cycles = range(2,11,2)
-number_of_circuits = 3 #number of random circuits with same number of qubits and cycles
+number_of_qubits = range(2,6)
+number_of_cycles = range(2,6)
+number_of_circuits = 2 #number of random circuits with same number of qubits and cycles
 
 number_of_nodes = [1]
 number_of_tasks_per_node = [1,2,5]
 number_of_omp_threads = [1]
 
-number_of_training_samples = [100,500,1000]
-number_of_training_iterations = [10000,100000]
+number_of_training_samples = [100,200]
+number_of_training_iterations = [10000,20000]
 
-number_of_initial_hidden_units = [0]
-number_of_sample_steps = range(11,22,2)
+number_of_initial_hidden_units = [0,1]
+number_of_sample_steps = [1,2]
 number_of_runs = 3 #number of runs for a specific circuit
 
 
