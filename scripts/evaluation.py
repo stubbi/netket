@@ -5,6 +5,7 @@ import sys
 import json
 import pandas
 import os
+import shutil
 
 # evaluation of a specific configuration
 
@@ -107,6 +108,7 @@ class Evaluation:
                 d = df.copy()
                 plots(d[(d['#iterations'] == i) & (d['#samples'] == s)], '{} iterations {} samples'.format(i,s))
 
+        shutil.make_archive('plots.zip', 'zip', 'plots')
 
           
     def generateCSV(self):
