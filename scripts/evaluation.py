@@ -72,30 +72,36 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
-    def plot(self, df, groupby, y):
+    def plot(self, df, groupby, y, suffix):
         fig, ax = plt.subplots()
         df = df.groupby(groupby, as_index = False).mean()
         for u in pandas.unique(df[groupby[0]]):
             filtered = df[df[groupby[0]] == u]
             ax.plot(filtered[groupby[1]], filtered[y], label = '{} {}'.format(u, groupby[0][1:]))
         plt.legend()
-        plt.title(self.experimentFolder.split('/')[-1])
+        plt.title('{} {}'.format(self.experimentFolder.split('/')[-1], suffix))
         plt.xlabel(groupby[1])
         plt.ylabel(y)
-        plt.savefig('{}_{}.pdf'.format(x,y))
+        plt.savefig('{}_{}_{}.pdf'.format(x,y, suffix.replace(' ', '')))
 
     def generatePlots(self):
+        def plots(df, suffix):
+            self.plot(df.copy(), ['#cycles','#qubits'], 'tvd', suffix)
+            self.plot(df.copy(), ['#cycles','#qubits'], 'duration', suffix)
+            self.plot(df.copy(), ['#qubits','#cycles'], 'tvd', suffix)
+            self.plot(df.copy(), ['#qubits','#cycles'], 'duration', suffix)
+            self.plot(df.copy(), ['#qubits','#hadamards'], 'tvd', suffix)
+            self.plot(df.copy(), ['#qubits','#hadamards'], 'duration', suffix)
+
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         df = pandas.read_csv(results_file)
         df = df[df['success'] == True]
-        self.plot(df.copy(), ['#cycles','#qubits'], 'tvd')
-        self.plot(df.copy(), ['#cycles','#qubits'], 'duration')
-        self.plot(df.copy(), ['#qubits','#cycles'], 'tvd')
-        self.plot(df.copy(), ['#qubits','#cycles'], 'duration')
-        self.plot(df.copy(), ['#qubits','#hadamards'], 'tvd')
-        self.plot(df.copy(), ['#qubits','#hadamards'], 'duration')
+        plots(df.copy(), 'all')
 
-        
+        for i in pandas.unique(df['#iterations']):
+            for s in pandas.unique(df['#samples']):
+                plots(df.copy()[df['#iterations' == i and '#samples' == s]], 'iterations {} samples {}'.format(i,s))
+
 
           
     def generateCSV(self):
