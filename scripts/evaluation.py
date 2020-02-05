@@ -4,6 +4,7 @@ import pickle
 import sys
 import json
 import pandas
+import os
 
 # evaluation of a specific configuration
 
@@ -82,7 +83,8 @@ class Evaluation:
         plt.title('{} {}'.format(self.experimentFolder.split('/')[-1], suffix))
         plt.xlabel(groupby[1])
         plt.ylabel(y)
-        plt.savefig('{}_{}_{}.pdf'.format(groupby[1],y, suffix.replace(' ', '')))
+        plt.savefig('plots/{}_{}_{}.pdf'.format(groupby[1],y, suffix.replace(' ', '')))
+        plt.close()
 
     def generatePlots(self):
         def plots(df, suffix):
@@ -94,6 +96,8 @@ class Evaluation:
             self.plot(df.copy(), ['#qubits','#hadamards'], 'duration', suffix)
 
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
+        if not os.path.exists('plots'):
+            os.makedirs('plots')
         df = pandas.read_csv(results_file)
         df = df[df['success'] == True]
         plots(df.copy(), 'all')
