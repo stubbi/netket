@@ -100,7 +100,7 @@ class Evaluation:
 
         for i in pandas.unique(df['#iterations']):
             for s in pandas.unique(df['#samples']):
-                plots(df.copy()[df['#iterations' == i and '#samples' == s]], 'iterations {} samples {}'.format(i,s))
+                plots(df.copy()[df[('#iterations' == i) & ('#samples' == s)]], 'iterations {} samples {}'.format(i,s))
 
 
           
