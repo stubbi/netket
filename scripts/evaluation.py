@@ -82,7 +82,7 @@ class Evaluation:
         plt.title('{} {}'.format(self.experimentFolder.split('/')[-1], suffix))
         plt.xlabel(groupby[1])
         plt.ylabel(y)
-        plt.savefig('{}_{}_{}.pdf'.format(x,y, suffix.replace(' ', '')))
+        plt.savefig('{}_{}_{}.pdf'.format(groupby[1],y, suffix.replace(' ', '')))
 
     def generatePlots(self):
         def plots(df, suffix):
