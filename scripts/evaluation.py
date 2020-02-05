@@ -72,15 +72,15 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
-    def plot(self, df, groupby, filterFor, x, y, label):
+    def plot(self, df, groupby, y):
         fig, ax = plt.subplots()
         df = df.groupby(groupby, as_index = False).mean()
-        for u in pandas.unique(df[filterFor]):
-            filtered = df[df[filterFor] == u]
-            ax.plot(filtered[x], filtered[y], label = '{} {}'.format(u, label))
+        for u in pandas.unique(df[groupby[0]]):
+            filtered = df[df[groupby[0]] == u]
+            ax.plot(filtered[groupby[1]], filtered[y], label = '{} {}'.format(u, groupby[0][1:]))
         plt.legend()
         plt.title(self.experimentFolder.split('/')[-1])
-        plt.xlabel(x)
+        plt.xlabel(groupby[1])
         plt.ylabel(y)
         plt.savefig('{}_{}.pdf'.format(x,y))
 
@@ -88,12 +88,14 @@ class Evaluation:
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         df = pandas.read_csv(results_file)
         df = df[df['success'] == True]
-        self.plot(df.copy(), ['#qubits','#cycles'], '#cycles', '#qubits', 'tvd', 'cycles')
-        self.plot(df.copy(), ['#qubits','#cycles'], '#cycles', '#qubits', 'duration', 'cycles')
-        self.plot(df.copy(), ['#qubits','#cycles'], '#qubits', '#cycles', 'tvd', 'qubits')
-        self.plot(df.copy(), ['#qubits','#cycles'], '#qubits', '#cycles', 'duration', 'qubits')
-        self.plot(df.copy(), ['#qubits','#hadamards'], '#qubits', '#hadamards', 'tvd', 'qubits')
-        self.plot(df.copy(), ['#qubits','#hadamards'], '#qubits', '#hadamards', 'duration', 'qubits')
+        self.plot(df.copy(), ['#cycles','#qubits'], 'tvd')
+        self.plot(df.copy(), ['#cycles','#qubits'], 'duration')
+        self.plot(df.copy(), ['#qubits','#cycles'], 'tvd')
+        self.plot(df.copy(), ['#qubits','#cycles'], 'duration')
+        self.plot(df.copy(), ['#qubits','#hadamards'], 'tvd')
+        self.plot(df.copy(), ['#qubits','#hadamards'], 'duration')
+
+        
 
           
     def generateCSV(self):
