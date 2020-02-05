@@ -16,7 +16,7 @@ number_of_cycles = range(2,6)
 number_of_circuits = 2 #number of random circuits with same number of qubits and cycles
 
 number_of_nodes = [1]
-number_of_tasks_per_node = [1,2,5]
+number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
 
 number_of_training_samples = [100,200]
