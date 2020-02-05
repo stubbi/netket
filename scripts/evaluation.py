@@ -72,12 +72,11 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
-    def plot(self, df, groupby, unique, x, y, label):
+    def plot(self, df, groupby, filterFor, x, y, label):
         fig, ax = plt.subplots()
         df = df.groupby(groupby).mean()
-        print(df.head())
-        for u in pandas.unique(df[unique]):
-            filtered = df[df[filtered] == u]
+        for u in pandas.unique(df[filterFor]):
+            filtered = df[df[filterFor] == u]
             ax.plot(filtered[x], filtered[y], label = '{} {}'.format(u, label))
         plt.legend()
         plt.title(self.experimentFolder.split('/')[-1])
