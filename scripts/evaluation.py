@@ -72,66 +72,28 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
-    def plotQubitsVSTVD(self, df):
+    def plot(self, df, groupby, unique, filtered, x, y, label):
         fig, ax = plt.subplots()
-        df = df.groupby(['#qubits','#cycles']).mean()
-        for c in pandas.unique(df['#cycles']):
-            filtered = df[df['#cycles'] == c]
-            ax.plot(filtered['#qubits'], filtered['tvd'], label = '{} cycles'.format(c))
+        def = df.groupby(groupby).mean()
+        for u in pandas.unique(df[unique]):
+            filtered = df[df[filtered] == u]
+            ax.plot(filtered[x], filtered[y], label = '{} {}'.format(u, label))
         plt.legend()
         plt.title(self.experimentFolder.split('/')[-1])
-        plt.xlabel("#Qubits")
-        plt.ylabel("TVD")
-        plt.ylim(0,1)
-        plt.savefig('qubits_tvd.pdf')
-
-    def plotQubitsVSDuration(self, df):
-        fig, ax = plt.subplots()
-        df = df.groupby(['#qubits','#cycles']).mean()
-        for c in pandas.unique(df['#cycles']):
-            filtered = df[df['#cycles'] == c]
-            ax.plot(filtered['#qubits'], filtered['duration'], label = '{} cycles'.format(c))
-        plt.legend()
-        plt.title(self.experimentFolder.split('/')[-1])
-        plt.xlabel("#Qubits")
-        plt.ylabel("Duration")
-        plt.savefig('qubits_duration.pdf')
-
-    def plotCyclesVSTVD(self, df):
-        fig, ax = plt.subplots()
-        df = df.groupby(['#qubits','#cycles']).mean()
-        for q in pandas.unique(df['#qubits']):
-            filtered = df[df['#qubits'] == q]
-            ax.plot(filtered['#cycles'], filtered['tvd'], label = '{} qubits'.format(q))
-        plt.legend()
-        plt.title(self.experimentFolder.split('/')[-1])
-        plt.xlabel("#Cycles")
-        plt.ylabel("TVD")
-        plt.ylim(0,1)
-        plt.savefig('cycles_tvd.pdf')
-
-    def plotCyclesVSDuration(self, df):
-        fig, ax = plt.subplots()
-        df = df.groupby(['#qubits','#cycles']).mean()
-        for q in pandas.unique(df['#qubits']):
-            filtered = df[df['#qubits'] == q]
-            ax.plot(filtered['#cycles'], filtered['duration'], label = '{} qubits'.format(q))
-        plt.legend()
-        plt.title(self.experimentFolder.split('/')[-1])
-        plt.xlabel("#Cycles")
-        plt.ylabel("Duration")
-        plt.ylim(0,1)
-        plt.savefig('cycles_duration.pdf')
+        plt.xlabel(x)
+        plt.ylabel(y)
+        plt.savefig('{}_{}.pdf'.format(x,y))
 
     def generatePlots(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         df = pandas.read_csv(results_file)
         successful = df['success'] == True
         df = df[successful]
-        self.plotQubitsVSTVD(df.copy())
-        self.plotCyclesVSTVD(df.copy())
-        self.plotQubitsVSDuration(df.copy())
-        self.plotCyclesVSDuration(df.copy())
+        self.plot(df.copy(), ['#qubits','#cycles'], '#cycles', '#qubits', 'tvd', 'cycles')
+        self.plot(df.copy(), ['#qubits','#cycles'], '#cycles', '#qubits', 'duration', 'cycles')
+        self.plot(df.copy(), ['#qubits','#cycles'], '#qubits', '#cycles', 'tvd', 'qubits')
+        self.plot(df.copy(), ['#qubits','#cycles'], '#qubits', '#cycles', 'duration', 'qubits')
+
           
     def generateCSV(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
