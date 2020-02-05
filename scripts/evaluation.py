@@ -108,7 +108,7 @@ class Evaluation:
                 d = df.copy()
                 plots(d[(d['#iterations'] == i) & (d['#samples'] == s)], '{} iterations {} samples'.format(i,s))
 
-        shutil.make_archive('plots.zip', 'zip', 'plots')
+        shutil.make_archive('plots', 'zip', 'plots')
 
           
     def generateCSV(self):
