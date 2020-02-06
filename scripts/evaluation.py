@@ -79,6 +79,7 @@ class Evaluation:
         df = df.groupby(groupby, as_index = False).mean()
         for u in pandas.unique(df[groupby[0]]):
             filtered = df[df[groupby[0]] == u]
+            print(filtered.columns)
             ax.plot(filtered[groupby[1]], filtered[y], label = '{} {}'.format(u, groupby[0]))
         plt.legend()
         plt.title('{} {}'.format(self.experimentFolder.split('/')[-1], suffix))
