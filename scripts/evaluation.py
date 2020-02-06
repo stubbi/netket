@@ -76,7 +76,7 @@ class Evaluation:
 
     def plot(self, df, groupbyKeys, y, suffix):
         fig, ax = plt.subplots()
-        df = pandas.to_numeric(df)
+        df = df.astype({'tvd': 'float64', 'duration': 'float64'})
         print(df.dtypes)
         df = df.groupby(groupbyKeys, as_index = False).mean()
         for u in pandas.unique(df[groupbyKeys[0]]):
