@@ -76,6 +76,7 @@ class Evaluation:
 
     def plot(self, df, groupby, y, suffix):
         fig, ax = plt.subplots()
+        print(df[df['tvd'] == '-'].size)
         df = df.groupby(groupby, as_index = False).mean()
         for u in pandas.unique(df[groupby[0]]):
             filtered = df[df[groupby[0]] == u]
@@ -89,8 +90,8 @@ class Evaluation:
 
     def generatePlots(self):
         def plots(df, suffix):
-            #self.plot(df.copy(), ['#cycles','#qubits'], 'tvd', suffix)
-            #self.plot(df.copy(), ['#cycles','#qubits'], 'duration', suffix)
+            self.plot(df.copy(), ['#cycles','#qubits'], 'tvd', suffix)
+            self.plot(df.copy(), ['#cycles','#qubits'], 'duration', suffix)
             self.plot(df.copy(), ['#qubits','#cycles'], 'tvd', suffix)
             self.plot(df.copy(), ['#qubits','#cycles'], 'duration', suffix)
             self.plot(df.copy(), ['#qubits','#hadamards'], 'tvd', suffix)
