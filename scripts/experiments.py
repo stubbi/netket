@@ -65,7 +65,6 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         noctua_user=noctua_user,
                         noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
-                        email=email,
                         singularity_image_location=singularity_image_location
                     )
 
@@ -109,8 +108,6 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
 #SBATCH -A {noctua_user}
 #SBATCH -p {noctua_partition}
 #SBATCH -t {max_wall_time}
-#SBATCH --mail-type fail
-#SBATCH --mail-user {email}
 
 module reset
 module load singularity
@@ -130,7 +127,6 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         noctua_user=noctua_user,
                         noctua_partition=noctua_partition,
                         max_wall_time=max_wall_time,
-                        email=email,
                         singularity_image_location=singularity_image_location,
                         run=run,
                         pc2pfs=os.environ["PC2PFS"],
