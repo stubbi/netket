@@ -76,7 +76,7 @@ class Evaluation:
 
     def plot(self, df, groupby, y, suffix):
         fig, ax = plt.subplots()
-        print(df[df['tvd'] == '-'].size)
+        print(df[df['duration'] == '-'].size)
         df = df.groupby(groupby, as_index = False).mean()
         for u in pandas.unique(df[groupby[0]]):
             filtered = df[df[groupby[0]] == u]
