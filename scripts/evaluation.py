@@ -77,7 +77,6 @@ class Evaluation:
     def plot(self, df, groupby, y, suffix):
         fig, ax = plt.subplots()
         df = df.groupby(groupby, as_index = False).mean()
-        print(df.head())
         for u in pandas.unique(df[groupby[0]]):
             filtered = df[df[groupby[0]] == u]
             print(filtered.columns)
@@ -102,7 +101,8 @@ class Evaluation:
         if not os.path.exists('plots'):
             os.makedirs('plots')
         df = pandas.read_csv(results_file)
-        df = df[df['success'] == True]
+        success = df['success'] == True
+        df = df[success]
         plots(df.copy(), 'all')
 
         for i in pandas.unique(df['#iterations']):
