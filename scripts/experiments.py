@@ -4,7 +4,6 @@ circuit_generator_script = 'random_circuit.py'
 experiment_name = 'plotting-test'
 noctua_partition = 'short'
 max_wall_time = '00:10:00'
-email = 'stubbi@mail.upb.de'
 noctua_user = 'hpc-prf-nqs'
 singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         noctua_user=noctua_user,
@@ -55,8 +54,6 @@ for qubits in number_of_qubits:
 #SBATCH -A {noctua_user}
 #SBATCH -p {noctua_partition}
 #SBATCH -t {max_wall_time}
-#SBATCH --mail-type fail
-#SBATCH --mail-user {email}
 
 module reset
 module load singularity
