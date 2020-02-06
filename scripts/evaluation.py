@@ -74,18 +74,17 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
-    def plot(self, df, groupby, y, suffix):
+    def plot(self, df, groupbyKeys, y, suffix):
         fig, ax = plt.subplots()
-        print(df[df['duration'] == '-'].size)
-        df = df.groupby(groupby, as_index = False).mean()
-        for u in pandas.unique(df[groupby[0]]):
-            filtered = df[df[groupby[0]] == u]
-            ax.plot(filtered[groupby[1]], filtered[y], label = '{} {}'.format(u, groupby[0]))
+        df = df.groupby(groupbyKeys, as_index = False).mean()
+        for u in pandas.unique(df[groupbyKeys[0]]):
+            filtered = df[df[groupbyKeys[0]] == u]
+            ax.plot(filtered[groupbyKeys[1]], filtered[y], label = '{} {}'.format(u, groupbyKeys[0]))
         plt.legend()
         plt.title('{} {}'.format(self.experimentFolder.split('/')[-1], suffix))
-        plt.xlabel(groupby[1])
+        plt.xlabel(groupbyKeys[1])
         plt.ylabel(y)
-        plt.savefig('plots/{}_{}_{}.pdf'.format(groupby[1][1:],y, suffix.replace(' ', '')))
+        plt.savefig('plots/{}_{}_{}.pdf'.format(groupbyKeys[1][1:],y, suffix.replace(' ', '')))
         plt.close()
 
     def generatePlots(self):
