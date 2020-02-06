@@ -76,6 +76,7 @@ class Evaluation:
 
     def plot(self, df, groupbyKeys, y, suffix):
         fig, ax = plt.subplots()
+        print(df.dtypes)
         df = df.groupby(groupbyKeys, as_index = False).mean()
         for u in pandas.unique(df[groupbyKeys[0]]):
             filtered = df[df[groupbyKeys[0]] == u]
