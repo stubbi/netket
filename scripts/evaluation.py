@@ -89,8 +89,8 @@ class Evaluation:
 
     def generatePlots(self):
         def plots(df, suffix):
-            self.plot(df.copy(), ['#cycles','#qubits'], 'tvd', suffix)
-            self.plot(df.copy(), ['#cycles','#qubits'], 'duration', suffix)
+            #self.plot(df.copy(), ['#cycles','#qubits'], 'tvd', suffix)
+            #self.plot(df.copy(), ['#cycles','#qubits'], 'duration', suffix)
             self.plot(df.copy(), ['#qubits','#cycles'], 'tvd', suffix)
             self.plot(df.copy(), ['#qubits','#cycles'], 'duration', suffix)
             self.plot(df.copy(), ['#qubits','#hadamards'], 'tvd', suffix)
@@ -100,9 +100,7 @@ class Evaluation:
         if not os.path.exists('plots'):
             os.makedirs('plots')
         df = pandas.read_csv(results_file)
-        print(df.size)
         df = df[df['success'] == True]
-        print(df.size)
         plots(df.copy(), 'all')
 
         for i in pandas.unique(df['#iterations']):
