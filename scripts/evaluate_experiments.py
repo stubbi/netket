@@ -1,6 +1,6 @@
 import subprocess, os, errno
 
-experiment_name = 'plotting-test'
+experiment_name = 'plotting-test-normalized'
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
 
