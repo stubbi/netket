@@ -79,7 +79,6 @@ class Evaluation:
         df = df.groupby(groupby, as_index = False).mean()
         for u in pandas.unique(df[groupby[0]]):
             filtered = df[df[groupby[0]] == u]
-            print(filtered.columns)
             ax.plot(filtered[groupby[1]], filtered[y], label = '{} {}'.format(u, groupby[0]))
         plt.legend()
         plt.title('{} {}'.format(self.experimentFolder.split('/')[-1], suffix))
@@ -101,8 +100,9 @@ class Evaluation:
         if not os.path.exists('plots'):
             os.makedirs('plots')
         df = pandas.read_csv(results_file)
-        success = df['success'] == True
-        df = df[success]
+        print(df.size)
+        df = df[df['success'] == True]
+        print(df.size)
         plots(df.copy(), 'all')
 
         for i in pandas.unique(df['#iterations']):
