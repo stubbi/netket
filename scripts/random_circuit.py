@@ -7,7 +7,7 @@ numQubits = int(sys.argv[1])
 numCycles = int(sys.argv[2])
 qasmFile = sys.argv[3]
 
-singleGates = ['X','Y','Z','H','T','Tdag']
+singleGates = ['X','Y','Z','T','Tdag']
 
 
 def generateCycle(m):

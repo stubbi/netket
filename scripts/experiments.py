@@ -1,7 +1,7 @@
 import subprocess, os, errno, time
 
 circuit_generator_script = 'random_circuit.py'
-experiment_name = 'plotting-test-normalized'
+experiment_name = 'no-hadamard-test'
 noctua_partition = 'short'
 max_wall_time = '00:10:00'
 noctua_user = 'hpc-prf-nqs'
