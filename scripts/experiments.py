@@ -1,7 +1,7 @@
 import subprocess, os, errno, time
 
 circuit_generator_script = 'random_circuit.py'
-experiment_name = 'no-hadamard-test'
+experiment_name = 'iterations-test'
 noctua_partition = 'short'
 max_wall_time = '00:10:00'
 noctua_user = 'hpc-prf-nqs'
@@ -10,20 +10,20 @@ singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         pc2pfs=os.environ["PC2PFS"])
 
 # parameters to be tested
-number_of_qubits = range(2,6)
-number_of_cycles = range(2,6)
-number_of_circuits = 5 #number of random circuits with same number of qubits and cycles
+number_of_qubits = 5
+number_of_cycles = 5
+number_of_circuits = 10 #number of random circuits with same number of qubits and cycles
 
 number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
 
-number_of_training_samples = [100,500,1000]
-number_of_training_iterations = [10000,100000]
+number_of_training_samples = [500]
+number_of_training_iterations = [10000,30000,50000,70000,100000]
 
 number_of_initial_hidden_units = [0]
-number_of_sample_steps = [0,2,4,6]
-number_of_runs = 3 #number of runs for a specific circuit
+number_of_sample_steps = [6]
+number_of_runs = 10 #number of runs for a specific circuit
 
 
 
