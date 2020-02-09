@@ -10,8 +10,8 @@ singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         pc2pfs=os.environ["PC2PFS"])
 
 # parameters to be tested
-number_of_qubits = 5
-number_of_cycles = 5
+number_of_qubits = [5]
+number_of_cycles = [5]
 number_of_circuits = 10 #number of random circuits with same number of qubits and cycles
 
 number_of_nodes = [1]
