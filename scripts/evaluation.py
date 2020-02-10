@@ -74,41 +74,55 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
-    def plot(self, df, groupbyKeys, y, suffix):
+    def plot(self, df, x, grouped, fixed):
         fig, ax = plt.subplots()
-        df = df.astype({'tvd': 'float64', 'duration': 'float64'})
-        print(df.dtypes)
-        df = df.groupby(groupbyKeys, as_index = False).mean()
-        for u in pandas.unique(df[groupbyKeys[0]]):
-            filtered = df[df[groupbyKeys[0]] == u]
-            ax.plot(filtered[groupbyKeys[1]], filtered[y], label = '{} {}'.format(u, groupbyKeys[0]))
-        plt.legend()
-        plt.title('{} {}'.format(self.experimentFolder.split('/')[-1], suffix))
-        plt.xlabel(groupbyKeys[1])
-        plt.ylabel(y)
-        plt.savefig('plots/{}_{}_{}.pdf'.format(groupbyKeys[1][1:],y, suffix.replace(' ', '')))
-        plt.close()
+        groupDFBy = grouped + x
+        df = df.groupby(groupDFBy, as_index = False).mean
+        filterBy = (df.groupby(grouped, as_index = False).mean)[grouped]
+        df = df.loc[(df[list(fixed)] == pd.Series(fixed)).all(axis=1)]
+
+        for y in ['tvd', 'duration']:
+            title = ''.join(['{} {} '.format(key, val) for key, val in fixed.items()])
+            name = '{}_{}_{}'.format(x, y, title.replace(' ', '_'))
+            for index, row in filterBy.iterrows(): 
+                toPlot = df.merge(row, 'left')
+                l = ''.join(['{} {} '.format(toPlot[i], i) for i in grouped])
+                ax.plot(toPlot[x], toPlot[y], label = l)
+            plt.legend()
+            plt.title()
+            plt.xlabel(x)
+            plt.ylabel(y)
+            plt.savefig('plots/{}.pdf'.format(name))
+            plt.close()
+
 
     def generatePlots(self):
-        def plots(df, suffix):
-            self.plot(df.copy(), ['#cycles','#qubits'], 'tvd', suffix)
-            self.plot(df.copy(), ['#cycles','#qubits'], 'duration', suffix)
-            self.plot(df.copy(), ['#qubits','#cycles'], 'tvd', suffix)
-            self.plot(df.copy(), ['#qubits','#cycles'], 'duration', suffix)
-            self.plot(df.copy(), ['#qubits','#hadamards'], 'tvd', suffix)
-            self.plot(df.copy(), ['#qubits','#hadamards'], 'duration', suffix)
-
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         if not os.path.exists('plots'):
             os.makedirs('plots')
         df = pandas.read_csv(results_file)
         df = df[df['success'] == True]
+        df = df.astype({'tvd': 'float64', 'duration': 'float64'})
         plots(df.copy(), 'all')
 
         for i in pandas.unique(df['#iterations']):
             for s in pandas.unique(df['#samples']):
-                d = df.copy()
-                plots(d[(d['#iterations'] == i) & (d['#samples'] == s)], '{} iterations {} samples'.format(i,s))
+                for t in pandas.unique(df['#sampleSteps']):
+                    for x in ['#hadamards', '#qubits', '#cycles']:
+                        grouped = []
+                        if(x == '#qubits'):
+                            grouped = ['#cycles']
+                        if(x == '#cycles'):
+                            grouped = ['#qubits']
+                        if(x == '#hadamards'):
+                            grouped = ['#cycles', '#qubits']
+                        
+                        fixed = {'#iterations': i,
+                                 '#samples': s,
+                                 '#sampleSteps': t}
+
+                        self.plot(df.copy(), x, grouped, fixed)
+
 
         shutil.make_archive('plots', 'zip', 'plots')
 
