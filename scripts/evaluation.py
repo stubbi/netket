@@ -74,6 +74,13 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
+    def f_xed(self, exact, histogram, qubits):
+        f_xed = 0.0
+        for h in histogram:
+            f_xed += abs(exact[h.key])**2
+        f_xed /= len(histogram)
+        return 2**qubits * f_xed - 1
+            
 
     def plot(self, df, x, grouped, fixed):
         all_keys = ['#qubits', '#cycles', '#iterations', '#samples', '#sampleSteps', 'initialHidden', '#hadamards'] 
@@ -87,7 +94,7 @@ class Evaluation:
         df = df.loc[(df[list(fixed)] == pandas.Series(fixed)).all(axis=1)]
         df = df.groupby(groupDFBy, as_index = False).mean()
 
-        for y in ['tvd', 'duration']:
+        for y in ['tvd', 'duration', 'f_xeb']:
             name = '{}_{}_{}'.format(x, y, title.replace(' ', '_'))
             for index, row in filterBy.iterrows(): 
                 toPlot = df.merge(row.to_frame().T, 'left')
@@ -107,7 +114,7 @@ class Evaluation:
             os.makedirs('plots')
         df = pandas.read_csv(results_file)
         df = df[df['success'] == True]
-        df = df.astype({'tvd': 'float64', 'duration': 'float64'})
+        df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xed': 'float64'})
 
         for i in pandas.unique(df['#iterations']):
             for s in pandas.unique(df['#samples']):
@@ -146,7 +153,7 @@ class Evaluation:
     def generateCSV(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         with open(results_file, 'w') as f:
-            f.write('#qubits,#cycles,circuit,#nodes,#tasks,#threads,#samples,#iterations,#initialHidden,#sampleSteps,run,#hadamards,tvd,duration,success\n')
+            f.write('#qubits,#cycles,circuit,#nodes,#tasks,#threads,#samples,#iterations,#initialHidden,#sampleSteps,run,#hadamards,tvd,f_xed,duration,success\n')
         
         for size in self.listSystemSizes:
             for cycles in self.listCycles:
@@ -164,14 +171,16 @@ class Evaluation:
                                                     try:
                                                         histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
                                                         tvd = '{:f}'.format(self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram)))
+                                                        f_xed = '{:f}'.format(self.f_xed(self.loadExact(size, cycles, circuits), self.normalise(histogram), int(size)))
                                                         duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
                                                         success = True
                                                     except:
                                                         tvd = '-'
+                                                        f_xed = '-'
                                                         duration = '-'
                                                         success = False
 
-                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration,success)
+                                                    line = "{},{},{},{},{},{},{},{},{},{},{},{},{},{},{},{}\n".format(size,cycles,circuits,nodes,tasks,threads,numSamples,numIterations,numInitialHidden,numSampleSteps,run,hadamards,tvd,duration,success)
                                                     with open(results_file, 'a') as f:
                                                         f.write(line)
 
