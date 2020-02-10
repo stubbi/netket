@@ -87,7 +87,7 @@ class Evaluation:
             name = '{}_{}_{}'.format(x, y, title.replace(' ', '_'))
             for index, row in filterBy.iterrows(): 
                 toPlot = df.merge(row.to_frame().T, 'left')
-                print(toPlot)
+                print(toPlot[x])
                 l = ''.join(['{} {} '.format(toPlot[i], i) for i in grouped])
                 ax.plot(toPlot[x], toPlot[y], label = l)
             plt.legend()
