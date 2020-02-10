@@ -88,7 +88,6 @@ class Evaluation:
         experiment = '{}\n'.format(self.experimentFolder.split('/')[-1])
         title = experiment + ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys])
 
-        fig, ax = plt.subplots()
         filterBy = (df.groupby(grouped, as_index = False).mean())[grouped]
 
         groupDFBy = grouped + [x]
@@ -96,6 +95,7 @@ class Evaluation:
         df = df.groupby(groupDFBy, as_index = False).mean()
 
         for y in ['tvd', 'duration', 'f_xeb']:
+            fig, ax = plt.subplots()
             name = '{}_{}_{}'.format(x, y, title.replace(' ', '_'))
             for index, row in filterBy.iterrows(): 
                 toPlot = df.merge(row.to_frame().T, 'left')
