@@ -75,6 +75,7 @@ class Evaluation:
         return tvd/2.0
 
     def plot(self, df, x, grouped, fixed):
+        print(df)
         fig, ax = plt.subplots()
         groupDFBy = grouped + [x]
         df = df.groupby(groupDFBy, as_index = False).mean
