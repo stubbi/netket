@@ -120,7 +120,8 @@ class Evaluation:
                                  '#samples': s,
                                  '#sampleSteps': t}
 
-                        self.plot(df.copy(), x, grouped, fixed)
+                        d = df.copy()
+                        self.plot(d, x, grouped, fixed)
 
 
         shutil.make_archive('plots', 'zip', 'plots')
