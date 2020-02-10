@@ -79,7 +79,7 @@ class Evaluation:
         groupDFBy = grouped + [x]
         df = df.groupby(groupDFBy, as_index = False).mean()
         filterBy = (df.groupby(grouped, as_index = False).mean())[grouped]
-        df = df.loc[(df[list(fixed)] == pd.Series(fixed)).all(axis=1)]
+        df = df.loc[(df[list(fixed)] == pandas.Series(fixed)).all(axis=1)]
 
         for y in ['tvd', 'duration']:
             title = ''.join(['{} {} '.format(key, val) for key, val in fixed.items()])
