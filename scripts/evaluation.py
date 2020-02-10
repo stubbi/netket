@@ -79,7 +79,7 @@ class Evaluation:
         shots = 0
         for h in histogram:
             shots += histogram[h]
-            f_xeb += histogram[h] * (2**qubits * abs(exact[int(h)])**2 + 1]
+            f_xeb += histogram[h] * (2**qubits * abs(exact[int(h)])**2 + 1)
         return f_xeb/shots
             
 
