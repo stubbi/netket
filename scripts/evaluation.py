@@ -76,7 +76,7 @@ class Evaluation:
 
     def plot(self, df, x, grouped, fixed):
         fig, ax = plt.subplots()
-        groupDFBy = grouped + x
+        groupDFBy = grouped + [x]
         df = df.groupby(groupDFBy, as_index = False).mean
         filterBy = (df.groupby(grouped, as_index = False).mean)[grouped]
         df = df.loc[(df[list(fixed)] == pd.Series(fixed)).all(axis=1)]
