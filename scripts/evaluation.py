@@ -74,10 +74,11 @@ class Evaluation:
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
+
     def plot(self, df, x, grouped, fixed):
         all_keys = ['#qubits', '#cycles', '#iterations', '#samples', '#sampleSteps', 'initialHidden', '#hadamards'] 
         experiment = '{}\n'.format(self.experimentFolder.split('/')[-1])
-        title = experiment.join(['{}:{}, '.format(key, fixed.get(key, 'all')) for key in all_keys])
+        title = experiment + ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys])
 
         fig, ax = plt.subplots()
         filterBy = (df.groupby(grouped, as_index = False).mean())[grouped]
