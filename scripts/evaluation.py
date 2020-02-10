@@ -103,7 +103,6 @@ class Evaluation:
         df = pandas.read_csv(results_file)
         df = df[df['success'] == True]
         df = df.astype({'tvd': 'float64', 'duration': 'float64'})
-        plots(df.copy(), 'all')
 
         for i in pandas.unique(df['#iterations']):
             for s in pandas.unique(df['#samples']):
