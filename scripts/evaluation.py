@@ -77,9 +77,9 @@ class Evaluation:
     def plot(self, df, x, grouped, fixed):
         fig, ax = plt.subplots()
         filterBy = (df.groupby(grouped, as_index = False).mean())[grouped]
-        df = df.loc[(df[list(fixed)] == pandas.Series(fixed)).all(axis=1)]
 
         groupDFBy = grouped + [x]
+        df = df.loc[(df[list(fixed)] == pandas.Series(fixed)).all(axis=1)]
         df = df.groupby(groupDFBy, as_index = False).mean()
 
         for y in ['tvd', 'duration']:
