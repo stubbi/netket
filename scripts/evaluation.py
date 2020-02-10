@@ -76,9 +76,11 @@ class Evaluation:
 
     def f_xeb(self, exact, histogram, qubits):
         f_xeb = 0.0
+        shots = 0
         for h in histogram:
-            f_xeb += abs(exact[h.key])**2
-        f_xeb /= len(histogram)
+            shots += histogram[h]
+            f_xeb += histogram[h] * abs(exact[int(h)])**2
+        f_xeb /= shots
         return 2**qubits * f_xeb - 1
             
 
