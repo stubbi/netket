@@ -85,6 +85,7 @@ class Evaluation:
             title = ''.join(['{} {} '.format(key, val) for key, val in fixed.items()])
             name = '{}_{}_{}'.format(x, y, title.replace(' ', '_'))
             for index, row in filterBy.iterrows(): 
+                print(row.to_frame())
                 toPlot = df.merge(row.to_frame(), 'left')
                 l = ''.join(['{} {} '.format(toPlot[i], i) for i in grouped])
                 ax.plot(toPlot[x], toPlot[y], label = l)
