@@ -75,6 +75,10 @@ class Evaluation:
         return tvd/2.0
 
     def plot(self, df, x, grouped, fixed):
+        all_keys = ['#qubits', '#cycles', '#iterations', '#samples', '#sampleSteps', 'initialHidden', '#hadamards'] 
+        experiment = '{}\n'.format(self.experimentFolder.split('/')[-1])
+        title = experiment.join(['{}:{}, '.format(key, fixed.get(key, 'all')) for key in all_keys])
+
         fig, ax = plt.subplots()
         filterBy = (df.groupby(grouped, as_index = False).mean())[grouped]
 
@@ -83,11 +87,10 @@ class Evaluation:
         df = df.groupby(groupDFBy, as_index = False).mean()
 
         for y in ['tvd', 'duration']:
-            title = ''.join(['{} {} '.format(key, val) for key, val in fixed.items()])
             name = '{}_{}_{}'.format(x, y, title.replace(' ', '_'))
             for index, row in filterBy.iterrows(): 
                 toPlot = df.merge(row.to_frame().T, 'left')
-                l = ''.join(['{} {} '.format(toPlot[i].tolist()[0], i) for i in grouped])
+                l = ''.join(['{}:{} '.format(i, toPlot[i].tolist()[0]) for i in grouped])
                 ax.plot(toPlot[x].tolist(), toPlot[y].tolist(), label = l)
             plt.legend()
             plt.title(title)
@@ -130,6 +133,11 @@ class Evaluation:
             self.plot(df.copy(), '#iterations', ['#qubits', '#cycles'], {'#samples': s})
 
         self.plot(df.copy(), '#sampleSteps', ['#qubits', '#cycles'], {})
+        self.plot(df.copy(), '#iterations', ['#qubits', '#cycles'], {})
+        self.plot(df.copy(), '#samples', ['#qubits', '#cycles'], {})
+        self.plot(df.copy(), '#qubits', ['#cycles'], {})
+        self.plot(df.copy(), '#cycles', ['#qubits'], {})
+        self.plot(df.copy(), '#hadamards', ['#qubits', '#cycles'], {})
 
         shutil.make_archive('plots', 'zip', 'plots')
 
