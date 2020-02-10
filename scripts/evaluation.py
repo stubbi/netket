@@ -75,11 +75,10 @@ class Evaluation:
         return tvd/2.0
 
     def plot(self, df, x, grouped, fixed):
-        print(df)
         fig, ax = plt.subplots()
         groupDFBy = grouped + [x]
-        df = df.groupby(groupDFBy, as_index = False).mean
-        filterBy = (df.groupby(grouped, as_index = False).mean)[grouped]
+        df = df.groupby(groupDFBy, as_index = False).mean()
+        filterBy = (df.groupby(grouped, as_index = False).mean())[grouped]
         df = df.loc[(df[list(fixed)] == pd.Series(fixed)).all(axis=1)]
 
         for y in ['tvd', 'duration']:
