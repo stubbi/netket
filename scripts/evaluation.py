@@ -79,8 +79,8 @@ class Evaluation:
         shots = 0
         for h in histogram:
             shots += histogram[h]
-            f_xeb += histogram[h] * abs(exact[int(h)])**2
-        return (2**qubits * f_xeb - 1)/shots
+            f_xeb += histogram[h] * (2**qubits * abs(exact[int(h)])**2 + 1]
+        return f_xeb/shots
             
 
     def plot(self, df, x, grouped, fixed):
