@@ -124,12 +124,12 @@ class Evaluation:
                         self.plot(df.copy(), x, grouped, fixed)
 
         for i in pandas.unique(df['#iterations']):
-            self.plot(df.copy(), '#samples', ['#qubits', '#samples'], {'#iterations': i})
+            self.plot(df.copy(), '#samples', ['#qubits', '#cycles'], {'#iterations': i})
 
         for s in pandas.unique(df['#samples']):
-            self.plot(df.copy(), '#iterations', ['#qubits', '#samples'], {'#samples': s})
+            self.plot(df.copy(), '#iterations', ['#qubits', '#cycles'], {'#samples': s})
 
-        self.plot(df.copy(), '#sampleSteps', ['#qubits', '#samples'], {})
+        self.plot(df.copy(), '#sampleSteps', ['#qubits', '#cycles'], {})
 
         shutil.make_archive('plots', 'zip', 'plots')
 
