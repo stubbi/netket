@@ -1,25 +1,28 @@
 import subprocess, os, errno
 
-experiment_name = 'new-plotting-test'
+experiment_name = 'plotting-test-normalized'
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
 
 
 # parameters to be tested
-number_of_qubits = [3,5,7]
-number_of_cycles = [3,5,7]
-number_of_circuits = 10 #number of random circuits with same number of qubits and cycles
+number_of_qubits = range(2,6)	number_of_qubits = range(2,6)
+number_of_cycles = range(2,6)	number_of_cycles = range(2,6)
+number_of_circuits = 2 #number of random circuits with same number of qubits and cycles	number_of_circuits = 5 #number of random circuits with same number of qubits and cycles
 
-number_of_nodes = [1]
-number_of_tasks_per_node = [1]
-number_of_omp_threads = [1]
 
-number_of_training_samples = [100,300,500,700,1000]
-number_of_training_iterations = [10000,30000,50000,70000,100000]
+number_of_nodes = [1]	number_of_nodes = [1]
+number_of_tasks_per_node = [1]	number_of_tasks_per_node = [1]
+number_of_omp_threads = [1]	number_of_omp_threads = [1]
 
-number_of_initial_hidden_units = [0]
-number_of_sample_steps = [4,11,18]
-number_of_runs = 1 #number of runs for a specific circuit
+
+number_of_training_samples = [100,200]	number_of_training_samples = [100,500,1000]
+number_of_training_iterations = [10000,20000]	number_of_training_iterations = [10000,100000]
+
+
+number_of_initial_hidden_units = [0,1]	number_of_initial_hidden_units = [0]
+number_of_sample_steps = [1,2]	number_of_sample_steps = [0,2,4,6]
+number_of_runs = 3 #number of runs for a specific circuit	number_of_runs = 3 #number of runs for a specific circuitt
 
 
 epxperiment_folder = "{pc2pfs}/{noctua_user}/{experiment_name}".format(noctua_user=noctua_user,
