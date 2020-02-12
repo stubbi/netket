@@ -86,7 +86,7 @@ class Evaluation:
     def plot(self, df, x, grouped, fixed):
         all_keys = ['#qubits', '#cycles', '#iterations', '#samples', '#sampleSteps', 'initialHidden', '#hadamards'] 
         experiment = '{}\n'.format(self.experimentFolder.split('/')[-1])
-        title = experiment + ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys])
+        title = ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys])
 
         filterBy = (df.groupby(grouped, as_index = False).mean())[grouped]
 
@@ -102,7 +102,8 @@ class Evaluation:
                 l = ''.join(['{}:{} '.format(i, toPlot[i].tolist()[0]) for i in grouped])
                 ax.plot(toPlot[x].tolist(), toPlot[y].tolist(), label = l)
             plt.legend()
-            plt.title(title)
+            plt.suptitle(experiment, fontsize=14, fontweight='bold')
+            plt.title(title, fontdict={'size':10})
             plt.xlabel(x)
             plt.ylabel(y)
             plt.savefig('plots/{}.pdf'.format(name))
