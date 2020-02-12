@@ -86,7 +86,7 @@ class Evaluation:
     def plot(self, df, x, grouped, fixed):
         all_keys = ['#qubits', '#cycles', '#iterations', '#samples', '#sampleSteps', 'initialHidden', '#hadamards'] 
         experiment = '{}\n'.format(self.experimentFolder.split('/')[-1])
-        title = ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys])
+        title = ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys if key not in grouped + [x]])
 
         filterBy = df[grouped].copy()
         filterBy.drop_duplicates()
