@@ -144,7 +144,7 @@ class Evaluation:
 
         self.plot(df.copy(), '#sampleSteps', ['#qubits', '#cycles'], {})
         self.plot(df.copy(), '#iterations', ['#qubits', '#cycles'], {})
-        self.plot(df.copy(), '#iterations', ['#qubits', '#cycles', '#sampleSteps'], {})
+        self.plot(df.copy(), '#iterations', ['#qubits', '#sampleSteps'], {})
         self.plot(df.copy(), '#sampleSteps', ['#iterations'], {})
         self.plot(df.copy(), '#iterations', ['#sampleSteps'], {})
         self.plot(df.copy(), '#samples', ['#qubits', '#cycles'], {})
