@@ -99,7 +99,7 @@ class Evaluation:
             fig, ax = plt.subplots()
             name = '{}_{}_{}'.format(x, y, title.replace(' ', '_'))
             for index, row in filterBy.iterrows(): 
-                toPlot = df.loc[df[grouped].isin(row[grouped]),:]
+                toPlot = pandas.merge(df, row.to_frame(), how='inner')
                 l = ''.join(['{}:{} '.format(i, toPlot[i].tolist()[0]) for i in grouped])
                 ax.plot(toPlot[x].tolist(), toPlot[y].tolist(), label = l)
             plt.legend()
