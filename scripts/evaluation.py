@@ -88,8 +88,7 @@ class Evaluation:
         experiment = '{}\n'.format(self.experimentFolder.split('/')[-1])
         title = ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys if key not in grouped + [x]])
 
-        filterBy = df[grouped].copy()
-        filterBy.drop_duplicates()
+        filterBy = df[grouped].drop_duplicates()
 
         groupDFBy = grouped + [x]
         df = df.loc[(df[list(fixed)] == pandas.Series(fixed)).all(axis=1)]
