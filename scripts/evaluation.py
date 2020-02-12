@@ -99,7 +99,7 @@ class Evaluation:
             fig, ax = plt.subplots()
             name = '{}_{}_{}'.format(x, y, title.replace(' ', '_'))
             for index, row in filterBy.iterrows(): 
-                print(row)
+                print(row.to_frame())
                 print(df)
                 toPlot = pandas.merge(df, row.to_frame(), how='inner')
                 l = ''.join(['{}:{} '.format(i, toPlot[i].tolist()[0]) for i in grouped])
