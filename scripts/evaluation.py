@@ -88,7 +88,7 @@ class Evaluation:
         experiment = '{}\n'.format(self.experimentFolder.split('/')[-1])
         title = ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys])
 
-        filterBy = (df.groupby(grouped, as_index = False).mean())[grouped]
+        filterBy = df.groupby[grouped].drop_duplicates()
 
         groupDFBy = grouped + [x]
         df = df.loc[(df[list(fixed)] == pandas.Series(fixed)).all(axis=1)]
