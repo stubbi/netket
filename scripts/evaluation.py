@@ -170,7 +170,7 @@ class Evaluation:
                                 for numSamples in self.listSamples:
                                     for numIterations in self.listIterations:
                                         for numInitialHidden in self.listInitialHidden:
-                                            step_size = len(self.listSampleSteps)/len(self.listSystemSizes)
+                                            step_size = int(len(self.listSampleSteps)/len(self.listSystemSizes))
                                             index_sample_steps = self.listSystemSizes.index(size) * step_size
                                             for numSampleSteps in self.listSampleSteps[index_sample_steps:index_sample_steps+step_size]:
                                                 for run in range(self.numRuns):

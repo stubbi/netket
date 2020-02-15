@@ -77,7 +77,7 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         for samples in number_of_training_samples:
                             for iterations in number_of_training_iterations:
                                 for initial_hidden in number_of_initial_hidden_units:
-                                    step_size = len(number_of_sample_steps)/len(number_of_qubits)
+                                    step_size = int(len(number_of_sample_steps)/len(number_of_qubits))
                                     index_sample_steps = number_of_qubits.index(qubits) * step_size
                                     for sample_steps in number_of_sample_steps[index_sample_steps:index_sample_steps + step_size]:
                                         for run in range(number_of_runs):
