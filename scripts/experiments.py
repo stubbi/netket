@@ -22,7 +22,7 @@ number_of_training_samples = [100 + i * 200 for i in range(5)]
 number_of_training_iterations = [10000 + i * 20000 for i in range(5)]
 
 number_of_initial_hidden_units = [0]
-number_of_sample_steps = [2,3,4,4,5,6,6,7,8] #size must be multiple of qubits (n*size), each n entries will be used for corresponding qubits
+number_of_sample_steps = [3,5,7] #size must be multiple of qubits (n*size), each n entries will be used for corresponding qubits
 number_of_runs = 1 #number of runs for a specific circuit
 
 
