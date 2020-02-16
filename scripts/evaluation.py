@@ -99,7 +99,7 @@ class Evaluation:
             name = '{}_{}_{}'.format(x.replace('#', ''), y.replace('#', ''), title.replace(', ', '_').replace('#', ''))
             for index, row in filterBy.iterrows(): 
                 toPlot = pandas.merge(df, row.to_frame().T, how='inner')
-                if(df.shape[0] > 0):
+                if(toPlot.shape[0] > 0):
                     l = ''.join(['{}:{} '.format(i, toPlot[i].tolist()[0]) for i in grouped])
                     ax.plot(toPlot[x].tolist(), toPlot[y].tolist(), label = l)
             plt.legend()
