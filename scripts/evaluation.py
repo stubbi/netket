@@ -89,10 +89,16 @@ class Evaluation:
         title = ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys if key not in grouped + [x]])
 
         filterBy = df[grouped].drop_duplicates()
+        print(filterBy)
+        print(df)
+        print()
 
         groupDFBy = grouped + [x]
         df = df.loc[(df[list(fixed)] == pandas.Series(fixed)).all(axis=1)]
-        df = df.groupby(groupDFBy, as_index = False).mean()
+        print(df)
+        df = df.groupby(groupDFBy, as_index = False).mean() 
+        print(df)
+        print()
 
         for y in ['tvd', 'duration', 'f_xeb']:
             fig, ax = plt.subplots()
@@ -102,6 +108,7 @@ class Evaluation:
                 print(toPlot)
                 print(df)
                 print(row.to_frame().T)
+                print()
                 l = ''.join(['{}:{} '.format(i, toPlot[i].tolist()[0]) for i in grouped])
                 ax.plot(toPlot[x].tolist(), toPlot[y].tolist(), label = l)
             plt.legend()
