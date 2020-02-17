@@ -3,14 +3,14 @@ import subprocess, os, errno, time
 circuit_generator_script = 'random_circuit.py'
 experiment_name = 'proposal-1'
 noctua_partition = 'short'
-max_wall_time = '00:10:00'
+max_wall_time = '00:30:00'
 noctua_user = 'hpc-prf-nqs'
 singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         noctua_user=noctua_user,
                         pc2pfs=os.environ["PC2PFS"])
 
 # parameters to be tested
-number_of_qubits = [3,5,7]
+number_of_qubits = [9,11,13]#[3,5,7]
 number_of_cycles = [10]
 number_of_circuits = 8 #number of random circuits with same number of qubits and cycles
 
@@ -22,13 +22,13 @@ number_of_training_samples = [100 + i * 200 for i in range(5)]
 number_of_training_iterations = [10000 + i * 20000 for i in range(5)]
 
 number_of_initial_hidden_units = [0]
-number_of_sample_steps = [3,5,7] #size must be multiple of qubits (n*size), each n entries will be used for corresponding qubits
+number_of_sample_steps = [9,11,13]#[3,5,7] #size must be multiple of qubits (n*size), each n entries will be used for corresponding qubits
 number_of_runs = 1 #number of runs for a specific circuit
 
 
 
 jobDirs = []
-for qubits in number_of_qubits:
+qubits in number_of_qubits:
     for cycles in number_of_cycles:
         for circuit in range(number_of_circuits):
 
