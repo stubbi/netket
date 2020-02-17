@@ -110,6 +110,29 @@ class Evaluation:
             plt.savefig('plots/{}.pdf'.format(name))
             plt.close()
 
+    def generateReport(self):
+        results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
+        df = pandas.read_csv(results_file)
+
+        report_file = "{directory}/report.txt".format(directory=self.experimentFolder)
+        with open(report_file, 'w') as f:
+            f.write('experiment: {}\n'.format(self.experimentFolder.split('/')[-1]))
+            f.write('total number of experiments: {}'.format(df.shape[0]))
+            f.write('number of succeeded experiments: {}'.format(df[df['success' == True]].shape[0]))
+            f.write('number of failed experiments: {}'.format(df[df['success' == False]].shape[0]))
+            f.write()
+            f.write('tested number of qubits: {}'.format(self.listSystemSizes))
+            f.write('tested number of cycles: {}'.format(self.listCycles))
+            f.write('tested number of samples: {}'.format(self.listSamples))
+            f.write('tested number of iterations: {}'.format(self.listIterations))
+            f.write('tested number of sample steps: {}'.format(self.listSampleSteps))
+            f.write('number of runs: {}'.format(self.numRuns))
+            f.write()
+            f.write('failed combinations:')
+            failed = df[df['success' == False]][]
+            for index, row in failed.iterrows():
+                f.write(row)
+
 
     def generatePlots(self):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
@@ -216,4 +239,5 @@ class Evaluation:
 
 ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
 ev.generateCSV()
+ev.generateReport()
 ev.generatePlots()
