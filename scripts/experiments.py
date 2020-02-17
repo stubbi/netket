@@ -28,7 +28,7 @@ number_of_runs = 1 #number of runs for a specific circuit
 
 
 jobDirs = []
-qubits in number_of_qubits:
+for qubits in number_of_qubits:
     for cycles in number_of_cycles:
         for circuit in range(number_of_circuits):
 
