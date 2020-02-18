@@ -10,7 +10,7 @@ singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         pc2pfs=os.environ["PC2PFS"])
 
 # parameters to be tested
-number_of_qubits = [21,23,25]#[15,17,19] #[9,11,13]#[3,5,7]
+number_of_qubits = [15,17,19] #[9,11,13]#[3,5,7]
 number_of_cycles = [10]
 number_of_circuits = 8 #number of random circuits with same number of qubits and cycles
 
@@ -22,7 +22,7 @@ number_of_training_samples = [100 + i * 200 for i in range(5)]
 number_of_training_iterations = [10000 + i * 20000 for i in range(5)]
 
 number_of_initial_hidden_units = [0]
-number_of_sample_steps = [9,11,13]#[3,5,7] #size must be multiple of qubits (n*size), each n entries will be used for corresponding qubits
+number_of_sample_steps = number_of_qubits #[9,11,13]#[3,5,7] #size must be multiple of qubits (n*size), each n entries will be used for corresponding qubits
 number_of_runs = 1 #number of runs for a specific circuit
 
 
