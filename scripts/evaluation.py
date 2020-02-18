@@ -142,21 +142,19 @@ class Evaluation:
 
         for i in pandas.unique(df['#iterations']):
             for s in pandas.unique(df['#samples']):
-                for t in pandas.unique(df['#sampleSteps']):
-                    for x in ['#hadamards', '#qubits', '#cycles']:
-                        grouped = []
-                        if(x == '#qubits'):
-                            grouped = ['#cycles']
-                        if(x == '#cycles'):
-                            grouped = ['#qubits']
-                        if(x == '#hadamards'):
-                            grouped = ['#cycles', '#qubits']
-                        
-                        fixed = {'#iterations': i,
-                                 '#samples': s,
-                                 '#sampleSteps': t}
+                for x in ['#hadamards', '#qubits', '#cycles']:
+                    grouped = []
+                    if(x == '#qubits'):
+                        grouped = ['#cycles']
+                    if(x == '#cycles'):
+                        grouped = ['#qubits']
+                    if(x == '#hadamards'):
+                        grouped = ['#cycles', '#qubits']
+                    
+                    fixed = {'#iterations': i,
+                                '#samples': s}
 
-                        self.plot(df.copy(), x, grouped, fixed)
+                    self.plot(df.copy(), x, grouped, fixed)
 
         for i in pandas.unique(df['#iterations']):
             self.plot(df.copy(), '#samples', ['#qubits', '#cycles'], {'#iterations': i})
