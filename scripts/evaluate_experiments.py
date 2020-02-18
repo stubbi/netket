@@ -6,7 +6,7 @@ email = 'stubbi@mail.upb.de'
 
 
 # parameters to be tested
-number_of_qubits = [3,5,7]
+number_of_qubits = [3,5,7,9,11,13,15,17,19]
 number_of_cycles = [10]
 number_of_circuits = 8 #number of random circuits with same number of qubits and cycles
 
