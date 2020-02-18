@@ -116,22 +116,20 @@ class Evaluation:
 
         report_file = "{directory}/report.txt".format(directory=self.experimentFolder)
         with open(report_file, 'w') as f:
-            f.write('experiment: {}\n'.format(self.experimentFolder.split('/')[-1]))
-            f.write('total number of experiments: {}'.format(df.shape[0]))
-            f.write('number of succeeded experiments: {}'.format(df[df['success'] == True].shape[0]))
-            f.write('number of failed experiments: {}'.format(df[df['success'] == False].shape[0]))
-            f.write()
-            f.write('tested number of qubits: {}'.format(self.listSystemSizes))
-            f.write('tested number of cycles: {}'.format(self.listCycles))
-            f.write('tested number of samples: {}'.format(self.listSamples))
-            f.write('tested number of iterations: {}'.format(self.listIterations))
-            f.write('tested number of sample steps: {}'.format(self.listSampleSteps))
-            f.write('number of runs: {}'.format(self.numRuns))
-            f.write()
-            f.write('failed combinations:')
+            f.write('experiment: {}\n\n'.format(self.experimentFolder.split('/')[-1]))
+            f.write('total number of experiments: {}\n'.format(df.shape[0]))
+            f.write('number of succeeded experiments: {}\n'.format(df[df['success'] == True].shape[0]))
+            f.write('number of failed experiments: {}\n\n.format(df[df['success'] == False].shape[0]))
+            f.write('tested number of qubits: {}\n'.format(self.listSystemSizes))
+            f.write('tested number of cycles: {}\n'.format(self.listCycles))
+            f.write('tested number of samples: {}\n'.format(self.listSamples))
+            f.write('tested number of iterations: {}\n'.format(self.listIterations))
+            f.write('tested number of sample steps: {}\n'.format(self.listSampleSteps))
+            f.write('number of runs: {}\n\n.format(self.numRuns))
+            f.write('failed combinations:\n')
             failed = df[df['success'] == False].copy().drop(columns=['tvd', 'duration', 'f_xeb']).drop_duplicates()
             for index, row in failed.iterrows():
-                f.write(row)
+                f.write('{} \n'.format(row))
 
 
     def generatePlots(self):
