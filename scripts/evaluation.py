@@ -125,7 +125,7 @@ class Evaluation:
             f.write('tested number of samples: {}\n'.format(self.listSamples))
             f.write('tested number of iterations: {}\n'.format(self.listIterations))
             f.write('tested number of sample steps: {}\n'.format(self.listSampleSteps))
-            f.write('number of runs: {}\n\n.format(self.numRuns))
+            f.write('number of runs: {}\n\n'.format(self.numRuns))
             f.write('failed combinations:\n')
             failed = df[df['success'] == False].copy().drop(columns=['tvd', 'duration', 'f_xeb']).drop_duplicates()
             for index, row in failed.iterrows():
