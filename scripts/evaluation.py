@@ -129,7 +129,7 @@ class Evaluation:
             f.write('number of runs: {}'.format(self.numRuns))
             f.write()
             f.write('failed combinations:')
-            failed = df[df['success' == False]][]
+            failed = df[df['success' == False]].copy().drop(columns=['tvd', 'duration', 'f_xeb']).drop_duplicates()
             for index, row in failed.iterrows():
                 f.write(row)
 
