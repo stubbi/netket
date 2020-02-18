@@ -119,7 +119,7 @@ class Evaluation:
             f.write('experiment: {}\n\n'.format(self.experimentFolder.split('/')[-1]))
             f.write('total number of experiments: {}\n'.format(df.shape[0]))
             f.write('number of succeeded experiments: {}\n'.format(df[df['success'] == True].shape[0]))
-            f.write('number of failed experiments: {}\n\n.format(df[df['success'] == False].shape[0]))
+            f.write('number of failed experiments: {}\n\n'.format(df[df['success'] == False].shape[0]))
             f.write('tested number of qubits: {}\n'.format(self.listSystemSizes))
             f.write('tested number of cycles: {}\n'.format(self.listCycles))
             f.write('tested number of samples: {}\n'.format(self.listSamples))
