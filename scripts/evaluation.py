@@ -118,8 +118,8 @@ class Evaluation:
         with open(report_file, 'w') as f:
             f.write('experiment: {}\n'.format(self.experimentFolder.split('/')[-1]))
             f.write('total number of experiments: {}'.format(df.shape[0]))
-            f.write('number of succeeded experiments: {}'.format(df[df['success' == True]].shape[0]))
-            f.write('number of failed experiments: {}'.format(df[df['success' == False]].shape[0]))
+            f.write('number of succeeded experiments: {}'.format(df[df['success'] == True].shape[0]))
+            f.write('number of failed experiments: {}'.format(df[df['success'] == False].shape[0]))
             f.write()
             f.write('tested number of qubits: {}'.format(self.listSystemSizes))
             f.write('tested number of cycles: {}'.format(self.listCycles))
@@ -129,7 +129,7 @@ class Evaluation:
             f.write('number of runs: {}'.format(self.numRuns))
             f.write()
             f.write('failed combinations:')
-            failed = df[df['success' == False]].copy().drop(columns=['tvd', 'duration', 'f_xeb']).drop_duplicates()
+            failed = df[df['success'] == False].copy().drop(columns=['tvd', 'duration', 'f_xeb']).drop_duplicates()
             for index, row in failed.iterrows():
                 f.write(row)
 
