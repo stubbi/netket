@@ -55,10 +55,10 @@ class QASMReader:
             qubits = int(line[7:])
             if(self.is_nqs()):
                 self.nqs = nq.nqs.NQS(qubits, self.numInitialHidden, self.numSampleSteps)
-                for q in range(qubits):
-                    self.nqs.applyHadamard(q, self.numSamples, self.numIterations)
             else:
                 self.exact = Qubits(qubits)
+                for q in range(qubits):
+                    self.exact.gate(H, target=q)
 
         elif(line.startswith('X')):
             for q in self.readQubits(line.strip('X')):
