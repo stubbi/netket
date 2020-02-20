@@ -33,7 +33,7 @@ batch_script ="""#!/bin/bash
 #SBATCH -J {experiment_name}-evaluation
 #SBATCH -A {noctua_user}
 #SBATCH -p short
-#SBATCH -t 00:10:00
+#SBATCH -t 00:30:00
 #SBATCH --mail-type fail
 #SBATCH --mail-user {email}
 
