@@ -14,7 +14,7 @@ epochs = int(sys.argv[2])
 initialHidden = int(sys.argv[3])
 sampleSteps = int(sys.argv[4])
 method = str(sys.argv[5])
-shots = 10000000
+shots = 100000
 
 class QASMReader:
     def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps):
