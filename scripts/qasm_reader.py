@@ -6,7 +6,7 @@ import json
 import sys
 import pickle
 from qupy import Qubits
-from qupy.operator import H, X, Y, Z, T, Tdag, rz, swap
+from qupy.operator import H, X, Y, Z, T, Tdag, rz, swap, sqrt_X, sqrt_Y
 import time
 
 samples = int(sys.argv[1])
@@ -133,6 +133,20 @@ class QASMReader:
                 else:
                     self.exact.gate(T, target=q)
 
+        elif(line.startswith('sqrt_X')):
+            for q in self.readQubits(line.strip('sqrt_X')):
+                if(self.is_nqs()):
+                    self.nqs.applySqrtX(q)
+                else:
+                    self.exact.gate(sqrt_X, target=q)
+
+        elif(line.startswith('sqrt_Y')):
+            for q in self.readQubits(line.strip('sqrt_Y')):
+                if(self.is_nqs()):
+                    self.nqs.applySqrtY(q)
+                else:
+                    self.exact.gate(sqrt_Y, target=q)
+                    
         elif(line.startswith('CZ')):
             q0 = self.readQubits(line.strip('CZ').split(',')[0])[0]
             q1 = self.readQubits(line.strip('CZ').split(',')[1])[0]
