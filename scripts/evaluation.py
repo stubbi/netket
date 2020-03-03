@@ -81,7 +81,9 @@ class Evaluation:
             shots += histogram[h]
             f_xeb += histogram[h] * (2**qubits * abs(exact[int(h)])**2 + 1)
         return f_xeb/shots
-            
+
+    def plotPDF(self, exact, histogram):
+        pass
 
     def plot(self, df, x, grouped, fixed):
         all_keys = ['#qubits', '#cycles', '#iterations', '#samples', '#sampleSteps', 'initialHidden', '#hadamards'] 
@@ -142,14 +144,12 @@ class Evaluation:
 
         for i in pandas.unique(df['#iterations']):
             for s in pandas.unique(df['#samples']):
-                for x in ['#hadamards', '#qubits', '#cycles']:
+                for x in ['#qubits', '#cycles']:
                     grouped = []
                     if(x == '#qubits'):
                         grouped = ['#cycles']
                     if(x == '#cycles'):
                         grouped = ['#qubits']
-                    if(x == '#hadamards'):
-                        grouped = ['#cycles', '#qubits']
                     
                     fixed = {'#iterations': i,
                                 '#samples': s}
@@ -170,7 +170,6 @@ class Evaluation:
         self.plot(df.copy(), '#samples', ['#qubits', '#cycles'], {})
         self.plot(df.copy(), '#qubits', ['#cycles'], {})
         self.plot(df.copy(), '#cycles', ['#qubits'], {})
-        self.plot(df.copy(), '#hadamards', ['#qubits', '#cycles'], {})
 
         shutil.make_archive('plots', 'zip', 'plots')
 
