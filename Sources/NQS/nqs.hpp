@@ -3,13 +3,14 @@
 #include "Graph/hypercube.hpp"
 #include "Hilbert/spins.hpp"
 #include "Optimizer/ada_max.hpp"
-#include "Sampler/metropolis_local_hadamard.hpp"
+#include "Sampler/metropolis_local_gate.hpp"
 #include "Supervised/supervised.hpp"
 #include "Operator/local_operator.hpp"
 #include "Utils/parallel_utils.hpp"
 #include <vector>
 #include <iostream>
 #include <chrono>
+#include <math.h>
 
 
 namespace nqs {
@@ -24,19 +25,18 @@ class NQS {
     Spin& hi_;
     RbmNQS& psi_;
     MetropolisLocal& sa_;
-    MetropolisLocalHadamard& saHadamard_;
     AdaMax& op_;
 
     // Total number of computational nodes to run on
     int totalnodes_;
+    int samplesteps_;
 
     public:
 
         NQS(int nqubits, int initialHidden, int sampleSteps)
-            : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)),
+            : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)), samplesteps_(sampleSteps),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), 0, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)),
-            saHadamard_(*new MetropolisLocalHadamard(psi_, sampleSteps)),
             op_(*new AdaMax()) {
                 VectorType a = getPsi_a();
                 VectorType b = getPsi_b();
@@ -55,27 +55,26 @@ class NQS {
                 MPI_Comm_size(MPI_COMM_WORLD, &totalnodes_);
             }
 
-        void applyHadamard(int qubit, int numSamples = 100, int numIterations = 1000) {
+        void learnGate(int qubit, int numSamples, int numIterations, MatrixType gateMatrix) {
+            MetropolisLocalGate sampler = MetropolisLocalGate(psi_, gateMatrix, samplesteps_);
+
             int numSamples_ = int(std::ceil(double(numSamples) / double(totalnodes_)));
             std::vector<Eigen::VectorXd> trainingSamples(numSamples_);
             std::vector<Eigen::VectorXcd> trainingTargets(numSamples_);
             
             int countOne = 0;
 
-            auto start = std::chrono::high_resolution_clock::now();
             for(int i = 0; i < numSamples_; i++) {
-                saHadamard_.Reset(true);
-                saHadamard_.Sweep(qubit);
+                sampler.Reset(true);
+                sampler.Sweep(qubit);
 
-                trainingSamples[i] = saHadamard_.Visible();
+                trainingSamples[i] = sampler.Visible();
 
                 Eigen::VectorXcd target(1);
-                target(0) = std::log(saHadamard_.PsiValueAfterHadamard(saHadamard_.Visible(), qubit));
+                target(0) = std::log(sampler.PsiAfterGate(sampler.Visible(), qubit));
                 trainingTargets[i] = target;
 
-                //InfoMessage() << saHadamard_.Visible() << " " << target << std::endl;
-
-                if(saHadamard_.Visible()(qubit) == 1) {
+                if(sampler.Visible()(qubit) == 1) {
                     countOne++;
                 }
             }
@@ -84,48 +83,40 @@ class NQS {
             if(countOne == 0 || countOne == numSamples_) {
                 // we have to add more samples, say 1%
                 for(int i = 0; i < numSamples_/100.0; i++) {
-                    saHadamard_.Reset(true);
-                    saHadamard_.Sweep(qubit);
+                    sampler.Reset(true);
+                    sampler.Sweep(qubit);
 
-                    auto sample = saHadamard_.Visible();
+                    auto sample = sampler.Visible();
                     sample(qubit) = 1.0 - sample(qubit);
                     trainingSamples[numSamples_ + i] = sample;
 
                     Eigen::VectorXcd target(1);
-                    target(0) = std::log(saHadamard_.PsiValueAfterHadamard(sample, qubit));
+                    target(0) = std::log(sampler.PsiAfterGate(sample, qubit));
                     trainingTargets[numSamples_ + i] = target;
 
-                    //InfoMessage() << sample << " " << target << " " << saHadamard_.PsiValueAfterHadamard(sample, qubit) << std::endl;
                 }
             }
 
-            Supervised spvsd = *new Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
+            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
             spvsd.Run(numIterations, "Overlap_phi");
+        }
 
-            /*
-            auto finish = std::chrono::high_resolution_clock::now();
-            std::chrono::duration<double> elapsed = finish - start;
-            InfoMessage() << "Elapsed time sampling: " << elapsed.count() << std::endl;
+        void applyHadamard(int qubit, int numSamples, int numIterations) {
+            MatrixType H(2,2);
+            H << 1,1,1,-1;
+            learnGate(qubit, numSamples, numIterations, 1.0/sqrt(2) * H);
+        }
 
-            Supervised spvsd = *new Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
-            start = std::chrono::high_resolution_clock::now();
-            spvsd.Run(numIterations, "Overlap_phi");
-            finish = std::chrono::high_resolution_clock::now();
-            elapsed = finish - start;
-            InfoMessage() << "Elapsed time supervised: " << elapsed.count() << std::endl;
-
-            start = std::chrono::high_resolution_clock::now();
-            psi_.DerLog(trainingSamples[0]);
-            finish = std::chrono::high_resolution_clock::now();
-            elapsed = finish - start;
-            InfoMessage() << "Elapsed time DerLog: " << elapsed.count() << std::endl;
-
-            start = std::chrono::high_resolution_clock::now();
-            psi_.LogVal(trainingSamples[0]);
-            finish = std::chrono::high_resolution_clock::now();
-            elapsed = finish - start;
-            InfoMessage() << "Elapsed time LogVal: " << elapsed.count() << std::endl;
-            */
+        void applySqrtX(int qubit, int numSamples, int numIterations) {
+            MatrixType sqrtX(2,2);
+            sqrtX << std::complex<double>(1, 1), std::complex<double>(1, -1), std::complex<double>(1, -1), std::complex<double>(1, 1);
+            learnGate(qubit, numSamples, numIterations, 0.5*sqrtX);
+        }
+        
+        void applySqrtY(int qubit, int numSamples, int numIterations) {
+            MatrixType sqrtY(2,2);
+            sqrtY << std::complex<double>(1, 1), std::complex<double>(1, 1), std::complex<double>(-1, -1), std::complex<double>(1, 1);
+            learnGate(qubit, numSamples, numIterations, 0.5*sqrtY);
         }
 
         void applyPauliX(int qubit){

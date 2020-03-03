@@ -26,7 +26,7 @@
 namespace nqs {
 
 // Metropolis sampling generating local moves in hilbert space on RBM after Hadamard gate has been applied
-class MetropolisLocalHadamard : public AbstractSampler {
+class MetropolisLocalGate : public AbstractSampler {
   // number of visible units
   const int nv_;
 
@@ -35,6 +35,10 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
   Eigen::VectorXd accept_;
   Eigen::VectorXd moves_;
+
+  //matrix representation of the gate
+  using MatrixType = Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic>;
+  MatrixType gatematrix_;
 
   int mynode_;
   int totalnodes_;
@@ -48,8 +52,8 @@ class MetropolisLocalHadamard : public AbstractSampler {
   int sweep_size_;
 
  public:
-  explicit MetropolisLocalHadamard(AbstractMachine& psi, int sweep_size)
-      : AbstractSampler(psi), nv_(GetHilbert().Size()), sweep_size_(sweep_size) {
+  explicit MetropolisLocalGate(AbstractMachine& psi, MatrixType gate_matrix, int sweep_size)
+      : AbstractSampler(psi), nv_(GetHilbert().Size()), gatematrix_(gate_matrix), sweep_size_(sweep_size) {
     Init();
   }
 
@@ -61,7 +65,7 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
     if (!GetHilbert().IsDiscrete()) {
       throw InvalidInputError(
-          "Local Metropolis sampler works only for discrete "
+          "Local Metropolis Gate sampler works only for discrete "
           "Hilbert spaces");
     }
 
@@ -73,7 +77,7 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
     Reset(true);
 
-    InfoMessage() << "Local Metropolis sampler is ready " << std::endl;
+    InfoMessage() << "Local Metropolis Gate sampler is ready " << std::endl;
   }
 
   void Reset(bool initrandom) override {
@@ -89,27 +93,26 @@ class MetropolisLocalHadamard : public AbstractSampler {
 
   void Sweep() override {}
 
-  std::complex<double> PsiValueAfterHadamard(Eigen::VectorXd v, int qubit) {
+  std::complex<double> PsiAfterGate(Eigen::VectorXd v, int qubit) {
     double valueOfQubit = v(qubit);
     //set qubit to 0
     v(qubit) = 0.0;
-    std::complex<double> psi1 = std::exp(GetMachine().LogVal(v));
+    std::complex<double> psi0 = std::exp(GetMachine().LogVal(v));
     //set qubit to 1
     v(qubit) = 1.0;
-    std::complex<double> psi2 = std::exp(GetMachine().LogVal(v));
+    std::complex<double> psi1 = std::exp(GetMachine().LogVal(v));
 
     std::complex<double> psi;
-    //if qubit in sample is 0 ..
+
     if(valueOfQubit == 0.0) {
-      //... add psi1 and psi2 (|0> -> |+>)
-      psi = psi1 + psi2;
+      psi = gatematrix_(0,0) * psi0 + gatematrix_(0,1) * psi1;
     } else {
-      //... else substract (|1> -> |->)
-      psi = psi1 - psi2;
+      psi = gatematrix_(1,0) * psi0 + gatematrix_(1,1) *  psi1;
     }
 
-    return psi.real() != 0.0 ? psi : std::complex<double>(0.0001, psi.imag());
+    return psi;
   }
+
 
   void Sweep(int qubit) {
     std::vector<int> tochange(1);
@@ -136,48 +139,13 @@ class MetropolisLocalHadamard : public AbstractSampler {
         newconf[0] = localstates_[newstate];
       }
 
-      double valueOfQubit = v_(qubit);
-      //set qubit to 0
-      v_(qubit) = 0.0;
-      std::complex<double> psi1Before = std::exp(GetMachine().LogVal(v_));
-      //set qubit to 1
-      v_(qubit) = 1.0;
-      std::complex<double> psi2Before = std::exp(GetMachine().LogVal(v_));
-      //reset
-      v_(qubit) = valueOfQubit;
-
-      double psiBefore;
-      //if qubit in sample is 0 ..
-      if(v_(qubit) == 0.0) {
-        //... add psi1 and psi2 (|0> -> |+>)
-        psiBefore = std::norm(psi1Before + psi2Before);
-      } else {
-        //... else substract (|1> -> |->)
-        psiBefore = std::norm(psi1Before - psi2Before);
-      }
+      double psiBefore = std::norm(PsiAfterGate(v_, qubit));
+      psiBefore = psiBefore > 0 ? psiBefore : 0.00000001;
 
       double valueOfQubitToChange = v_(tochange[0]);
       v_(tochange[0]) = newconf[0];
-      valueOfQubit = v_(qubit);
-      //set qubit to 0
-      v_(qubit) = 0.0;
-      std::complex<double> psi1After = std::exp(GetMachine().LogVal(v_));
-      //set qubit to 1
-      v_(qubit) = 1.0;
-      std::complex<double> psi2After = std::exp(GetMachine().LogVal(v_));
-      //reset
-      v_(qubit) = valueOfQubit;
-
-
-      double psiAfter;
-      //if qubit in sample is 0 ..
-      if(v_(qubit) == 0.0) {
-        //... add psi1 and psi2 (|0> -> |+>)
-        psiAfter = std::norm(psi1After + psi2After);
-      } else {
-        //... else substract (|1> -> |->)
-        psiAfter = std::norm(psi1After - psi2After);
-      }
+      double psiAfter = std::norm(PsiAfterGate(v_, qubit));
+      psiAfter = psiAfter > 0 ? psiAfter : 0.00000001;
 
       //reset
       v_(tochange[0]) = valueOfQubitToChange;

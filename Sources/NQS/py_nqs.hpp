@@ -57,6 +57,22 @@ void AddNQSModule(py::module &m) {
            Args:
                qubit: The index of the qubit the gate will be applied to
            )EOF")
+      .def("applySqrtX", &NQS::applySqrtX, py::arg("qubit"),
+                            py::arg("numSamples"), py::arg("numIterations"),
+            R"EOF(
+           Apply sqrtX gate to qubit.
+
+           Args:
+               qubit: The index of the qubit the gate will be applied to
+           )EOF")
+      .def("applySqrtY", &NQS::applySqrtY, py::arg("qubit"),
+                            py::arg("numSamples"), py::arg("numIterations"),
+            R"EOF(
+           Apply sqrtY gate to qubit.
+
+           Args:
+               qubit: The index of the qubit the gate will be applied to
+           )EOF")
       .def("applyPauliX", &NQS::applyPauliX, py::arg("qubit"),
             R"EOF(
            Apply Pauli X gate to qubit.
