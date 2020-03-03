@@ -82,8 +82,17 @@ class Evaluation:
             f_xeb += histogram[h] * (2**qubits * abs(exact[int(h)])**2 + 1)
         return f_xeb/shots
 
-    def plotPDF(self, exact, histogram):
-        pass
+    def plotPDF(self, qubits, cycles, circuit):
+        exact = self.loadExact(qubits, cycles, circuit)
+        exact_probs_sorted = [abs(e)**2 for e in exact].sort()
+
+        fig, ax = plt.subplots()
+        ax.plot(exact_probs_sorted)
+        plt.ylabel('p(j)')
+        plt.xlabel('Bit string index j (ordered)')
+        plt.savefig('plots/pdf_{}qubits_{}cycles_circuit{}'.format(qubits, cycles, circuit))
+        plt.close()
+
 
     def plot(self, df, x, grouped, fixed):
         all_keys = ['#qubits', '#cycles', '#iterations', '#samples', '#sampleSteps', 'initialHidden', '#hadamards'] 
@@ -170,6 +179,11 @@ class Evaluation:
         self.plot(df.copy(), '#samples', ['#qubits', '#cycles'], {})
         self.plot(df.copy(), '#qubits', ['#cycles'], {})
         self.plot(df.copy(), '#cycles', ['#qubits'], {})
+
+        for q in self.listSystemSizes:
+            for c in self.listCycles:
+                for i in self.numCircuits:
+                    self.plotPDF(q, c, i)
 
         shutil.make_archive('plots', 'zip', 'plots')
 
