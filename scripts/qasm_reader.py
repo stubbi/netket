@@ -136,14 +136,14 @@ class QASMReader:
         elif(line.startswith('sqrt_X')):
             for q in self.readQubits(line.strip('sqrt_X')):
                 if(self.is_nqs()):
-                    self.nqs.applySqrtX(q)
+                    self.nqs.applySqrtX(q, self.numSamples, self.numIterations)
                 else:
                     self.exact.gate(sqrt_X, target=q)
 
         elif(line.startswith('sqrt_Y')):
             for q in self.readQubits(line.strip('sqrt_Y')):
                 if(self.is_nqs()):
-                    self.nqs.applySqrtY(q)
+                    self.nqs.applySqrtY(q, self.numSamples, self.numIterations)
                 else:
                     self.exact.gate(sqrt_Y, target=q)
                     
