@@ -115,7 +115,7 @@ class NQS {
         
         void applySqrtY(int qubit, int numSamples, int numIterations) {
             MatrixType sqrtY(2,2);
-            sqrtY << std::complex<double>(1, 1), std::complex<double>(1, 1), std::complex<double>(-1, -1), std::complex<double>(1, 1);
+            sqrtY << std::complex<double>(1, 1), std::complex<double>(-1, -1), std::complex<double>(1, 1), std::complex<double>(1, 1);
             learnGate(qubit, numSamples, numIterations, 0.5*sqrtY);
         }
 
