@@ -1,31 +1,18 @@
 import subprocess, os, errno, time
+from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs
 
 circuit_generator_script = 'random_circuit.py'
-experiment_name = 'proposal-1'
-noctua_partition = 'short'
-max_wall_time = '00:30:00'
+experiment_name = 'rcs'
+noctua_partition = 'batch'
+max_wall_time = '12:00:00'
 noctua_user = 'hpc-prf-nqs'
 singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         noctua_user=noctua_user,
                         pc2pfs=os.environ["PC2PFS"])
 
-# parameters to be tested
-number_of_qubits = [5]#range(3,20,2)
-number_of_cycles = [5] #[10]
-number_of_circuits = 10 #number of random circuits with same number of qubits and cycles
 
-number_of_nodes = [1]
-number_of_tasks_per_node = [1]
-number_of_omp_threads = [1]
-
-number_of_training_samples = [100, 500, 1000]#[100 + i * 200 for i in range(5)] 
-number_of_training_iterations = [1000, 5000, 10000]#[10000 + i * 20000 for i in range(5)]
-
-number_of_initial_hidden_units = [0]
-number_of_sample_steps = number_of_qubits #[9,11,13]#[3,5,7] #size must be multiple of qubits (n*size), each n entries will be used for corresponding qubits
-number_of_runs = 1 #number of runs for a specific circuit
-
-
+total_number_of_jobs = len(number_of_cycles) * number_of_circuits * len(number_of_nodes) * len(number_of_tasks_per_node) * len(number_of_omp_threads) * len(number_of_training_samples) * len(number_of_training_iterations) * len(number_of_initial_hidden_units) * len(number_of_sample_steps) * number_of_runs
+job_number = 0
 
 jobDirs = []
 for qubits in number_of_qubits:
@@ -81,6 +68,21 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                     index_sample_steps = number_of_qubits.index(qubits) * step_size
                                     for sample_steps in number_of_sample_steps[index_sample_steps:index_sample_steps + step_size]:
                                         for run in range(number_of_runs):
+                                            job_number += 1
+                                            print('submitting job {} of {}'.format(job_number, total_number_of_jobs))
+
+                                            # make sure the queue stays small enough
+                                            out = subprocess.Popen(['squeue', '|', 'wc', '-l'], 
+                                                stdout=subprocess.PIPE, 
+                                                stderr=subprocess.STDOUT)
+                                            stdout,stderr = out.communicate()
+                                            while(int(stdout) > 50):
+                                                time.sleep(10)
+                                                out = subprocess.Popen(['squeue', '|', 'wc', '-l'], 
+                                                    stdout=subprocess.PIPE, 
+                                                    stderr=subprocess.STDOUT)
+                                                stdout,stderr = out.communicate()
+
 
                                             directory = "{circuitDir}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
                                                 noctua_user=noctua_user,

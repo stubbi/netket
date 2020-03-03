@@ -87,7 +87,8 @@ class Evaluation:
         exact_probs_sorted = sorted([abs(e)**2 for e in exact])
 
         fig, ax = plt.subplots()
-        ax.plot(range(len(exact_probs_sorted)), exact_probs_sorted)
+        ax.plot(range(len(exact_probs_sorted)), exact_probs_sorted, label = 'no errors')
+        plt.legend()
         plt.ylabel('p(j)')
         plt.xlabel('Bit string index j (ordered)')
         plt.savefig('plots/pdf_{}qubits_{}cycles_circuit{}'.format(qubits, cycles, circuit))

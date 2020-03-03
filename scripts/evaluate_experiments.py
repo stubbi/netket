@@ -1,26 +1,9 @@
 import subprocess, os, errno
+from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs
 
 experiment_name = 'proposal-1'
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
-
-
-# parameters to be tested
-number_of_qubits = [5]
-number_of_cycles = [5]
-number_of_circuits = 10 #number of random circuits with same number of qubits and cycles
-
-number_of_nodes = [1]
-number_of_tasks_per_node = [1]
-number_of_omp_threads = [1]
-
-number_of_training_samples = [100, 500, 1000]#[100 + i * 200 for i in range(5)] 
-number_of_training_iterations = [1000, 5000, 10000]#[10000 + i * 20000 for i in range(5)]
-
-number_of_initial_hidden_units = [0]
-number_of_sample_steps = number_of_qubits #size must be multiple of qubits (n*size), each n entries will be used for corresponding qubits
-number_of_runs = 1 #number of runs for a specific circuit
-
 
 epxperiment_folder = "{pc2pfs}/{noctua_user}/{experiment_name}".format(noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
