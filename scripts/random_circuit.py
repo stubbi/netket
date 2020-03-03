@@ -9,7 +9,7 @@ numQubits = int(sys.argv[1])
 numCycles = int(sys.argv[2])
 qasmFile = sys.argv[3]
 
-singleGates = ['sqrt_X','sqrt_Y','T']
+singleGates = ['sqrt_Y','T']
 
 root = math.floor(math.sqrt(numQubits))
 single_qubit_cycles = [['n/a' for _ in range(numQubits)]]
