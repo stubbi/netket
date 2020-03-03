@@ -25,6 +25,7 @@ T = xp.array([[1, 0], [0, (1 + 1j) / math.sqrt(2)]], dtype=dtype)
 Sdag = xp.array([[1, 0], [0, -1j]], dtype=dtype)
 Tdag = xp.array([[1, 0], [0, (1 - 1j) / math.sqrt(2)]], dtype=dtype)
 sqrt_not = xp.array([[1 + 1j, 1 - 1j], [1 - 1j, 1 + 1j]], dtype=dtype) / 2
+sqrt_Y = xp.array([[1 + 1j, 1 + 1j], [-1 - 1j, 1 + 1j]], dtype=dtype) / 2
 
 # alias
 sqrt_X = sqrt_not
