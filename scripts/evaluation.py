@@ -84,7 +84,7 @@ class Evaluation:
 
     def plotPDF(self, qubits, cycles, circuit):
         exact = self.loadExact(qubits, cycles, circuit)
-        exact_probs_sorted = [abs(e)**2 for e in exact].sort()
+        exact_probs_sorted = sorted([abs(e)**2 for e in exact])
 
         fig, ax = plt.subplots()
         ax.plot(exact_probs_sorted, range(len(exact_probs_sorted)))
