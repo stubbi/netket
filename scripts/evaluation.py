@@ -182,7 +182,7 @@ class Evaluation:
 
         for q in self.listSystemSizes:
             for c in self.listCycles:
-                for i in self.numCircuits:
+                for i in range(self.numCircuits):
                     self.plotPDF(q, c, i)
 
         shutil.make_archive('plots', 'zip', 'plots')
