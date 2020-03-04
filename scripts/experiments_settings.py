@@ -1,11 +1,11 @@
 # parameters to be tested
-number_of_qubits = range(2,26,2)
-number_of_cycles = range(10,41,2)
+number_of_qubits = range(2,16,5)
+number_of_cycles = range(10,21,5)
 number_of_circuits = 10 #number of random circuits with same number of qubits and cycles
 
-number_of_nodes = range(5)
-number_of_tasks_per_node = range(5)
-number_of_omp_threads = range(5)
+number_of_nodes = range(2)
+number_of_tasks_per_node = range(2)
+number_of_omp_threads = range(2)
 
 number_of_training_samples = [100 + i * 100 for i in range(5)] 
 number_of_training_iterations = [10000 + i * 10000 for i in range(5)]
