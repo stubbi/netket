@@ -4,7 +4,7 @@ from experiments_settings import number_of_qubits, number_of_cycles, number_of_c
 circuit_generator_script = 'random_circuit.py'
 experiment_name = 'rcs'
 noctua_partition = 'batch'
-max_wall_time = '02:00:00'
+max_wall_time = '05:00:00'
 noctua_user = 'hpc-prf-nqs'
 singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         noctua_user=noctua_user,
