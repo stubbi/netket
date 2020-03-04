@@ -76,13 +76,14 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                                 stdout=subprocess.PIPE, 
                                                 stderr=subprocess.STDOUT)
                                             stdout,stderr = out.communicate()
-                                            print(stdout)
-                                            while(int(stdout) > 100):
+                                            running_jobs = len(stdout.split('\n'))
+                                            while(running_jobs > 100):
                                                 time.sleep(10)
                                                 out = subprocess.Popen(['squeue'], 
                                                     stdout=subprocess.PIPE, 
                                                     stderr=subprocess.STDOUT)
                                                 stdout,stderr = out.communicate()
+                                                running_jobs = len(stdout.split('\n'))
 
 
                                             directory = "{circuitDir}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
