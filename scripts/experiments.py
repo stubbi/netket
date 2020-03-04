@@ -15,6 +15,21 @@ total_number_of_jobs = len(number_of_cycles) * number_of_circuits * len(number_o
 job_number = 0
 
 jobDirs = []
+
+def wait_for_job_queue():
+    out = subprocess.Popen(['squeue'], 
+        stdout=subprocess.PIPE, 
+        stderr=subprocess.STDOUT)
+    stdout,stderr = out.communicate()
+    running_jobs = len(stdout.split('\n'))
+    while(running_jobs > 100):
+        time.sleep(10)
+        out = subprocess.Popen(['squeue'], 
+            stdout=subprocess.PIPE, 
+            stderr=subprocess.STDOUT)
+        stdout,stderr = out.communicate()
+        running_jobs = len(stdout.split('\n'))
+
 for qubits in number_of_qubits:
     for cycles in number_of_cycles:
         for circuit in range(number_of_circuits):
@@ -31,6 +46,7 @@ for qubits in number_of_qubits:
                 if err.errno != errno.EEXIST or not os.path.isdir(circuitDirectory): 
                     raise
 
+            wait_for_job_queue()
             bashCommand = "python {home}/nqs/scripts/{circuit_generator_script} {qubits} {cycles} {circuitDirectory}/in.qc".format(home=os.environ["HOME"], circuit_generator_script=circuit_generator_script, qubits=qubits, cycles=cycles, circuitDirectory=circuitDirectory)
             process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)
 
@@ -71,19 +87,7 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                             job_number += 1
                                             print('submitting job {} of {}'.format(job_number, total_number_of_jobs))
 
-                                            # make sure the queue stays small enough
-                                            out = subprocess.Popen(['squeue'], 
-                                                stdout=subprocess.PIPE, 
-                                                stderr=subprocess.STDOUT)
-                                            stdout,stderr = out.communicate()
-                                            running_jobs = len(stdout.split('\n'))
-                                            while(running_jobs > 100):
-                                                time.sleep(10)
-                                                out = subprocess.Popen(['squeue'], 
-                                                    stdout=subprocess.PIPE, 
-                                                    stderr=subprocess.STDOUT)
-                                                stdout,stderr = out.communicate()
-                                                running_jobs = len(stdout.split('\n'))
+                                            
 
 
                                             directory = "{circuitDir}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
@@ -150,6 +154,7 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
             jobDirs.append(circuitDirectory)
 
 for directory in jobDirs:
+    wait_for_job_queue()
     bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)  
     print "started job in {}".format(directory)           
