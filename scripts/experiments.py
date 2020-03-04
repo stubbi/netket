@@ -72,13 +72,14 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                             print('submitting job {} of {}'.format(job_number, total_number_of_jobs))
 
                                             # make sure the queue stays small enough
-                                            out = subprocess.Popen(['squeue', '|', 'wc', '-l'], 
+                                            out = subprocess.Popen(['squeue'], 
                                                 stdout=subprocess.PIPE, 
                                                 stderr=subprocess.STDOUT)
                                             stdout,stderr = out.communicate()
+                                            print(stdout)
                                             while(int(stdout) > 100):
                                                 time.sleep(10)
-                                                out = subprocess.Popen(['squeue', '|', 'wc', '-l'], 
+                                                out = subprocess.Popen(['squeue'], 
                                                     stdout=subprocess.PIPE, 
                                                     stderr=subprocess.STDOUT)
                                                 stdout,stderr = out.communicate()
