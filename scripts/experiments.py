@@ -11,8 +11,6 @@ singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         pc2pfs=os.environ["PC2PFS"])
 
 
-total_number_of_jobs = len(number_of_cycles) * number_of_circuits * len(number_of_nodes) * len(number_of_tasks_per_node) * len(number_of_omp_threads) * len(number_of_training_samples) * len(number_of_training_iterations) * len(number_of_initial_hidden_units) * len(number_of_sample_steps) * number_of_runs
-job_number = 0
 
 jobDirs = []
 
@@ -84,10 +82,6 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                                     index_sample_steps = number_of_qubits.index(qubits) * step_size
                                     for sample_steps in number_of_sample_steps[index_sample_steps:index_sample_steps + step_size]:
                                         for run in range(number_of_runs):
-                                            job_number += 1
-                                            print('submitting job {} of {}'.format(job_number, total_number_of_jobs))
-
-                                            
 
 
                                             directory = "{circuitDir}/{nodes}nodes/{tasks}tasks/{threads}threads/{samples}samples/{iterations}iterations/{initial_hidden}initialHidden/{sample_steps}sampleSteps/run{run}".format(
@@ -153,7 +147,11 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
 
             jobDirs.append(circuitDirectory)
 
+total_number_of_jobs = len(jobDirs)
+job_number = 0
 for directory in jobDirs:
+    job_number += 1
+    print('submitting job {} of {}'.format(job_number, total_number_of_jobs))
     wait_for_job_queue()
     bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)  
