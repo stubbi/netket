@@ -112,7 +112,6 @@ class Evaluation:
 
         fig, ax = plt.subplots()
         ax.plot(self.listCycles, entropies)
-        plt.legend()
         plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
         plt.title('{} qubits'.format(qubits), fontdict={'size':10})
         plt.ylabel('Entropy')
