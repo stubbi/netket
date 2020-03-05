@@ -151,6 +151,9 @@ void AddNQSModule(py::module &m) {
             py::arg("pars"),
             R"EOF(
            Set parameters of the underlying Boltzmann machine.
+
+           Args:
+               pars: the weights and biases of the RBM.
            )EOF")
       .def("psi", &NQS::psi, py::arg("v"),
             R"EOF(
