@@ -1,3 +1,4 @@
+experiment_name = 'rcs'
 # parameters to be tested
 number_of_qubits = [10]
 number_of_cycles = [4]
