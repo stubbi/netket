@@ -3,6 +3,9 @@ from experiments_settings import number_of_qubits, number_of_cycles, number_of_c
 
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
+singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
+                        noctua_user=noctua_user,
+                        pc2pfs=os.environ["PC2PFS"])
 
 epxperiment_folder = "{pc2pfs}/{noctua_user}/{experiment_name}".format(noctua_user=noctua_user,
                                     pc2pfs=os.environ["PC2PFS"],
@@ -21,7 +24,7 @@ batch_script ="""#!/bin/bash
 
 module reset
 module load vis/matplotlib
-python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} > evaluation_out 2> evaluation_err""".format(
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} > evaluation_out 2> evaluation_err""".format(
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
@@ -36,7 +39,8 @@ python $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {
                         listIterations=','.join(map(str, number_of_training_iterations)),
                         listInitialHidden=','.join(map(str, number_of_initial_hidden_units)),
                         listSampleSteps=','.join(map(str, number_of_sample_steps)),
-                        numRuns=number_of_runs
+                        numRuns=number_of_runs,
+                        singularity_image_location=singularity_image_location
                         )
 
 f = open("{epxperiment_folder}/evaluation.slurm".format(epxperiment_folder=epxperiment_folder),'w')
