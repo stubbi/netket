@@ -126,7 +126,7 @@ class Evaluation:
         return np.sum([e * math.log(e) if e != 0 else 0 for e in exact_probs])
 
     def porterThomasEntropy(self, qubits):
-        return math.log(2**qubits) - 1.0 + 0.577
+        return math.log(2**int(qubits)) - 1.0 + 0.577
 
     def experiment(self):
         return '{}\n'.format(self.experimentFolder.split('/')[-1])
