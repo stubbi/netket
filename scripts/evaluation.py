@@ -101,7 +101,7 @@ class Evaluation:
         ax.axhline(self.porterThomasEntropy(qubits))
         plt.legend()
         plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
-        plt.title('{} qubits {} cycles {} circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
+        plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
         plt.ylabel('p(j)')
         plt.xlabel('Bit string index j (ordered)')
         plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
