@@ -21,6 +21,7 @@ batch_script ="""#!/bin/bash
 #SBATCH -t 00:30:00
 #SBATCH --mail-type fail
 #SBATCH --mail-user {email}
+export OMP_NUM_THREADS=1
 
 module reset
 module load vis/matplotlib
