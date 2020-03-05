@@ -8,6 +8,7 @@ import os
 import shutil
 import numpy as np
 import math
+import nqs as nq
 
 # evaluation of a specific configuration
 
@@ -59,6 +60,12 @@ class Evaluation:
     def loadExact(self,qubits, cycles, circuit):
         with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
             return pickle.load(f, encoding='latin1')
+    
+    def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
+        with open("{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)), 'rb') as f:
+            nqs = nq.nqs.NQS(0,0,0)
+            nqs.setPsiParams(pickle.load(f, encoding='latin1'))
+            return nqs
 
     def numberOfHadamards(self, qubits, cycles, circuit):
         hadamards = 0
@@ -210,9 +217,11 @@ class Evaluation:
         self.plot(df.copy(), '#samples', ['#qubits', '#cycles'], {})
         self.plot(df.copy(), '#qubits', ['#cycles'], {})
         self.plot(df.copy(), '#cycles', ['#qubits'], {})
-        self.plot(df.copy(), '#nodes', ['#qubits', '#cycles'], ['#tasks', '#threads'])
-        self.plot(df.copy(), '#tasks', ['#qubits', '#cycles'], ['#nodes', '#threads'])
-        self.plot(df.copy(), '#threads', ['#qubits', '#cycles'], ['#nodes', '#tasks'])
+        for i in [1,2]:
+            for j in [1,2]
+                self.plot(df.copy(), '#nodes', ['#qubits', '#cycles'], {'#tasks': i, '#threads': j})
+                self.plot(df.copy(), '#tasks', ['#qubits', '#cycles'], {'#nodes': i, '#threads': j})
+                self.plot(df.copy(), '#threads', ['#qubits', '#cycles'], {'#nodes': i, '#tasks': j})
 
         for q in self.listSystemSizes:
             self.plotDepthEntropy(q)
