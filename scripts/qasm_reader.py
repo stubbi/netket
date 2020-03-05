@@ -164,8 +164,10 @@ class QASMReader:
 
     def display(self):
         if(self.is_nqs()):
+            startSampling = time.time()
             raw_data = [self.toDecimal(self.nqs.sample()) for _ in range(shots)]
             histogram = collections.Counter(raw_data)
+            endSampling = time.time()
 
             with open('raw_data.json', 'w') as f:
                 json.dump(raw_data, f)
@@ -175,6 +177,9 @@ class QASMReader:
 
             with open('parameters.json', 'w') as f:
                 pickle.dump([a for a in self.nqs.getPsiParams().tolist()], f)
+
+            with open('duration_sampling.time', 'w') as f:
+                f.write(str(endSampling-startSampling))
         else:
             with open('exact.json', 'wb') as f:
                 pickle.dump(self.exact.get_state(), f)
