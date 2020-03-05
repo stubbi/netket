@@ -98,7 +98,6 @@ class Evaluation:
 
         fig, ax = plt.subplots()
         ax.plot(range(len(exact_probs_sorted)), exact_probs_sorted, label = 'no errors')
-        ax.axhline(self.porterThomasEntropy(qubits))
         plt.legend()
         plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
         plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
@@ -112,6 +111,7 @@ class Evaluation:
 
         fig, ax = plt.subplots()
         ax.plot(self.listCycles, entropies)
+        ax.axhline(self.porterThomasEntropy(qubits))
         plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
         plt.title('{} qubits'.format(qubits), fontdict={'size':10})
         plt.ylabel('Entropy')
@@ -121,7 +121,7 @@ class Evaluation:
 
     def circuitEntropy(self, qubits, cycles, circuit):
         exact = self.loadExact(qubits, cycles, circuit)
-        exact_probs = [len(exact) * abs(e)**2 for e in exact]
+        exact_probs = [abs(e)**2 for e in exact]
         return np.sum([e * math.log(e) if e != 0 else 0 for e in exact_probs])
 
     def porterThomasEntropy(self, qubits):
