@@ -19,6 +19,9 @@ class NQS {
 
     using VectorType = Eigen::Matrix<Complex, Eigen::Dynamic, 1>;
     using MatrixType = Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic>;
+    using VectorType = AbstractOperator::VectorType;
+    using VectorRefType = AbstractOperator::VectorRefType;
+    using VectorConstRefType = AbstractOperator::VectorConstRefType;
 
     int nqubits_;
     Hypercube& g_;

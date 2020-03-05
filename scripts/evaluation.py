@@ -6,6 +6,8 @@ import json
 import pandas
 import os
 import shutil
+import numpy as np
+import math
 
 # evaluation of a specific configuration
 
@@ -84,20 +86,46 @@ class Evaluation:
 
     def plotPDF(self, qubits, cycles, circuit):
         exact = self.loadExact(qubits, cycles, circuit)
-        exact_probs_sorted = sorted([abs(e)**2 for e in exact])
+        exact_probs_sorted = sorted([len(exact) * abs(e)**2 for e in exact])
 
         fig, ax = plt.subplots()
         ax.plot(range(len(exact_probs_sorted)), exact_probs_sorted, label = 'no errors')
+        ax.axhline(self.porterThomasEntropy(qubits))
         plt.legend()
+        plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
+        plt.title('{} qubits {} cycles {} circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
         plt.ylabel('p(j)')
         plt.xlabel('Bit string index j (ordered)')
-        plt.savefig('plots/pdf_{}qubits_{}cycles_circuit{}'.format(qubits, cycles, circuit))
+        plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
         plt.close()
 
+    def plotDepthEntropy(self, qubits):
+        entropies = [np.average([self.circuitEntropy(qubits, cycles, circuit) for circuit in range(self.numCircuits)]) for cycles in self.listCycles]
+
+        fig, ax = plt.subplots()
+        ax.plot(self.listCycles, entropies)
+        plt.legend()
+        plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
+        plt.title('{} qubits'.format(qubits), fontdict={'size':10})
+        plt.ylabel('Entropy')
+        plt.xlabel('Depht')
+        plt.savefig('plots/circuits/entropy_{}qubits.pdf'.format(qubits))
+        plt.close()
+
+    def circuitEntropy(self, qubits, cycles, circuit):
+        exact = self.loadExact(qubits, cycles, circuit)
+        exact_probs = [len(exact) * abs(e)**2 for e in exact]
+        return np.sum([e * math.log(e) if e != 0 else 0 for e in exact_probs])
+
+    def porterThomasEntropy(self, qubits):
+        return math.log(2**qubits) - 1.0 + 0.577
+
+    def experiment(self):
+        return '{}\n'.format(self.experimentFolder.split('/')[-1])
 
     def plot(self, df, x, grouped, fixed):
         all_keys = ['#qubits', '#cycles', '#iterations', '#samples', '#sampleSteps', 'initialHidden', '#hadamards'] 
-        experiment = '{}\n'.format(self.experimentFolder.split('/')[-1])
+        experiment = self.experiment()
         title = ', '.join(['{}:{}'.format(key, fixed.get(key, 'all')) for key in all_keys if key not in grouped + [x]])
 
         filterBy = df[grouped].drop_duplicates()
@@ -148,6 +176,8 @@ class Evaluation:
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         if not os.path.exists('plots'):
             os.makedirs('plots')
+        if not os.path.exists('plots/circuits'):
+            os.makedirs('plots/circuits')
         df = pandas.read_csv(results_file)
         df = df[df['success'] == True]
         df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
@@ -180,8 +210,12 @@ class Evaluation:
         self.plot(df.copy(), '#samples', ['#qubits', '#cycles'], {})
         self.plot(df.copy(), '#qubits', ['#cycles'], {})
         self.plot(df.copy(), '#cycles', ['#qubits'], {})
+        self.plot(df.copy(), '#nodes', ['#qubits', '#cycles'], ['#tasks', '#threads'])
+        self.plot(df.copy(), '#tasks', ['#qubits', '#cycles'], ['#nodes', '#threads'])
+        self.plot(df.copy(), '#threads', ['#qubits', '#cycles'], ['#nodes', '#tasks'])
 
         for q in self.listSystemSizes:
+            self.plotDepthEntropy(q)
             for c in self.listCycles:
                 for i in range(self.numCircuits):
                     self.plotPDF(q, c, i)
