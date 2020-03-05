@@ -247,6 +247,10 @@ class NQS {
             return psi_.GetParameters();
         }
 
+        void setPsiParams(VectorConstRefType pars) {
+            psi_.SetParameters(pars);
+        }
+
         Complex psi(AbstractMachine::VisibleConstType v) {
             return std::exp(psi_.LogVal(v));
         }
