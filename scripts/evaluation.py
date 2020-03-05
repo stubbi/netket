@@ -218,7 +218,7 @@ class Evaluation:
         self.plot(df.copy(), '#qubits', ['#cycles'], {})
         self.plot(df.copy(), '#cycles', ['#qubits'], {})
         for i in [1,2]:
-            for j in [1,2]
+            for j in [1,2]:
                 self.plot(df.copy(), '#nodes', ['#qubits', '#cycles'], {'#tasks': i, '#threads': j})
                 self.plot(df.copy(), '#tasks', ['#qubits', '#cycles'], {'#nodes': i, '#threads': j})
                 self.plot(df.copy(), '#threads', ['#qubits', '#cycles'], {'#nodes': i, '#tasks': j})
