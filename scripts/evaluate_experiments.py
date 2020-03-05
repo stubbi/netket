@@ -25,6 +25,7 @@ export OMP_NUM_THREADS=1
 
 module reset
 module load vis/matplotlib
+module load singularity
 singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} > evaluation_out 2> evaluation_err""".format(
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
