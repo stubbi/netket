@@ -8,7 +8,7 @@ import os
 import shutil
 import numpy as np
 import math
-import nqs as nq
+#import nqs as nq
 
 # evaluation of a specific configuration
 
@@ -63,9 +63,10 @@ class Evaluation:
     
     def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
         with open("{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)), 'rb') as f:
-            nqs = nq.nqs.NQS(0,0,0)
-            nqs.setPsiParams(pickle.load(f, encoding='latin1'))
-            return nqs
+            #nqs = nq.nqs.NQS(0,0,0)
+            #nqs.setPsiParams(pickle.load(f, encoding='latin1'))
+            #return nqs
+            return 0
 
     def numberOfHadamards(self, qubits, cycles, circuit):
         hadamards = 0
