@@ -19,7 +19,7 @@ def wait_for_job_queue():
         stderr=subprocess.STDOUT)
     stdout,stderr = out.communicate()
     running_jobs = len(stdout.split('\n'))
-    while(running_jobs > 500):
+    while(running_jobs > 100):
         time.sleep(10)
         out = subprocess.Popen(['squeue'], 
             stdout=subprocess.PIPE, 
