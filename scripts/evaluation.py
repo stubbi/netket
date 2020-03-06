@@ -8,7 +8,7 @@ import os
 import shutil
 import numpy as np
 import math
-#import nqs as nq
+import nqs as nq
 
 # evaluation of a specific configuration
 
@@ -62,11 +62,10 @@ class Evaluation:
             return pickle.load(f, encoding='latin1')
     
     def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
-        with open("{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)), 'rb') as f:
-            #nqs = nq.nqs.NQS(0,0,0)
-            #nqs.setPsiParams(pickle.load(f, encoding='latin1'))
-            #return nqs
-            return 0
+        f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
+        nqs = nq.nqs.NQS(0,0,0)
+        nqs.load(f)
+        return nqs
 
     def numberOfHadamards(self, qubits, cycles, circuit):
         hadamards = 0
@@ -76,11 +75,14 @@ class Evaluation:
                     hadamards = hadamards + 1
         return hadamards
 
-    def tvd(self, exact, histogram):
+    def tvd(self, exact, rbm):
+        def toBinaryArray(i):
+            return [int(b) for b in format(i, '0{}b'.format(math.log(len(exact),2)))]
+
         tvd = 0.0
         for i in range(len(exact)):
             exact_prob = abs(exact[i])**2
-            nqs_prob = histogram.get(str(i), 0.0)
+            nqs_prob = abs(rbm.psi(toBinaryArray(i)))**2
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
@@ -254,7 +256,8 @@ class Evaluation:
 
                                                     try:
                                                         histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
-                                                        tvd = '{:f}'.format(self.tvd(self.loadExact(size, cycles, circuits), self.normalise(histogram)))
+                                                        rbm = self.loadRBM(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
+                                                        tvd = '{:f}'.format(self.tvd(self.loadExact(size, cycles, circuits), rbm))
                                                         f_xeb = '{:f}'.format(self.f_xeb(self.loadExact(size, cycles, circuits), self.normalise(histogram), int(size)))
                                                         duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
                                                         success = True

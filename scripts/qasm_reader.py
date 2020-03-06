@@ -175,11 +175,10 @@ class QASMReader:
             with open('histogram.json', 'w') as f:
                 json.dump(histogram, f)
 
-            with open('parameters.json', 'w') as f:
-                pickle.dump([a for a in self.nqs.getPsiParams().tolist()], f)
-
             with open('duration_sampling.time', 'w') as f:
                 f.write(str(endSampling-startSampling))
+
+            self.nqs.save('parameters.json')
         else:
             with open('exact.json', 'wb') as f:
                 pickle.dump(self.exact.get_state(), f)

@@ -143,16 +143,19 @@ void AddNQSModule(py::module &m) {
             R"EOF(
            Sample from the nqs.
            )EOF")
-      .def("getPsiParams", &NQS::getPsiParams,
-            R"EOF(
-           Get parameters of the underlying Boltzmann machine.
-           )EOF")
-      .def("setPsiParams", &NQS::setPsiParams, py::arg("pars"),
-            R"EOF(
-           Set parameters of the underlying Boltzmann machine.
+      .def("save", &NQS::savePsiParams, py::arg("filename"),
+           R"EOF(
+                 Member function to save the machine parameters.
 
-           Args:
-               pars: the weights and biases of the RBM.
+                 Args:
+                     filename: name of file to save parameters to.
+           )EOF")
+      .def("load", &NQS::loadPsiParams, py::arg("filename"),
+           R"EOF(
+                 Member function to load machine parameters from a json file.
+
+                 Args:
+                     filename: name of file to load parameters from.
            )EOF")
       .def("psi", &NQS::psi, py::arg("v"),
             R"EOF(
@@ -160,10 +163,6 @@ void AddNQSModule(py::module &m) {
 
            Args:
                v: configuration of qubits to calculate wave function for.
-           )EOF")
-      .def("truthTable", &NQS::truthTable,
-            R"EOF(
-           prints the truth table for the current circuit and has an exponential runtime!
            )EOF");
 }
 

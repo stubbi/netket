@@ -243,50 +243,16 @@ class NQS {
             return sa_.Visible();
         }
 
-        VectorType getPsiParams() {
-            return psi_.GetParameters();
+        void savePsiParams(const std::string &filename) {
+            psi_.Save(filename);
         }
 
-        void setPsiParams(AbstractMachine::VectorConstRefType pars) {
-            psi_.SetParameters(pars);
+        void loadPsiParams(const std::string &filename) {
+            psi_.Load(filename);
         }
 
         Complex psi(AbstractMachine::VisibleConstType v) {
             return std::exp(psi_.LogVal(v));
-        }
-
-        /*
-        *
-        * This function is for debug purpose only. It prints the truth table for
-        * the current circuit and has an exponential runtime!
-        */
-        void truthTable() {
-            std::map<std::vector<int>, float> occurences;
-            InfoMessage() << "Truth table:" << std::endl;
-            for(int i = 0; i < 1000; i++) {
-               sa_.Reset(true);
-               sa_.Sweep();
-               std::vector<int> v(sa_.Visible().data(), sa_.Visible().data() + sa_.Visible().size());
-               try {
-                   occurences.at(v) = occurences.at(v) + 1.0/1000.0;
-               } catch (...) {
-                   occurences.insert(std::pair<std::vector<int>,float>(v,1.0/1000.0));
-               }
-            }
-
-            std::vector<int> v(sa_.Visible().data(), sa_.Visible().data() + sa_.Visible().size());
-            for(int i = 0; i < std::pow(2.0, sa_.Visible().size()); i++) {
-                convertToBinary(i, v);
-                std::ostringstream vts;
-                std::copy(v.begin(), v.end(), std::ostream_iterator<int>(vts, "")); 
-                try {
-                    float o = occurences.at(v);
-                    InfoMessage() << vts.str() << " " << o << std::endl;
-               } catch (...) {
-                    InfoMessage() << vts.str() << " 0.0" << std::endl;
-               }
-            }
-            InfoMessage() << std::endl;
         }
 
     private:
