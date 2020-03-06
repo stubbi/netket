@@ -10,7 +10,8 @@ From: python:3.7
     wget -O - https://apt.kitware.com/keys/kitware-archive-latest.asc 2>/dev/null | apt-key add -
     apt-add-repository 'deb https://apt.kitware.com/ubuntu/ bionic main'
     apt-get install -y --no-install-recommends cmake openmpi-bin libopenmpi-dev libatlas-base-dev python-dev python-pip libssl-dev
-    pip install -U pip setuptools numpy scipy matplotlib
+    pip install -U pip setuptools numpy scipy
+    pip install matplotlib
     chmod -R 755 /nqs/
     cd nqs
     python setup.py install
