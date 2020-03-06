@@ -77,16 +77,12 @@ class Evaluation:
 
     def tvd(self, exact, rbm):
         def toBinaryArray(i):
-            print(len(exact))
-            print(math.log(len(exact),2))
             return [int(b) for b in format(i, '0{}b'.format(int(math.log(len(exact),2))))]
 
         tvd = 0.0
         for i in range(len(exact)):
             exact_prob = abs(exact[i])**2
-            print(toBinaryArray(i))
             nqs_prob = abs(rbm.psi(toBinaryArray(i)))**2
-            print(nqs_prob)
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
@@ -259,17 +255,11 @@ class Evaluation:
                                                 for run in range(self.numRuns):
 
                                                     try:
-                                                        print('load histogram')
                                                         histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
-                                                        print('load rbm')
                                                         rbm = self.loadRBM(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
-                                                        print('load tvd')
                                                         tvd = '{:f}'.format(self.tvd(self.loadExact(size, cycles, circuits), rbm))
-                                                        print('load f_xeb')
                                                         f_xeb = '{:f}'.format(self.f_xeb(self.loadExact(size, cycles, circuits), self.normalise(histogram), int(size)))
-                                                        print('load duration')
                                                         duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
-                                                        print('load success')
                                                         success = True
                                                     except:
                                                         print("Unexpected error:", sys.exc_info()[0])
