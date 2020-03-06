@@ -128,7 +128,7 @@ class Evaluation:
     def circuitEntropy(self, qubits, cycles, circuit):
         exact = self.loadExact(qubits, cycles, circuit)
         exact_probs = [abs(e)**2 for e in exact]
-        return np.sum([e * math.log(e) if e != 0 else 0 for e in exact_probs])
+        return - np.sum([e * math.log(e) if e != 0 else 0 for e in exact_probs])
 
     def porterThomasEntropy(self, qubits):
         return math.log(2**int(qubits)) - 1.0 + 0.577
