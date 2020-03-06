@@ -100,6 +100,7 @@ class Evaluation:
         exact = self.loadExact(qubits, cycles, circuit)
         df = df[(df['#qubits'] == qubits) & (df['#cycles'] == cycles) & (df['circuit'] == circuit)]
         minRow = df[df.tvd == df.tvd.min()]
+        print(minRow)
         maxRow = df[df.tvd == df.tvd.max()]
 
         print(minRow)
