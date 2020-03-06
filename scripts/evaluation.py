@@ -98,7 +98,7 @@ class Evaluation:
 
     def plotPDF(self, df, qubits, cycles, circuit):
         exact = self.loadExact(qubits, cycles, circuit)
-        df = df[df['#qubits'] == qubits and df['#cycles'] == cycles and df['circuit'] == circuit]
+        df = df[(df['#qubits'] == qubits) & (df['#cycles'] == cycles) & (df['circuit'] == circuit)]
         minRow = df[df.tvd == df.tvd.min()]
         maxRow = df[df.tvd == df.tvd.max()]
 
