@@ -79,12 +79,11 @@ class Evaluation:
         def toBinaryArray(i):
             return [int(b) for b in format(i, '0{}b'.format(int(math.log(len(exact),2))))]
 
-        tvd = 0.0
-        for i in range(len(exact)):
-            exact_prob = abs(exact[i])**2
-            nqs_prob = abs(rbm.psi(toBinaryArray(i)))**2
-            tvd += abs(exact_prob-nqs_prob)
-        return tvd/2.0
+        exact_probs = [abs(e)**2 for e in exact]
+        nqs_probs = [abs(rbm.psi(toBinaryArray(i)))**2 for i in range(len(exact))]
+        nqs_norm = np.sum(nqs_probs)
+        nqs_probs = [n/nqs_norm for n in nqs_probs]
+        return np.sum([abs(exact_probs[i] - nqs_probs[i]) for i in range(len(exact))])/2.0
 
     def f_xeb(self, exact, histogram, qubits):
         f_xeb = 0.0
