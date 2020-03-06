@@ -164,5 +164,5 @@ setup(
      simulation of Quantum Circuits with Restricted Boltzmann Machines.""",
     cmdclass=dict(build_ext=CMakeBuild),
     zip_safe=False,
-    install_requires=["numpy>=1.16", "cmake>=3.10.3", "scipy>=1.2.1", "matplotlib"],
+    install_requires=["numpy>=1.16", "cmake>=3.10.3", "scipy>=1.2.1"],
 )
