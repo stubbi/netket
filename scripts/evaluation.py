@@ -77,10 +77,11 @@ class Evaluation:
 
     def tvd(self, exact, rbm):
         def toBinaryArray(i):
-            return [int(b) for b in format(i, '0{}b'.format(math.log(len(exact),2)))]
+            print(len(exact))
+            print(math.log(len(exact),2))
+            return [int(b) for b in format(i, '0{}b'.format(int(math.log(len(exact),2))))]
 
         tvd = 0.0
-        print(exact)
         for i in range(len(exact)):
             exact_prob = abs(exact[i])**2
             print(toBinaryArray(i))
