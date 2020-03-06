@@ -63,7 +63,7 @@ class Evaluation:
     
     def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
         f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
-        nqs = nq.nqs.NQS(0,0,0)
+        nqs = nq.nqs.NQS(size,numInitialHidden,numSamples)
         nqs.load(f)
         return nqs
 
@@ -82,7 +82,9 @@ class Evaluation:
         tvd = 0.0
         for i in range(len(exact)):
             exact_prob = abs(exact[i])**2
+            print(toBinaryArray(i))
             nqs_prob = abs(rbm.psi(toBinaryArray(i)))**2
+            print(nqs_prob)
             tvd += abs(exact_prob-nqs_prob)
         return tvd/2.0
 
