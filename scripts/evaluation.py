@@ -64,9 +64,7 @@ class Evaluation:
     def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
         f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
         nqs = nq.nqs.NQS(int(size),int(numInitialHidden),int(numSamples))
-        print('start load')
         nqs.load(f)
-        print('finished load')
         return nqs
 
     def numberOfHadamards(self, qubits, cycles, circuit):
@@ -82,6 +80,7 @@ class Evaluation:
             return [int(b) for b in format(i, '0{}b'.format(math.log(len(exact),2)))]
 
         tvd = 0.0
+        print(exact)
         for i in range(len(exact)):
             exact_prob = abs(exact[i])**2
             print(toBinaryArray(i))
