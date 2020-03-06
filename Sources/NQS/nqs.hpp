@@ -19,7 +19,6 @@ class NQS {
 
     using VectorType = Eigen::Matrix<Complex, Eigen::Dynamic, 1>;
     using MatrixType = Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic>;
-    using VectorConstRefType = Eigen::Ref<const VectorType>;
 
     int nqubits_;
     Hypercube& g_;
@@ -248,7 +247,7 @@ class NQS {
             return psi_.GetParameters();
         }
 
-        void setPsiParams(VectorConstRefType pars) {
+        void setPsiParams(AbstractMachine::VectorConstRefType pars) {
             psi_.SetParameters(pars);
         }
 

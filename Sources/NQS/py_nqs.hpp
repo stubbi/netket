@@ -147,8 +147,7 @@ void AddNQSModule(py::module &m) {
             R"EOF(
            Get parameters of the underlying Boltzmann machine.
            )EOF")
-      .def("setPsiParams", &NQS::setPsiParams,
-            py::arg("pars"),
+      .def("setPsiParams", &NQS::setPsiParams, py::arg("pars"),
             R"EOF(
            Set parameters of the underlying Boltzmann machine.
 
