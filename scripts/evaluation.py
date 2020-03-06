@@ -63,7 +63,7 @@ class Evaluation:
     
     def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
         f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
-        nqs = nq.nqs.NQS(size,numInitialHidden,numSamples)
+        nqs = nq.nqs.NQS(int(size),int(numInitialHidden),int(numSamples))
         print('start load')
         nqs.load(f)
         print('finished load')
