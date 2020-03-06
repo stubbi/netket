@@ -259,11 +259,17 @@ class Evaluation:
                                                 for run in range(self.numRuns):
 
                                                     try:
+                                                        print('load histogram')
                                                         histogram = self.loadHistogram(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
+                                                        print('load rbm')
                                                         rbm = self.loadRBM(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)
+                                                        print('load tvd')
                                                         tvd = '{:f}'.format(self.tvd(self.loadExact(size, cycles, circuits), rbm))
+                                                        print('load f_xeb')
                                                         f_xeb = '{:f}'.format(self.f_xeb(self.loadExact(size, cycles, circuits), self.normalise(histogram), int(size)))
+                                                        print('load duration')
                                                         duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
+                                                        print('load success')
                                                         success = True
                                                     except:
                                                         print("Unexpected error:", sys.exc_info()[0])
