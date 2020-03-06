@@ -264,6 +264,7 @@ class Evaluation:
                                                         duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
                                                         success = True
                                                     except:
+                                                        print("Unexpected error:", sys.exc_info()[0])
                                                         tvd = '-'
                                                         f_xeb = '-'
                                                         duration = '-'
