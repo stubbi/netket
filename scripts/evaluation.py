@@ -75,14 +75,17 @@ class Evaluation:
                     hadamards = hadamards + 1
         return hadamards
 
-    def tvd(self, exact, rbm):
+    def loadRBMProbs(self, exact, rbm):
         def toBinaryArray(i):
             return [int(b) for b in format(i, '0{}b'.format(int(math.log(len(exact),2))))]
 
-        exact_probs = [abs(e)**2 for e in exact]
         nqs_probs = [abs(rbm.psi(toBinaryArray(i)))**2 for i in range(len(exact))]
         nqs_norm = np.sum(nqs_probs)
-        nqs_probs = [n/nqs_norm for n in nqs_probs]
+        return [n/nqs_norm for n in nqs_probs]
+
+    def tvd(self, exact, rbm):
+        exact_probs = [abs(e)**2 for e in exact]
+        nqs_probs = self.loadRBMProbs(exact, rbm)
         return np.sum([abs(exact_probs[i] - nqs_probs[i]) for i in range(len(exact))])/2.0
 
     def f_xeb(self, exact, histogram, qubits):
@@ -93,12 +96,28 @@ class Evaluation:
             f_xeb += histogram[h] * (2**qubits * abs(exact[int(h)])**2 + 1)
         return f_xeb/shots
 
-    def plotPDF(self, qubits, cycles, circuit):
+    def plotPDF(self, df, qubits, cycles, circuit):
         exact = self.loadExact(qubits, cycles, circuit)
-        exact_probs_sorted = sorted([len(exact) * abs(e)**2 for e in exact])
+        df = df[df['#qubits'] == qubits and df['#cycles'] == cycles and df['circuit'] == circuit]
+        minRow = df[df.tvd == df.tvd.min()]
+        maxRow = df[df.tvd == df.tvd.max()]
+
+    
+        minRBM = self.loadRBM(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0])
+        maxRBM = self.loadRBM(maxRow['#qubits'].iloc[0],maxRow['#cycles'].iloc[0],maxRow['circuit'].iloc[0],maxRow['#nodes'].iloc[0],maxRow['#tasks'].iloc[0],maxRow['#threads'].iloc[0],maxRow['#samples'].iloc[0],maxRow['#iterations'].iloc[0],maxRow['#initialHidden'].iloc[0],maxRow['#sampleSteps'].iloc[0],maxRow['run'].iloc[0])
+
+        bestRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, maxRBM)]
+        worstRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, minRBM)]
+        normalisedProbs = [len(exact) * abs(e)**2 for e in exact] 
+
+        bestRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, bestRBMProbs))]
+        worstRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, worstRBMProbs))]
+        exactProbsSorted = sorted(normalisedProbs)
 
         fig, ax = plt.subplots()
-        ax.plot(range(len(exact_probs_sorted)), exact_probs_sorted, label = 'no errors')
+        ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')
+        ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm')
+        ax.plot(range(len(exactProbsSorted)), worstRBMProbsSorted, label = 'worst rbm')
         plt.legend()
         plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
         plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
@@ -228,7 +247,7 @@ class Evaluation:
             self.plotDepthEntropy(q)
             for c in self.listCycles:
                 for i in range(self.numCircuits):
-                    self.plotPDF(q, c, i)
+                    self.plotPDF(df.copy(), q, c, i)
 
         shutil.make_archive('plots', 'zip', 'plots')
 
