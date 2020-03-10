@@ -97,32 +97,35 @@ class Evaluation:
         return f_xeb/shots
 
     def plotPDF(self, df, qubits, cycles, circuit):
-        exact = self.loadExact(qubits, cycles, circuit)
-        df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(cycles)) & (df['circuit'] == int(circuit))]
-        minRow = df[df.tvd == df.tvd.min()]
-        maxRow = df[df.tvd == df.tvd.max()]
+        try:
+            exact = self.loadExact(qubits, cycles, circuit)
+            df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(cycles)) & (df['circuit'] == int(circuit))]
+            minRow = df[df.tvd == df.tvd.min()]
+            maxRow = df[df.tvd == df.tvd.max()]
 
-        minRBM = self.loadRBM(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0])
-        maxRBM = self.loadRBM(maxRow['#qubits'].iloc[0],maxRow['#cycles'].iloc[0],maxRow['circuit'].iloc[0],maxRow['#nodes'].iloc[0],maxRow['#tasks'].iloc[0],maxRow['#threads'].iloc[0],maxRow['#samples'].iloc[0],maxRow['#iterations'].iloc[0],maxRow['#initialHidden'].iloc[0],maxRow['#sampleSteps'].iloc[0],maxRow['run'].iloc[0])
+            minRBM = self.loadRBM(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0])
+            maxRBM = self.loadRBM(maxRow['#qubits'].iloc[0],maxRow['#cycles'].iloc[0],maxRow['circuit'].iloc[0],maxRow['#nodes'].iloc[0],maxRow['#tasks'].iloc[0],maxRow['#threads'].iloc[0],maxRow['#samples'].iloc[0],maxRow['#iterations'].iloc[0],maxRow['#initialHidden'].iloc[0],maxRow['#sampleSteps'].iloc[0],maxRow['run'].iloc[0])
 
-        bestRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, minRBM)]
-        worstRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, maxRBM)]
-        normalisedProbs = [len(exact) * abs(e)**2 for e in exact] 
+            bestRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, minRBM)]
+            worstRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, maxRBM)]
+            normalisedProbs = [len(exact) * abs(e)**2 for e in exact] 
 
-        bestRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, bestRBMProbs))]
-        worstRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, worstRBMProbs))]
-        exactProbsSorted = sorted(normalisedProbs)
+            bestRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, bestRBMProbs))]
+            worstRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, worstRBMProbs))]
+            exactProbsSorted = sorted(normalisedProbs)
 
-        fig, ax = plt.subplots()
-        ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')
-        ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, tvd: {}'.format(df.tvd.min()))
-        plt.legend()
-        plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
-        plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
-        plt.ylabel('p(j)')
-        plt.xlabel('Bit string index j (ordered)')
-        plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
-        plt.close()
+            fig, ax = plt.subplots()
+            ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')
+            ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, tvd: {}'.format(df.tvd.min()))
+            plt.legend()
+            plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
+            plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
+            plt.ylabel('p(j)')
+            plt.xlabel('Bit string index j (ordered)')
+            plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
+            plt.close()
+        except:
+            print('no plot for {} qubits {} cycles circuit {}'.format(qubits, cycles, circuit))
 
     def plotDepthEntropy(self, qubits):
         entropies = [np.average([self.circuitEntropy(qubits, cycles, circuit) for circuit in range(self.numCircuits)]) for cycles in self.listCycles]
@@ -138,9 +141,13 @@ class Evaluation:
         plt.close()
 
     def circuitEntropy(self, qubits, cycles, circuit):
-        exact = self.loadExact(qubits, cycles, circuit)
-        exact_probs = [abs(e)**2 for e in exact]
-        return - np.sum([e * math.log(e) if e != 0 else 0 for e in exact_probs])
+        try:
+            exact = self.loadExact(qubits, cycles, circuit)
+            exact_probs = [abs(e)**2 for e in exact]
+            return - np.sum([e * math.log(e) if e != 0 else 0 for e in exact_probs])
+        except:
+            print("no circuit entropy for {} qubits {} cycles circuit {}".format(qubits, cycles, circuit))
+            return 0
 
     def porterThomasEntropy(self, qubits):
         return math.log(2**int(qubits)) - 1.0 + 0.577
