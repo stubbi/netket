@@ -233,7 +233,7 @@ class Supervised {
       Eigen::VectorXd sample(batchSamples[i]);
       // And the corresponding target
       Eigen::VectorXcd target(batchTargets[i]);
-      Complex t = target[0] - max_target;
+      Complex t = t(target[0].real(), target[0].imag());// - max_target;
       // Undo log
       t = exp(t);
 
