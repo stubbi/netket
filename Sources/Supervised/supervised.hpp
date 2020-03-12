@@ -120,11 +120,8 @@ class Supervised {
     trainingTarget_values_.resize(trainingTargets_.size());
     for (unsigned int i = 0; i < trainingTargets_.size(); i++) {
       trainingTarget_values_[i] = exp(2 * trainingTargets_[i][0].real());
-      /*
-      InfoMessage() << "trainingTargets_[i][0].real() " << trainingTargets_[i][0].real() << std::endl;
       InfoMessage() << "trainingSamples_[i] " << trainingSamples_[i] << std::endl;
       InfoMessage() << "trainingTarget_values_[i] " << trainingTarget_values_[i] << std::endl;
-      */
     }
     distribution_phi_ = std::discrete_distribution<>(
         trainingTarget_values_.begin(), trainingTarget_values_.end());

@@ -110,7 +110,7 @@ class MetropolisLocalGate : public AbstractSampler {
     } else {
       psi = gatematrix_(1,0) * psi0 + gatematrix_(1,1) *  psi1;
     }
-
+    InfoMessage() << "PsiAfterGate: " << v << " " << psi << std::endl;
     return psi;
   }
 

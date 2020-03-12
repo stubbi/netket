@@ -104,7 +104,9 @@ class NQS {
         void applyHadamard(int qubit, int numSamples, int numIterations) {
             MatrixType H(2,2);
             H << 1,1,1,-1;
-            learnGate(qubit, numSamples, numIterations, 1.0/sqrt(2) * H);
+            H = 1.0/sqrt(2.0) * H;
+            InfoMessage() << "H:" << H(0,0) << H(0,1) << H(1,0) << H(1,1) << std::endl;
+            learnGate(qubit, numSamples, numIterations, H);
         }
 
         void applySqrtX(int qubit, int numSamples, int numIterations) {
