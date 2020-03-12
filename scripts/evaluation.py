@@ -59,8 +59,7 @@ class Evaluation:
 
     def loadExact(self,qubits, cycles, circuit):
         with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
-            print(f.read())
-            return pickle.load(f)
+            return pickle.loads(f.read())
     
     def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
         f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
