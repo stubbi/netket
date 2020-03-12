@@ -284,8 +284,8 @@ class Evaluation:
                                                         f_xeb = '{:f}'.format(self.f_xeb(self.loadExact(size, cycles, circuits), self.normalise(histogram), int(size)))
                                                         duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
                                                         success = True
-                                                    except:
-                                                        print("Unexpected error:", sys.exc_info()[0])
+                                                    except Exception, e:
+                                                        print("Unexpected error: {}".format(str(e)))
                                                         tvd = '-'
                                                         f_xeb = '-'
                                                         duration = '-'
