@@ -59,8 +59,8 @@ class NQS {
             MetropolisLocalGate sampler = MetropolisLocalGate(psi_, gateMatrix, samplesteps_);
 
             int numSamples_ = int(std::ceil(double(numSamples) / double(totalnodes_)));
-            std::vector<Eigen::VectorXd> trainingSamples(numSamples_);
-            std::vector<Eigen::VectorXcd> trainingTargets(numSamples_);
+            std::vector<Eigen::VectorXd> trainingSamples;
+            std::vector<Eigen::VectorXcd> trainingTargets;
             
             int countOne = 0;
 
@@ -68,11 +68,11 @@ class NQS {
                 sampler.Reset(true);
                 sampler.Sweep(qubit);
 
-                trainingSamples[i] = sampler.Visible();
+                trainingSamples.push_back(sampler.Visible());
 
                 Eigen::VectorXcd target(1);
                 target(0) = std::log(sampler.PsiAfterGate(sampler.Visible(), qubit));
-                trainingTargets[i] = target;
+                trainingTargets.push_back(target);
 
                 if(sampler.Visible()(qubit) == 1) {
                     countOne++;
@@ -83,21 +83,21 @@ class NQS {
 
             // in these cases, the gradient factors out and collapses
             if(countOne == 0 || countOne == numSamples_) {
-                // we have to add more samples, say 1%
-                for(int i = 0; i < numSamples_/100.0; i++) {
+                // we have to add more samples
+                for(int i = 0; i < numSamples_; i++) {
                     sampler.Reset(true);
                     sampler.Sweep(qubit);
 
                     auto sample = sampler.Visible();
                     sample(qubit) = 1.0 - sample(qubit);
-                    trainingSamples[numSamples_ + i] = sample;
+                    trainingSamples.push_back(sample);
 
                     Eigen::VectorXcd target(1);
                     target(0) = std::log(sampler.PsiAfterGate(sample, qubit));
-                    trainingTargets[numSamples_ + i] = target;
+                    trainingTargets.push_back(target);
 
-                    InfoMessage() << "sample: " << i << ": " << trainingSamples[i] << std::endl;
-                    InfoMessage() << "target: " << i << ": " << trainingTargets[i] << std::endl << std::endl;
+                    InfoMessage() << "sample: " << numSamples_ + i << ": " << trainingSamples[numSamples_ + i] << std::endl;
+                    InfoMessage() << "target: " << numSamples_ + i << ": " << trainingTargets[numSamples_ + i] << std::endl << std::endl;
                 }
             }
 
