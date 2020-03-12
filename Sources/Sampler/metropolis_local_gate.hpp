@@ -101,6 +101,7 @@ class MetropolisLocalGate : public AbstractSampler {
     //set qubit to 1
     v(qubit) = 1.0;
     std::complex<double> psi1 = std::exp(GetMachine().LogVal(v));
+    v(qubit) = valueOfQubit;
 
     std::complex<double> psi;
 
