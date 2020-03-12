@@ -77,6 +77,8 @@ class NQS {
                 if(sampler.Visible()(qubit) == 1) {
                     countOne++;
                 }
+                InfoMessage() << "sample: " << i << ": " << trainingSamples[i] << std::endl;
+                InfoMessage() << "target: " << i << ": " << trainingTargets[i] << std::endl << std::endl;
             }
 
             // in these cases, the gradient factors out and collapses
@@ -94,11 +96,16 @@ class NQS {
                     target(0) = std::log(sampler.PsiAfterGate(sample, qubit));
                     trainingTargets[numSamples_ + i] = target;
 
+                    InfoMessage() << "sample: " << i << ": " << trainingSamples[i] << std::endl;
+                    InfoMessage() << "target: " << i << ": " << trainingTargets[i] << std::endl << std::endl;
                 }
             }
 
+            InfoMessage() << "training set prepared" << std::endl;
             Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
+            InfoMessage() << "Supervised spvsd" << std::endl;
             spvsd.Run(numIterations, "Overlap_phi");
+            InfoMessage() << "spvsd.Run" << std::endl;
         }
 
         void applyHadamard(int qubit, int numSamples, int numIterations) {
