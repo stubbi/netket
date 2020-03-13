@@ -114,6 +114,11 @@ class Evaluation:
             worstRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, worstRBMProbs))]
             exactProbsSorted = sorted(normalisedProbs)
 
+            print(exact)
+            print(exactProbsSorted)
+            print(bestRBMProbsSorted)
+            print()
+
             fig, ax = plt.subplots()
             ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')
             ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, tvd: {}'.format(df.tvd.min()))
