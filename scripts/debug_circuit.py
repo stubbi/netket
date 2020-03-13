@@ -30,6 +30,7 @@ def generateCycle(m):
 circuit = """
 version 1.0
 qubits {}
+H q[0]
 """.format(numQubits)
 
 for m in range(numCycles):
