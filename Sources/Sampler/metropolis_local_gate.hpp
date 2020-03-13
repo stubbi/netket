@@ -106,9 +106,9 @@ class MetropolisLocalGate : public AbstractSampler {
     std::complex<double> psi;
 
     if(valueOfQubit == 0.0) {
-      psi = gatematrix_(0,0) * psi0 + gatematrix_(0,1) * psi1;
+      psi = gatematrix_(0,0) * psi0 + gatematrix_(1,0) * psi1;
     } else {
-      psi = gatematrix_(1,0) * psi0 + gatematrix_(1,1) *  psi1;
+      psi = gatematrix_(0,1) * psi0 + gatematrix_(1,1) *  psi1;
     }
     InfoMessage() << "PsiAfterGate: " << v << " " << psi << std::endl;
     return psi;
