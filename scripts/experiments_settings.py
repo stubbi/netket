@@ -1,4 +1,4 @@
-experiment_name = 'debug'
+experiment_name = 'debugY'
 circuit_generator_script = 'debug_circuit.py'
 # parameters to be tested
 number_of_qubits = [1]
