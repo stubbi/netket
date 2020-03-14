@@ -1,4 +1,4 @@
-experiment_name = 'rcs2'
+experiment_name = 'rcsX'
 circuit_generator_script = 'random_circuit.py'
 # parameters to be tested
 number_of_qubits = [6]
