@@ -121,7 +121,7 @@ class Evaluation:
 
             fig, ax = plt.subplots()
             ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')
-            ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, tvd: {}'.format(df.tvd.min()))
+            ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, {} samples {} iterations {} sample steps, tvd: {}'.format(minRow['#samples'], minRow['#iterations'], minRow['#sampleSteps'], df.tvd.min()))
             plt.legend()
             plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
             plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
