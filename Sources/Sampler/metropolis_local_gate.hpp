@@ -76,8 +76,6 @@ class MetropolisLocalGate : public AbstractSampler {
     localstates_ = GetHilbert().LocalStates();
 
     Reset(true);
-
-    InfoMessage() << "Local Metropolis Gate sampler is ready " << std::endl;
   }
 
   void Reset(bool initrandom) override {
@@ -110,7 +108,6 @@ class MetropolisLocalGate : public AbstractSampler {
     } else {
       psi = gatematrix_(0,1) * psi0 + gatematrix_(1,1) *  psi1;
     }
-    InfoMessage() << "PsiAfterGate: " << v << " " << psi << std::endl;
     return psi;
   }
 

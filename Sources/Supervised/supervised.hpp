@@ -120,21 +120,15 @@ class Supervised {
     trainingTarget_values_.resize(trainingTargets_.size());
     for (unsigned int i = 0; i < trainingTargets_.size(); i++) {
       trainingTarget_values_[i] = exp(2 * trainingTargets_[i][0].real());
-      InfoMessage() << "trainingSamples_[i] " << trainingSamples_[i] << std::endl;
-      InfoMessage() << "trainingTarget_values_[i] " << trainingTarget_values_[i] << std::endl;
     }
     distribution_phi_ = std::discrete_distribution<>(
         trainingTarget_values_.begin(), trainingTarget_values_.end());
 
     if (method == "Gd") {
       dosr_ = false;
-      //InfoMessage() << "Using a gradient-descent based method" << std::endl;
     } else {
       setSrParameters(diag_shift, use_iterative, use_cholesky);
     }
-
-    //InfoMessage() << "Supervised learning running on " << totalnodes_
-    //              << " processes" << std::endl;
 
     MPI_Barrier(MPI_COMM_WORLD);
   }
@@ -257,8 +251,6 @@ class Supervised {
       grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
       grad_num_3_ = grad_num_3_ + std::norm(value);
 
-      InfoMessage() << "sample " << batchSamples[i] << std::endl;
-      InfoMessage() << "t " << t << std::endl << std::endl;
       
     }
 
@@ -270,7 +262,6 @@ class Supervised {
     SumOnNodes(grad_num_3_);
     /// No need to devide by totalnodes_
     grad_ = grad_part_1_ / grad_num_1_ - (grad_part_2_ / grad_num_2_ * grad_num_3_ / grad_part_3_);
-    //InfoMessage() << "grad_ " << grad_ << std::endl;
   }
 
   /// Computes the gradient of the loss function with respect to
@@ -440,7 +431,6 @@ class Supervised {
 
     loss_mse_ = mse / numSamples;
     loss_mse_log_ = mse_log / numSamples;
-    //InfoMessage() << "loss_mse_log_ " << loss_mse_log_ << std::endl;
   }
 
   double GetMse() const { return loss_mse_; }
@@ -488,15 +478,6 @@ class Supervised {
         -(log(num1) + log(num2) - log(num3) - log(num4));
     assert(std::abs(complex_log_overlap_.imag()) < 1e-8);
     loss_log_overlap_ = complex_log_overlap_.real();
-
-    //InfoMessage() << "loss_log_overlap_ " << loss_log_overlap_ << std::endl;
-    //InfoMessage() << "grad " << grad_ << std::endl;
-    //InfoMessage() << "grad_part_1_ " << grad_part_1_ << std::endl;
-    //InfoMessage() << "grad_num_1_ " << grad_num_1_ << std::endl;
-    //InfoMessage() << "grad_part_2_ " << grad_part_2_ << std::endl;
-    //InfoMessage() << "grad_num_2_ " << grad_num_2_ << std::endl;
-    //InfoMessage() << "params " << psi_.GetParameters() << std::endl << std::endl;
-
   }
 
   double GetLogOverlap() const { return loss_log_overlap_; }
