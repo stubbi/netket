@@ -61,6 +61,9 @@ class NQS {
             int numSamples_ = int(std::ceil(double(numSamples) / double(totalnodes_)));
             std::vector<Eigen::VectorXd> trainingSamples;
             std::vector<Eigen::VectorXcd> trainingTargets;
+
+            std::vector<Eigen::VectorXd> normalisationSamples;
+            std::vector<Eigen::VectorXcd> normalisationTargets;
             
             int countOne = 0;
 
@@ -68,11 +71,19 @@ class NQS {
                 sampler.Reset(true);
                 sampler.Sweep(qubit);
 
+                sa_.Reset(true);
+                sa_.Sweep();
+
                 trainingSamples.push_back(sampler.Visible());
+                normalisationSamples.push_back(sa_.Visible());
 
                 Eigen::VectorXcd target(1);
                 target(0) = std::log(sampler.PsiAfterGate(sampler.Visible(), qubit));
                 trainingTargets.push_back(target);
+
+                Eigen:VectorXcd normalisationTarget(1);
+                normalisationTarget(0) = std::log(psi_.LogVal(sa_.Visible()));
+                normalisatinTargets.push_back(normalisationTarget);
 
                 if(sampler.Visible()(qubit) == 1) {
                     countOne++;
@@ -86,6 +97,9 @@ class NQS {
                     sampler.Reset(true);
                     sampler.Sweep(qubit);
 
+                    sa_.Reset(true);
+                    sa_.Sweep();
+
                     auto sample = sampler.Visible();
                     sample(qubit) = 1.0 - sample(qubit);
                     trainingSamples.push_back(sample);
@@ -94,10 +108,14 @@ class NQS {
                     target(0) = std::log(sampler.PsiAfterGate(sample, qubit));
                     trainingTargets.push_back(target);
 
+                    Eigen:VectorXcd normalisationTarget(1);
+                    normalisationTarget(0) = std::log(psi_.LogVal(sa_.Visible()));
+                    normalisatinTargets.push_back(normalisationTarget);
+
                 }
             }
 
-            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
+            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets, normalisationSamples, normalisationTargets);
             spvsd.Run(numIterations, "Overlap_phi");
         }
 

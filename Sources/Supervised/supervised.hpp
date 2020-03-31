@@ -68,6 +68,9 @@ class Supervised {
   // Test samples and targets
   std::vector<Eigen::VectorXd> testSamples_;
   std::vector<Eigen::VectorXcd> testTargets_;
+  // Normalisation samples and targets
+  std::vector<Eigen::VectorXd> normalisationSamples_;
+  std::vector<Eigen::VectorXcd> normalisationTargets_;
 
   // All loss function is real
   double loss_log_overlap_;
@@ -91,13 +94,17 @@ class Supervised {
              int batchsize,
              std::vector<Eigen::VectorXd> trainingSamples,
              std::vector<Eigen::VectorXcd> trainingTargets,
+             std::vector<Eigen::VectorXd> normalisationSamples,
+             std::vector<Eigen::VectorXcd> normalisationTargets,
              const std::string &method = "Gd", double diag_shift = 0.01,
              bool use_iterative = false, bool use_cholesky = true)
       : psi_(psi),
         opt_(opt),
         sa_(sa),
         trainingSamples_(trainingSamples),
-        trainingTargets_(trainingTargets) {
+        trainingTargets_(trainingTargets),
+        normalisationSamples_(normalisationSamples),
+        normalisationTargets_(normalisationTargets) {
     npar_ = psi_.Npar();
 
     opt_.Init(npar_, psi_.IsHolomorphic());
@@ -203,18 +210,19 @@ class Supervised {
     grad_num_2_ = 0;
     grad_num_3_ = 0;
 
-    double max_log_psi = -std::numeric_limits<double>::infinity();
-    double max_target = -std::numeric_limits<double>::infinity();
+    double max_training_target = -std::numeric_limits<double>::infinity();
+    double max_normalisation_target = -std::numeric_limits<double>::infinity();
     Eigen::VectorXcd sampleForMaxLogPsi(batchSamples[0]);
     /// [TODO] avoid going through psi twice.
-    for (int i = 0; i < batchsize_node_; i++) {
-      Complex value(psi_.LogVal(batchSamples[i]));
-      if (max_log_psi < std::abs(value)) {
-        max_log_psi = std::abs(value);
-        sampleForMaxLogPsi = batchSamples[i];
+    for (int i = 0; i < trainingTargets_.size(); i++) {
+      if (max_training_target < std::abs(trainingTargets_[i][0])) {
+        max_training_target = std::abs(trainingTargets_[i][0]);
       }
-      if (max_target < std::abs(batchTargets[i][0])) {
-        max_target = std::abs(batchTargets[i][0]);
+    }
+
+    for (int i = 0; i < normalsationTargets_.size(); i++) {
+      if (max_normalisation_target < std::abs(normalsationTargets_[i][0])) {
+        max_normalisation_target = std::abs(normalsationTargets_[i][0]);
       }
     }
 
@@ -227,14 +235,14 @@ class Supervised {
       Eigen::VectorXd sample(batchSamples[i]);
       // And the corresponding target
       Eigen::VectorXcd target(batchTargets[i]);
-      Complex t = target[0];// - max_target;
+      Complex t = target[0] - max_training_target;
       // Undo log
       t = exp(t);
 
 
       Complex value(psi_.LogVal(sample));
       // Undo Log
-      value = value - max_log_psi;
+      value = value - max_normalisation_target;
       value = exp(value);
 
       // Compute derivative of log
