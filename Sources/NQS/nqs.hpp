@@ -83,7 +83,7 @@ class NQS {
 
                 Eigen:VectorXcd normalisationTarget(1);
                 normalisationTarget(0) = std::log(psi_.LogVal(sa_.Visible()));
-                normalisatinTargets.push_back(normalisationTarget);
+                normalisationTargets.push_back(normalisationTarget);
 
                 if(sampler.Visible()(qubit) == 1) {
                     countOne++;
@@ -108,9 +108,9 @@ class NQS {
                     target(0) = std::log(sampler.PsiAfterGate(sample, qubit));
                     trainingTargets.push_back(target);
 
-                    Eigen:VectorXcd normalisationTarget(1);
+                    Eigen::VectorXcd normalisationTarget(1);
                     normalisationTarget(0) = std::log(psi_.LogVal(sa_.Visible()));
-                    normalisatinTargets.push_back(normalisationTarget);
+                    normalisationTargets.push_back(normalisationTarget);
 
                 }
             }
