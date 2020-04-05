@@ -35,7 +35,7 @@ class NQS {
 
         NQS(int nqubits, int initialHidden, int sampleSteps)
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)), samplesteps_(sampleSteps),
-            hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), 0, 0, true, true)),
+            hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), nqubits*(nqubits-1)/2, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)),
             op_(*new AdaMax()) {
                 VectorType a = getPsi_a();
@@ -189,14 +189,14 @@ class NQS {
         void applyControlledZRotation(int controlQubit, int qubit, double theta) {
             std::complex<double> A_theta = std::acosh(std::exp(std::complex<double>(0, -theta/2.0)));
 
-            psi_.addHidden();
-
             VectorType a = getPsi_a();
             VectorType b = getPsi_b();
             MatrixType W = getPsi_W();
 
-            W(qubit, W.cols()-1) = -2.0 * A_theta;
-            W(controlQubit, W.cols()-1) = 2.0 * A_theta;
+            int smaller = controlQubit < qubit ? controlQubit : qubit;
+            int hidden = nqubits_*(nqubits_-1)/2 - (nqubits_-smaller)*(nqubits_-smaller-1)/2 + std::abs(controlQubit-qubit) - 1;
+            W(qubit, hidden) -= 2.0 * A_theta;
+            W(controlQubit, hidden) += 2.0 * A_theta;
         
             a(qubit) += std::complex<double>(0, theta/2.0) + A_theta;
             a(controlQubit) += std::complex<double>(0, theta/2.0) - A_theta;
