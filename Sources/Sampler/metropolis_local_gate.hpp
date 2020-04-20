@@ -91,7 +91,15 @@ class MetropolisLocalGate : public AbstractSampler {
 
   void Sweep() override {}
 
-  std::complex<double> PsiAfterGate(Eigen::VectorXd v, int qubit) {
+  std::complex<double> PsiAfterGate(Eigen::VectorXd v, int qubit1, int qubit2) {
+    if(qubit2 == -1) {
+      return PsiAfter1QubitGate(v, qubit1);
+    } else {
+      return PsiAfter2QubitGate(v, qubit1, qubit2);
+    }
+  }
+
+  std::complex<double> PsiAfter1QubitGate(Eigen::VectorXd v, int qubit) {
     double valueOfQubit = v(qubit);
     //set qubit to 0
     v(qubit) = 0.0;
@@ -111,8 +119,53 @@ class MetropolisLocalGate : public AbstractSampler {
     return psi;
   }
 
+  std::complex<double> PsiAfter2QubitGate(Eigen::VectorXd v, int qubit1, int qubit2) {
+    double valueOfQubit1 = v(qubit1);
+    double valueOfQubit2 = v(qubit2);
 
-  void Sweep(int qubit) {
+    //set qubits to 00
+    v(qubit1) = 0.0;
+    v(qubit2) = 0.0;
+    std::complex<double> psi00 = std::exp(GetMachine().LogVal(v));
+
+    //set qubits to 01
+    v(qubit1) = 0.0;
+    v(qubit2) = 1.0;
+    std::complex<double> psi01 = std::exp(GetMachine().LogVal(v));
+
+    //set qubits to 10
+    v(qubit1) = 1.0;
+    v(qubit2) = 0.0;
+    std::complex<double> psi10 = std::exp(GetMachine().LogVal(v));
+
+    //set qubits to 11
+    v(qubit1) = 1.0;
+    v(qubit2) = 1.0;
+    std::complex<double> psi11 = std::exp(GetMachine().LogVal(v));
+
+    std::complex<double> psi;
+
+    if(valueOfQubit1 == 0.0 && valueOfQubit2 == 0.0) {
+      psi = gatematrix_(0,0) * psi00 + gatematrix_(1,0) * psi01 + gatematrix_(2,0) * psi10 + gatematrix_(3,0) * psi11;
+    }
+
+    if(valueOfQubit1 == 0.0 && valueOfQubit2 == 1.0) {
+      psi = gatematrix_(0,0) * psi00 + gatematrix_(1,1) * psi01 + gatematrix_(2,1) * psi10 + gatematrix_(3,1) * psi11;
+    }
+
+    if(valueOfQubit1 == 1.0 && valueOfQubit2 == 0.0) {
+      psi = gatematrix_(0,2) * psi00 + gatematrix_(1,2) * psi01 + gatematrix_(2,2) * psi10 + gatematrix_(3,2) * psi11;
+    }
+
+    if(valueOfQubit1 == 1.0 && valueOfQubit2 == 1.0) {
+      psi = gatematrix_(0,3) * psi00 + gatematrix_(1,3) * psi01 + gatematrix_(2,3) * psi10 + gatematrix_(3,3) * psi11;
+    }
+
+    return psi;
+  }
+
+
+  void Sweep(int qubit1, int qubit2 = -1) {
     std::vector<int> tochange(1);
     std::vector<double> newconf(1);
 
@@ -137,12 +190,12 @@ class MetropolisLocalGate : public AbstractSampler {
         newconf[0] = localstates_[newstate];
       }
 
-      double psiBefore = std::norm(PsiAfterGate(v_, qubit));
+      double psiBefore = std::norm(PsiAfterGate(v_, qubit1, qubit2));
       psiBefore = psiBefore > 0 ? psiBefore : 0.00000001;
 
       double valueOfQubitToChange = v_(tochange[0]);
       v_(tochange[0]) = newconf[0];
-      double psiAfter = std::norm(PsiAfterGate(v_, qubit));
+      double psiAfter = std::norm(PsiAfterGate(v_, qubit1, qubit2));
       psiAfter = psiAfter > 0 ? psiAfter : 0.00000001;
 
       //reset

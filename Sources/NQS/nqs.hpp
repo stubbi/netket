@@ -55,7 +55,7 @@ class NQS {
                 MPI_Comm_size(MPI_COMM_WORLD, &totalnodes_);
             }
 
-        void learnGate(int qubit, int numSamples, int numIterations, MatrixType gateMatrix) {
+        void learnGate(int qubit1, int qubit2, int numSamples, int numIterations, MatrixType gateMatrix) {
             MetropolisLocalGate sampler = MetropolisLocalGate(psi_, gateMatrix, samplesteps_);
 
             int numSamples_ = int(std::ceil(double(numSamples) / double(totalnodes_)));
@@ -65,11 +65,14 @@ class NQS {
             std::vector<Eigen::VectorXd> normalisationSamples;
             std::vector<Eigen::VectorXcd> normalisationTargets;
             
-            int countOne = 0;
+            int count00 = 0;
+            int count01 = 0;
+            int count10 = 0;
+            int count11 = 0;
 
             for(int i = 0; i < numSamples_; i++) {
                 sampler.Reset(true);
-                sampler.Sweep(qubit);
+                sampler.Sweep(qubit1, qubit2);
 
                 sa_.Reset(true);
                 sa_.Sweep();
@@ -78,34 +81,52 @@ class NQS {
                 normalisationSamples.push_back(sa_.Visible());
 
                 Eigen::VectorXcd target(1);
-                target(0) = std::log(sampler.PsiAfterGate(sampler.Visible(), qubit));
+                target(0) = std::log(sampler.PsiAfterGate(sampler.Visible(), qubit1, qubit2));
                 trainingTargets.push_back(target);
 
                 Eigen:VectorXcd normalisationTarget(1);
                 normalisationTarget(0) = std::log(psi_.LogVal(sa_.Visible()));
                 normalisationTargets.push_back(normalisationTarget);
 
-                if(sampler.Visible()(qubit) == 1) {
-                    countOne++;
+                int valueQubit2 = qubit2;
+
+                if(qubit2 == -1) {
+                    qubit2 = 0;
                 }
+
+                if(sampler.Visible()(qubit1) == 0 && sampler.Visible()(qubit2) == 0) {
+                    count00++;
+                }
+
+                if(sampler.Visible()(qubit1) == 0 && sampler.Visible()(qubit2) == 1) {
+                    count01++;
+                }
+
+                if(sampler.Visible()(qubit1) == 1 && sampler.Visible()(qubit2) == 0) {
+                    count10++;
+                }
+
+                if(sampler.Visible()(qubit1) == 1 && sampler.Visible()(qubit2) == 1) {
+                    count11++;
+                }
+
+                qubit2 = valueQubit2;
+
             }
 
+
             // in these cases, the gradient factors out and collapses
-            if(countOne == 0 || countOne == numSamples_) {
+            if(count00 == numSamples_ || count01 == numSamples_ || count10 == numSamples_ || count11 == numSamples_) {
                 // we have to add more samples
                 for(int i = 0; i < numSamples_; i++) {
                     sampler.Reset(true);
-                    sampler.Sweep(qubit);
-
                     sa_.Reset(true);
-                    sa_.Sweep();
 
                     auto sample = sampler.Visible();
-                    sample(qubit) = 1.0 - sample(qubit);
                     trainingSamples.push_back(sample);
 
                     Eigen::VectorXcd target(1);
-                    target(0) = std::log(sampler.PsiAfterGate(sample, qubit));
+                    target(0) = std::log(sampler.PsiAfterGate(sample, qubit1, qubit2));
                     trainingTargets.push_back(target);
 
                     Eigen::VectorXcd normalisationTarget(1);
@@ -123,19 +144,19 @@ class NQS {
             MatrixType H(2,2);
             H << 1,1,1,-1;
             H = 1.0/sqrt(2.0) * H;
-            learnGate(qubit, numSamples, numIterations, H);
+            learnGate(qubit, -1, numSamples, numIterations, H);
         }
 
         void applySqrtX(int qubit, int numSamples, int numIterations) {
             MatrixType sqrtX(2,2);
             sqrtX << std::complex<double>(1, 1), std::complex<double>(1, -1), std::complex<double>(1, -1), std::complex<double>(1, 1);
-            learnGate(qubit, numSamples, numIterations, 0.5*sqrtX);
+            learnGate(qubit, -1, numSamples, numIterations, 0.5*sqrtX);
         }
         
         void applySqrtY(int qubit, int numSamples, int numIterations) {
             MatrixType sqrtY(2,2);
             sqrtY << std::complex<double>(1, 1), std::complex<double>(-1, -1), std::complex<double>(1, 1), std::complex<double>(1, 1);
-            learnGate(qubit, numSamples, numIterations, 0.5*sqrtY);
+            learnGate(qubit, -1, numSamples, numIterations, 0.5*sqrtY);
         }
 
         void applyPauliX(int qubit){
@@ -186,22 +207,10 @@ class NQS {
             setPsiParams(a,b,W);
         }
 
-        void applyControlledZRotation(int controlQubit, int qubit, double theta) {
-            std::complex<double> A_theta = std::acosh(std::exp(std::complex<double>(0, -theta/2.0)));
-
-            VectorType a = getPsi_a();
-            VectorType b = getPsi_b();
-            MatrixType W = getPsi_W();
-
-            int smaller = controlQubit < qubit ? controlQubit : qubit;
-            int hidden = nqubits_*(nqubits_-1)/2 - (nqubits_-smaller)*(nqubits_-smaller-1)/2 + std::abs(controlQubit-qubit) - 1;
-            W(qubit, hidden) -= 2.0 * A_theta;
-            W(controlQubit, hidden) += 2.0 * A_theta;
-        
-            a(qubit) += std::complex<double>(0, theta/2.0) + A_theta;
-            a(controlQubit) += std::complex<double>(0, theta/2.0) - A_theta;
-
-            setPsiParams(a,b,W);
+        void applyControlledZRotation(int controlQubit, int qubit, double theta, int numSamples, int numIterations) {
+            MatrixType cZ(4,4);
+            cZ << 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,std::exp(std::complex<double>(0, theta));
+            learnGate(controlQubit, qubit, numSamples, numIterations, cZ);
         }
 
         /**
@@ -218,32 +227,32 @@ class NQS {
         }
 
         void applyToffoli(int qubit1, int qubit2, int qubit3, int numSamples = 100, int numIterations = 1000) {
-            applyControlledZRotation(qubit2, qubit3, M_PI);
+            applyControlledZRotation(qubit2, qubit3, M_PI, numSamples, numIterations);
             applyHadamard(qubit3, numSamples, numIterations);
 
             applyTDagger(qubit3);
 
             applyHadamard(qubit3, numSamples, numIterations);
-            applyControlledZRotation(qubit1, qubit3, M_PI);
+            applyControlledZRotation(qubit1, qubit3, M_PI, numSamples, numIterations);
             applyHadamard(qubit3, numSamples, numIterations);
 
             applyT(qubit3);
 
             applyHadamard(qubit3, numSamples, numIterations);
-            applyControlledZRotation(qubit2, qubit3, M_PI);
+            applyControlledZRotation(qubit2, qubit3, M_PI, numSamples, numIterations);
             applyHadamard(qubit3, numSamples, numIterations);
 
             applyTDagger(qubit3);
 
             applyHadamard(qubit3, numSamples, numIterations);
-            applyControlledZRotation(qubit1, qubit3, M_PI);
+            applyControlledZRotation(qubit1, qubit3, M_PI, numSamples, numIterations);
             applyHadamard(qubit3, numSamples, numIterations);
 
             applyT(qubit2);
             applyT(qubit3);
 
             applyHadamard(qubit2, numSamples, numIterations);
-            applyControlledZRotation(qubit1, qubit2, M_PI);
+            applyControlledZRotation(qubit1, qubit2, M_PI, numSamples, numIterations);
             applyHadamard(qubit2, numSamples, numIterations);
 
             applyHadamard(qubit3, numSamples, numIterations);
@@ -252,7 +261,7 @@ class NQS {
             applyTDagger(qubit2);
 
             applyHadamard(qubit2, numSamples, numIterations);
-            applyControlledZRotation(qubit1, qubit2, M_PI);
+            applyControlledZRotation(qubit1, qubit2, M_PI, numSamples, numIterations);
             applyHadamard(qubit2, numSamples, numIterations);
         }
 
