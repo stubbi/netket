@@ -151,7 +151,7 @@ class QASMReader:
             q0 = self.readQubits(line.strip('CZ').split(',')[0])[0]
             q1 = self.readQubits(line.strip('CZ').split(',')[1])[0]
             if(self.is_nqs()):
-                self.nqs.applyControlledZRotation(q0, q1, cmath.pi, 2 * self.numSamples, 2 * self.numIterations)
+                self.nqs.applyControlledZRotation(q1, q0, cmath.pi, 2 * self.numSamples, 2 * self.numIterations)
             else:
                 self.exact.gate(Z, target=q0, control=q1)
 
