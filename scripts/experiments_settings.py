@@ -1,4 +1,4 @@
-experiment_name = 'rcs-6-8'
+experiment_name = 'cz-test'
 circuit_generator_script = 'random_circuit.py'
 # parameters to be tested
 number_of_qubits = [6]
