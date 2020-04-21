@@ -150,7 +150,7 @@ class MetropolisLocalGate : public AbstractSampler {
     }
 
     if(valueOfQubit1 == 0.0 && valueOfQubit2 == 1.0) {
-      psi = gatematrix_(0,0) * psi00 + gatematrix_(1,1) * psi01 + gatematrix_(2,1) * psi10 + gatematrix_(3,1) * psi11;
+      psi = gatematrix_(0,1) * psi00 + gatematrix_(1,1) * psi01 + gatematrix_(2,1) * psi10 + gatematrix_(3,1) * psi11;
     }
 
     if(valueOfQubit1 == 1.0 && valueOfQubit2 == 0.0) {
