@@ -42,9 +42,9 @@ class NQS {
                 VectorType b = getPsi_b();
                 MatrixType W = getPsi_W();
                 
-                for(int k = 0; k < a.size(); k++) {
-                    a(k) = 0.0;
-                }
+                a.setZero();
+                b.setZero();
+                W.setZero();
 
                 setPsiParams(a,b,W);
 
