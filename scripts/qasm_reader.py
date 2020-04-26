@@ -28,6 +28,7 @@ class QASMReader:
         self.method = method
         self.start = None
         self.end = None
+        self.gateNo = 0
 
     def is_nqs(self):
         return self.method == 'nqs'
@@ -36,6 +37,8 @@ class QASMReader:
         f = open(filename)
         for line in f:
             self.circuitFromLine(line)
+            self.nqs.save('parameters_{}.json'.format(self.gateNo))
+            self.gateNo += 1
         f.close()
 
     def readQubits(self, line):
