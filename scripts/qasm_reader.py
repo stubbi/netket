@@ -38,7 +38,7 @@ class QASMReader:
         oldGateNo = self.gateNo #to avoid storing data without changes
         for line in f:
             self.circuitFromLine(line)
-            if(oldGateNo != self.gateNo)
+            if(oldGateNo != self.gateNo):
                 if(self.is_nqs()):
                     self.nqs.save('parameters_gate_{}.json'.format(self.gateNo))
                 else:
