@@ -57,12 +57,20 @@ class Evaluation:
         with open("{directory}/duration.time".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run)), 'r') as f:
             return float(f.readline())
 
-    def loadExact(self,qubits, cycles, circuit):
-        with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
-            return pickle.loads(f.read())
+    def loadExact(self,qubits, cycles, circuit, gateNo = -1):
+        if(gateNo != -1):
+            with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
+                return pickle.loads(f.read())
+        else:
+            with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact_gate_{gateNo}.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit, gateNo=gateNo), "rb") as f:
+                return pickle.loads(f.read())
     
-    def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run):
-        f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
+    def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo = -1):
+        f = ''
+        if(gateNo != -1):
+            f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
+        else:
+            f = "{directory}/parameters_gate_{gateNo}.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo)
         nqs = nq.nqs.NQS(int(size),int(numInitialHidden),int(numSamples))
         nqs.load(f)
         return nqs
@@ -113,11 +121,6 @@ class Evaluation:
             bestRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, bestRBMProbs))]
             worstRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, worstRBMProbs))]
             exactProbsSorted = sorted(normalisedProbs)
-
-            print(exact)
-            print(exactProbsSorted)
-            print(bestRBMProbsSorted)
-            print()
 
             fig, ax = plt.subplots()
             ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')

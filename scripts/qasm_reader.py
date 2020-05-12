@@ -35,8 +35,16 @@ class QASMReader:
 
     def buildCircuit(self, filename):
         f = open(filename)
+        oldGateNo = self.gateNo #to avoid storing data without changes
         for line in f:
             self.circuitFromLine(line)
+            if(oldGateNo != self.gateNo)
+                if(self.is_nqs()):
+                    self.nqs.save('parameters_gate_{}.json'.format(self.gateNo))
+                else:
+                    with open('exact_gate_{}.json'.format(self.gateNo), 'wb') as f:
+                        pickle.dump(self.exact.get_state(), f)
+            oldGateNo = self.gateNo
         f.close()
 
     def readQubits(self, line):
@@ -51,13 +59,12 @@ class QASMReader:
         return qubits
 
     def circuitFromLine(self, line):
+        self.gateNo += 1
         line = line.split('#')[0].strip()
         if(line.startswith('qubits')):
             qubits = int(line[7:])
             if(self.is_nqs()):
                 self.nqs = nq.nqs.NQS(qubits, self.numInitialHidden, self.numSampleSteps)
-                self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                self.gateNo += 1
             else:
                 self.exact = Qubits(qubits)
                 for q in range(qubits):
@@ -67,8 +74,6 @@ class QASMReader:
             for q in self.readQubits(line.strip('X')):
                 if(self.is_nqs()):
                     self.nqs.applyPauliX(q)
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(X, target=q)
 
@@ -76,8 +81,6 @@ class QASMReader:
             for q in self.readQubits(line.strip('Y')):
                 if(self.is_nqs()):
                     self.nqs.applyPauliY(q)
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(Y, target=q)
 
@@ -85,8 +88,6 @@ class QASMReader:
             for q in self.readQubits(line.strip('Z')):
                 if(self.is_nqs()):
                     self.nqs.applyPauliZ(q)
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(Z, target=q)
 
@@ -94,8 +95,6 @@ class QASMReader:
             for q in self.readQubits(line.strip('H')):
                 if(self.is_nqs()):
                     self.nqs.applyHadamard(q, self.numSamples, self.numIterations)
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(H, target=q)
 
@@ -103,8 +102,6 @@ class QASMReader:
             for q in self.readQubits(line.split(',')[0].strip('Rz')):
                 if(self.is_nqs()):
                     self.nqs.applySingleZRotation(q, float(line.split(',')[1]))
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(rz(float(line.split(',')[1])), target=q)
 
@@ -114,8 +111,6 @@ class QASMReader:
             q2 = self.readQubits(line.strip('Toffoli').split(',')[2])[0]
             if(self.is_nqs()):
                 self.nqs.applyToffoli(q0, q1, q2, self.numSamples, self.numIterations)
-                self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                self.gateNo += 1
             else:
                 #https://arxiv.org/pdf/0803.2316.pdf
                 self.exact.gate(H, target = q2)
@@ -138,8 +133,6 @@ class QASMReader:
             for q in self.readQubits(line.strip('Tdag')):
                 if(self.is_nqs()):
                     self.nqs.applyTDagger(q)
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(T, target=q)
 
@@ -147,8 +140,6 @@ class QASMReader:
             for q in self.readQubits(line.strip('T')):
                 if(self.is_nqs()):
                     self.nqs.applyT(q)
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(T, target=q)
 
@@ -156,8 +147,6 @@ class QASMReader:
             for q in self.readQubits(line.strip('sqrt_X')):
                 if(self.is_nqs()):
                     self.nqs.applySqrtX(q, self.numSamples, self.numIterations)
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(sqrt_X, target=q)
 
@@ -165,8 +154,6 @@ class QASMReader:
             for q in self.readQubits(line.strip('sqrt_Y')):
                 if(self.is_nqs()):
                     self.nqs.applySqrtY(q, self.numSamples, self.numIterations)
-                    self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                    self.gateNo += 1
                 else:
                     self.exact.gate(sqrt_Y, target=q)
                     
@@ -175,14 +162,12 @@ class QASMReader:
             q1 = self.readQubits(line.strip('CZ').split(',')[1])[0]
             if(self.is_nqs()):
                 self.nqs.applyControlledZRotation(q0, q1, cmath.pi, self.numSamples, self.numIterations)
-                self.nqs.save('parameters_{}.json'.format(self.gateNo))
-                self.gateNo += 1
             else:
                 self.exact.gate(Z, target=q0, control=q1)
 
         else:
             # no CNOT, named and repeated subcircuits among others...
-            pass
+            self.gateNo -= 1
 
     def toDecimal(self, sample):
         return int("".join(str(int(x)) for x in sample), 2)
