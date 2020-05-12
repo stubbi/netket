@@ -68,7 +68,7 @@ class Evaluation:
     def loadRBM(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo = -1):
         f = ''
         if(gateNo != -1):
-            f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
+            f = "{diretctory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
         else:
             f = "{directory}/parameters_gate_{gateNo}.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo)
         nqs = nq.nqs.NQS(int(size),int(numInitialHidden),int(numSamples))
@@ -104,15 +104,15 @@ class Evaluation:
             f_xeb += histogram[h] * (2**qubits * abs(exact[int(h)])**2 + 1)
         return f_xeb/shots
 
-    def plotPDF(self, df, qubits, cycles, circuit):
+    def plotPDF(self, df, qubits, cycles, circuit, gateNo = -1):
         try:
-            exact = self.loadExact(qubits, cycles, circuit)
+            exact = self.loadExact(qubits, cycles, circuit, gateNo)
             df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(cycles)) & (df['circuit'] == int(circuit))]
             minRow = df[df.tvd == df.tvd.min()]
             maxRow = df[df.tvd == df.tvd.max()]
 
-            minRBM = self.loadRBM(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0])
-            maxRBM = self.loadRBM(maxRow['#qubits'].iloc[0],maxRow['#cycles'].iloc[0],maxRow['circuit'].iloc[0],maxRow['#nodes'].iloc[0],maxRow['#tasks'].iloc[0],maxRow['#threads'].iloc[0],maxRow['#samples'].iloc[0],maxRow['#iterations'].iloc[0],maxRow['#initialHidden'].iloc[0],maxRow['#sampleSteps'].iloc[0],maxRow['run'].iloc[0])
+            minRBM = self.loadRBM(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo)
+            maxRBM = self.loadRBM(maxRow['#qubits'].iloc[0],maxRow['#cycles'].iloc[0],maxRow['circuit'].iloc[0],maxRow['#nodes'].iloc[0],maxRow['#tasks'].iloc[0],maxRow['#threads'].iloc[0],maxRow['#samples'].iloc[0],maxRow['#iterations'].iloc[0],maxRow['#initialHidden'].iloc[0],maxRow['#sampleSteps'].iloc[0],maxRow['run'].iloc[0]), gateNo)
 
             bestRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, minRBM)]
             worstRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, maxRBM)]
@@ -127,10 +127,14 @@ class Evaluation:
             ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, {} samples {} iterations {} sample steps, tvd: {}'.format(minRow.iloc[0]['#samples'], minRow.iloc[0]['#iterations'], minRow.iloc[0]['#sampleSteps'], df.tvd.min()))
             plt.legend()
             plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
-            plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
             plt.ylabel('p(j)')
             plt.xlabel('Bit string index j (ordered)')
-            plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
+            if(gateNo != -1):
+                plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {:.2f} gate: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits), gateNo), fontdict={'size':10})
+                plt.savefig('plots/circuits/gatewise/pdf_{}qubits_{}cycles_circuit{}_gate{}.pdf'.format(qubits, cycles, circuit, gateNo))
+            else:
+                plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {:.2f} '.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
+                plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
             plt.close()
         except:
             print('no plot for {} qubits {} cycles circuit {}'.format(qubits, cycles, circuit))
@@ -260,7 +264,19 @@ class Evaluation:
             self.plotDepthEntropy(q)
             for c in self.listCycles:
                 for i in range(self.numCircuits):
-                    self.plotPDF(df.copy(), q, c, i)
+                    with open("{}/{}qubits/{}cycles/circuit{}/in.qc".format(self.experimentFolder,q,c,i)) as f:
+                        content = f.readlines()
+
+                    # TODO only works for current RCSs!
+                    content = [x.strip() for x in content if x.startswith('T')] 
+                    content = [x.strip() for x in content if x.startswith('sqrt_X')] 
+                    content = [x.strip() for x in content if x.startswith('sqrt_Y')] 
+                    content = [x.strip() for x in content if x.startswith('CZ')] 
+
+                    gates = len(content)
+
+                    for g in range(gates):
+                        self.plotPDF(df.copy(), q, c, i, g-1)
 
         shutil.make_archive('plots', 'zip', 'plots')
 
