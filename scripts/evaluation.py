@@ -138,7 +138,7 @@ class Evaluation:
                 plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
             plt.close()
         except:
-            print('no plot for {} qubits {} cycles circuit {}'.format(qubits, cycles, circuit))
+            print('no plot for {} qubits {} cycles circuit {} gateNo {}'.format(qubits, cycles, circuit, gateNo))
 
     def plotDepthEntropy(self, qubits):
         entropies = [np.average([self.circuitEntropy(qubits, cycles, circuit) for circuit in range(self.numCircuits)]) for cycles in self.listCycles]
