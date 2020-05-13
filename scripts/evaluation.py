@@ -268,7 +268,7 @@ class Evaluation:
                         content = f.readlines()
 
                     # TODO only works for current RCSs!
-                    content = [x for x in content if x.startswith('T') or x.startswith('sqrt_X') or x.startswith('sqrt_Y') or x.startswith('CZ'))] 
+                    content = [x for x in content if x.startswith('T') or x.startswith('sqrt_X') or x.startswith('sqrt_Y') or x.startswith('CZ')] 
 
                     gates = len(content)
                     print(content)
