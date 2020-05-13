@@ -133,7 +133,7 @@ class Evaluation:
                 print('exact')
                 print(exact)
                 print('rbm')
-                print(loadRBMAmplitude(exact,minRBM))
+                print(self.loadRBMAmplitude(exact,minRBM))
                 print("\n\n")
 
             fig, ax = plt.subplots()
