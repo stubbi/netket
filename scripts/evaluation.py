@@ -232,6 +232,8 @@ class Evaluation:
             os.makedirs('plots')
         if not os.path.exists('plots/circuits'):
             os.makedirs('plots/circuits')
+        if not os.path.exists('plots/circuits/gatewise'):
+            os.makedirs('plots/circuits/gatewise')
         df = pandas.read_csv(results_file)
         df = df[df['success'] == True]
         df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
