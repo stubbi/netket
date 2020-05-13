@@ -58,7 +58,7 @@ class Evaluation:
             return float(f.readline())
 
     def loadExact(self,qubits, cycles, circuit, gateNo = -1):
-        if(gateNo != -1):
+        if(gateNo == -1):
             with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/exact.json".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "rb") as f:
                 return pickle.loads(f.read())
         else:
