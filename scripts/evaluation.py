@@ -71,7 +71,6 @@ class Evaluation:
             f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
         else:
             f = "{directory}/parameters_gate_{gateNo}.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo)
-        print(f)
         nqs = nq.nqs.NQS(int(size),int(numInitialHidden),int(numSamples))
         nqs.load(f)
         return nqs
@@ -125,13 +124,13 @@ class Evaluation:
 
             fig, ax = plt.subplots()
             ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')
-            ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, {} samples {} iterations {} sample steps, tvd: {:.2f}'.format(minRow.iloc[0]['#samples'], minRow.iloc[0]['#iterations'], minRow.iloc[0]['#sampleSteps'], tvd(exact,minRBM)))
+            ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, {} samples {} iterations {} sample steps, tvd: {:.2f}'.format(minRow.iloc[0]['#samples'], minRow.iloc[0]['#iterations'], minRow.iloc[0]['#sampleSteps'], self.tvd(exact,minRBM)))
             plt.legend()
             plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
             plt.ylabel('p(j)')
             plt.xlabel('Bit string index j (ordered)')
             if(gateNo != -1):
-                plt.title('{} qubits {} cycles circuit {} entropy: {:.2f} Porter-Thomas: {:.2f} gate: {} ({})'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits), gateNo, circuitFile[gateNo]), fontdict={'size':10})
+                plt.title('{} qubits {} cycles circuit {} entropy: {:.2f} Porter-Thomas: {:.2f} gate: {} ({})'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits), gateNo, circuitFile[gateNo-1]), fontdict={'size':10})
                 plt.savefig('plots/circuits/gatewise/pdf_{}qubits_{}cycles_circuit{}_gate{}.pdf'.format(qubits, cycles, circuit, gateNo))
             else:
                 plt.title('{} qubits {} cycles circuit {} entropy: {:.2f} Porter-Thomas: {:.2f} '.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
