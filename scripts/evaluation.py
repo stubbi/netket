@@ -71,6 +71,7 @@ class Evaluation:
             f = "{diretctory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
         else:
             f = "{directory}/parameters_gate_{gateNo}.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo)
+        print(f)
         nqs = nq.nqs.NQS(int(size),int(numInitialHidden),int(numSamples))
         nqs.load(f)
         return nqs
@@ -108,8 +109,8 @@ class Evaluation:
         print(gateNo)
         try:
             exact = self.loadExact(qubits, cycles, circuit, gateNo)
-            print("exact:")
-            print(exact)
+            #print("exact:")
+            #print(exact)
             df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(cycles)) & (df['circuit'] == int(circuit))]
             minRow = df[df.tvd == df.tvd.min()]
             maxRow = df[df.tvd == df.tvd.max()]
