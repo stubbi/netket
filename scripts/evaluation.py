@@ -268,12 +268,10 @@ class Evaluation:
                         content = f.readlines()
 
                     # TODO only works for current RCSs!
-                    content = [x.strip() for x in content if x.startswith('T')] 
-                    content = [x.strip() for x in content if x.startswith('sqrt_X')] 
-                    content = [x.strip() for x in content if x.startswith('sqrt_Y')] 
-                    content = [x.strip() for x in content if x.startswith('CZ')] 
+                    content = [x for x in content if x.startswith('T') or x.startswith('sqrt_X' or x.startswith('sqrt_Y') or x.startswith('CZ'))] 
 
                     gates = len(content)
+                    print(gates)
 
                     for g in range(gates):
                         self.plotPDF(df.copy(), q, c, i, g-1)
