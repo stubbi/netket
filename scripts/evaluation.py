@@ -271,6 +271,7 @@ class Evaluation:
                     content = [x for x in content if x.startswith('T') or x.startswith('sqrt_X' or x.startswith('sqrt_Y') or x.startswith('CZ'))] 
 
                     gates = len(content)
+                    print(content)
                     print(gates)
 
                     for g in range(gates):
