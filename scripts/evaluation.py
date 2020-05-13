@@ -109,6 +109,9 @@ class Evaluation:
         print(gateNo)
         try:
             exact = self.loadExact(qubits, cycles, circuit, gateNo)
+            if(gateNo < 4):
+                print(exact)
+                print()
             df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(cycles)) & (df['circuit'] == int(circuit))]
             minRow = df[df.tvd == df.tvd.min()]
             maxRow = df[df.tvd == df.tvd.max()]
