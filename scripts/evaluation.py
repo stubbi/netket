@@ -105,8 +105,7 @@ class Evaluation:
             f_xeb += histogram[h] * (2**qubits * abs(exact[int(h)])**2 + 1)
         return f_xeb/shots
 
-    def plotPDF(self, df, qubits, cycles, circuit, gateNo = -1):
-        print(gateNo)
+    def plotPDF(self, df, qubits, cycles, circuit, gateNo = -1, circuitFile):
         try:
             exact = self.loadExact(qubits, cycles, circuit, gateNo)
             df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(cycles)) & (df['circuit'] == int(circuit))]
@@ -123,22 +122,19 @@ class Evaluation:
             bestRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, bestRBMProbs))]
             worstRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, worstRBMProbs))]
             exactProbsSorted = sorted(normalisedProbs)
-            if(gateNo < 4):
-                print(exactProbsSorted)
-                print()
 
             fig, ax = plt.subplots()
             ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')
-            ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, {} samples {} iterations {} sample steps, tvd: {}'.format(minRow.iloc[0]['#samples'], minRow.iloc[0]['#iterations'], minRow.iloc[0]['#sampleSteps'], df.tvd.min()))
+            ax.plot(range(len(exactProbsSorted)), bestRBMProbsSorted, label = 'best rbm, {} samples {} iterations {} sample steps, tvd: {:.2f}'.format(minRow.iloc[0]['#samples'], minRow.iloc[0]['#iterations'], minRow.iloc[0]['#sampleSteps'], tvd(exact,minRBM)))
             plt.legend()
             plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
             plt.ylabel('p(j)')
             plt.xlabel('Bit string index j (ordered)')
             if(gateNo != -1):
-                plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {:.2f} gate: {}'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits), gateNo), fontdict={'size':10})
+                plt.title('{} qubits {} cycles circuit {} entropy: {:.2f} Porter-Thomas: {:.2f} gate: {} ({})'.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits), gateNo, circuitFile[gateNo]), fontdict={'size':10})
                 plt.savefig('plots/circuits/gatewise/pdf_{}qubits_{}cycles_circuit{}_gate{}.pdf'.format(qubits, cycles, circuit, gateNo))
             else:
-                plt.title('{} qubits {} cycles circuit {} entropy: {} Porter-Thomas: {:.2f} '.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
+                plt.title('{} qubits {} cycles circuit {} entropy: {:.2f} Porter-Thomas: {:.2f} '.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
                 plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
             plt.close()
         except:
@@ -277,12 +273,10 @@ class Evaluation:
                     # TODO only works for current RCSs!
                     content = [x for x in content if x.startswith('T') or x.startswith('sqrt_X') or x.startswith('sqrt_Y') or x.startswith('CZ')] 
 
-                    gates = 4#len(content)
-                    print(content)
-                    print(gates)
+                    gates = len(content)
 
                     for g in range(gates + 1):
-                        self.plotPDF(df.copy(), q, c, i, g-1)
+                        self.plotPDF(df.copy(), q, c, i, g-1, content)
 
         shutil.make_archive('plots', 'zip', 'plots')
 
