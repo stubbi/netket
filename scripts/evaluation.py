@@ -91,6 +91,12 @@ class Evaluation:
         nqs_norm = np.sum(nqs_probs)
         return [n/nqs_norm for n in nqs_probs]
 
+    def loadRBMAmplitudes(self, exact, rbm):
+        def toBinaryArray(i):
+            return [int(b) for b in format(i, '0{}b'.format(int(math.log(len(exact),2))))]
+
+        return [rbm.psi(toBinaryArray(i)) for i in range(len(exact))]
+
     def tvd(self, exact, rbm):
         exact_probs = [abs(e)**2 for e in exact]
         nqs_probs = self.loadRBMProbs(exact, rbm)
@@ -121,6 +127,14 @@ class Evaluation:
             bestRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, bestRBMProbs))]
             worstRBMProbsSorted = [p for _,p in sorted(zip(normalisedProbs, worstRBMProbs))]
             exactProbsSorted = sorted(normalisedProbs)
+
+            if(gateNo < 4):
+                print(gateNo)
+                print('exact')
+                print(exact)
+                print('rbm')
+                print(loadRBMAmplitude(exact,minRBM))
+                print("\n\n")
 
             fig, ax = plt.subplots()
             ax.plot(range(len(exactProbsSorted)), exactProbsSorted, label = 'exact')
