@@ -109,20 +109,12 @@ class Evaluation:
         print(gateNo)
         try:
             exact = self.loadExact(qubits, cycles, circuit, gateNo)
-            #print("exact:")
-            #print(exact)
             df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(cycles)) & (df['circuit'] == int(circuit))]
             minRow = df[df.tvd == df.tvd.min()]
             maxRow = df[df.tvd == df.tvd.max()]
 
             minRBM = self.loadRBM(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo)
             maxRBM = self.loadRBM(maxRow['#qubits'].iloc[0],maxRow['#cycles'].iloc[0],maxRow['circuit'].iloc[0],maxRow['#nodes'].iloc[0],maxRow['#tasks'].iloc[0],maxRow['#threads'].iloc[0],maxRow['#samples'].iloc[0],maxRow['#iterations'].iloc[0],maxRow['#initialHidden'].iloc[0],maxRow['#sampleSteps'].iloc[0],maxRow['run'].iloc[0], gateNo)
-            print("minRBM")
-            print(minRBM)
-            print("maxRBM")
-            print(maxRBM)
-            print()
-            print()
 
             bestRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, minRBM)]
             worstRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, maxRBM)]
