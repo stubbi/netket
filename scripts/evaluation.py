@@ -105,6 +105,7 @@ class Evaluation:
         return f_xeb/shots
 
     def plotPDF(self, df, qubits, cycles, circuit, gateNo = -1):
+        print(gateNo)
         try:
             exact = self.loadExact(qubits, cycles, circuit, gateNo)
             df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(cycles)) & (df['circuit'] == int(circuit))]
@@ -274,7 +275,7 @@ class Evaluation:
                     print(content)
                     print(gates)
 
-                    for g in range(gates):
+                    for g in range(gates + 1):
                         self.plotPDF(df.copy(), q, c, i, g-1)
 
         shutil.make_archive('plots', 'zip', 'plots')
