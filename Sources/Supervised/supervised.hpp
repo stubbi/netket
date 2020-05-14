@@ -260,6 +260,25 @@ class Supervised {
       grad_num_3_ = grad_num_3_ + std::norm(value);
 
       
+      InfoMessage() << "Iteration: " << i << std::endl;
+      InfoMessage() << "Target: " << target[0] << std::endl;
+      InfoMessage() << "Sample: " << sample << std::endl;
+      InfoMessage() << "Max Training Target: " << max_training_target << std::endl;
+      InfoMessage() << "Max Normalisation Target: " << max_normalisation_target << std::endl;
+      InfoMessage() << "t: " << t << std::endl;
+      InfoMessage() << "Psi Value: " << psi_.LogVal(sample) << std::endl;
+      InfoMessage() << "Value: " << value << std::endl;
+      InfoMessage() << "norm(Value): " << std::norm(value) << std::endl;
+      InfoMessage() << "Derivative: " << psi_.DerLog(sample) << std::endl;
+      InfoMessage() << "Derivative conjugated: " << der << std::endl;
+      InfoMessage() << "Grad Part 1: " << grad_part_1_ << std::endl;
+      InfoMessage() << "Grad Num 1: " << grad_num_1_ << std::endl;
+      InfoMessage() << "Grad Part 2: " << grad_part_2_ << std::endl;
+      InfoMessage() << "Grad Num 2: " << grad_num_2_ << std::endl;
+      InfoMessage() << "Grad Part 3: " << grad_part_3_ << std::endl;
+      InfoMessage() << "Grad Num 3: " << grad_num_3_ << std::endl;
+      InfoMessage() << "##########################" << std::endl << std::endl << std::endl << std::endl;
+      
     }
 
     SumOnNodes(grad_part_1_);
