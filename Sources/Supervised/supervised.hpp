@@ -228,7 +228,7 @@ class Supervised {
       }
     }
 
-    SetNormalisationTargets()
+    SetNormalisationTargets();
     for (int i = 0; i < normalisationTargets_.size(); i++) {
       if (max_normalisation_target < std::abs(normalisationTargets_[i][0])) {
         max_normalisation_target = std::abs(normalisationTargets_[i][0]);
