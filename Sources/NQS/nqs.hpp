@@ -85,7 +85,7 @@ class NQS {
                 trainingTargets.push_back(target);
 
                 Eigen:VectorXcd normalisationTarget(1);
-                normalisationTarget(0) = std::log(psi_.LogVal(sa_.Visible()));
+                normalisationTarget(0) = psi_.LogVal(sa_.Visible());
                 normalisationTargets.push_back(normalisationTarget);
 
                 int valueQubit2 = qubit2;
@@ -130,7 +130,7 @@ class NQS {
                     trainingTargets.push_back(target);
 
                     Eigen::VectorXcd normalisationTarget(1);
-                    normalisationTarget(0) = std::log(psi_.LogVal(sa_.Visible()));
+                    normalisationTarget(0) = psi_.LogVal(sa_.Visible());
                     normalisationTargets.push_back(normalisationTarget);
 
                 }
