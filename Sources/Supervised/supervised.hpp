@@ -69,7 +69,6 @@ class Supervised {
   std::vector<Eigen::VectorXd> testSamples_;
   std::vector<Eigen::VectorXcd> testTargets_;
   // Normalisation samples and targets
-  std::vector<Eigen::VectorXd> normalisationSamples_;
   std::vector<Eigen::VectorXcd> normalisationTargets_;
 
   // All loss function is real
@@ -94,17 +93,13 @@ class Supervised {
              int batchsize,
              std::vector<Eigen::VectorXd> trainingSamples,
              std::vector<Eigen::VectorXcd> trainingTargets,
-             std::vector<Eigen::VectorXd> normalisationSamples,
-             std::vector<Eigen::VectorXcd> normalisationTargets,
              const std::string &method = "Gd", double diag_shift = 0.01,
              bool use_iterative = false, bool use_cholesky = true)
       : psi_(psi),
         opt_(opt),
         sa_(sa),
         trainingSamples_(trainingSamples),
-        trainingTargets_(trainingTargets),
-        normalisationSamples_(normalisationSamples),
-        normalisationTargets_(normalisationTargets) {
+        trainingTargets_(trainingTargets) {
     npar_ = psi_.Npar();
 
     opt_.Init(npar_, psi_.IsHolomorphic());
@@ -138,6 +133,19 @@ class Supervised {
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
+  }
+
+  void SetNormalisationTargets() {
+    normalisationTargets_.clear()
+
+    for(int i = 0; i < trainingTargets_.size(); i++) {
+        sa_.Reset(true);
+        sa_.Sweep();
+
+        Eigen::VectorXcd normalisationTarget(1);
+        normalisationTarget(0) = psi_.LogVal(sa_.Visible());
+        normalisationTargets_.push_back(normalisationTarget);
+    }
   }
 
   /// Computes the gradient estimate of the derivative of negative log
@@ -220,6 +228,7 @@ class Supervised {
       }
     }
 
+    SetNormalisationTargets()
     for (int i = 0; i < normalisationTargets_.size(); i++) {
       if (max_normalisation_target < std::abs(normalisationTargets_[i][0])) {
         max_normalisation_target = std::abs(normalisationTargets_[i][0]);
@@ -259,7 +268,6 @@ class Supervised {
       grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
       grad_num_3_ = grad_num_3_ + std::norm(value);
 
-      
       InfoMessage() << "Iteration: " << i << std::endl;
       InfoMessage() << "Target: " << target[0] << std::endl;
       InfoMessage() << "Sample: " << sample << std::endl;

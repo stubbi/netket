@@ -120,7 +120,6 @@ class NQS {
                 // we have to add more samples
                 for(int i = 0; i < numSamples_; i++) {
                     sampler.Reset(true);
-                    sa_.Reset(true);
 
                     auto sample = sampler.Visible();
                     trainingSamples.push_back(sample);
@@ -128,15 +127,10 @@ class NQS {
                     Eigen::VectorXcd target(1);
                     target(0) = std::log(sampler.PsiAfterGate(sample, qubit1, qubit2));
                     trainingTargets.push_back(target);
-
-                    Eigen::VectorXcd normalisationTarget(1);
-                    normalisationTarget(0) = psi_.LogVal(sa_.Visible());
-                    normalisationTargets.push_back(normalisationTarget);
-
                 }
             }
 
-            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets, normalisationSamples, normalisationTargets);
+            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
             spvsd.Run(numIterations, "Overlap_phi");
         }
 
