@@ -136,7 +136,7 @@ class Supervised {
   }
 
   void SetNormalisationTargets() {
-    normalisationTargets_.clear()
+    normalisationTargets_.clear();
 
     for(int i = 0; i < trainingTargets_.size(); i++) {
         sa_.Reset(true);
