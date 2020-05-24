@@ -223,15 +223,15 @@ class Supervised {
     Eigen::VectorXcd sampleForMaxLogPsi(batchSamples[0]);
     /// [TODO] avoid going through psi twice.
     for (int i = 0; i < trainingTargets_.size(); i++) {
-      if (max_training_target < std::abs(trainingTargets_[i][0])) {
-        max_training_target = std::abs(trainingTargets_[i][0]);
+      if (max_training_target < std::log(std::abs(std::exp(trainingTargets_[i][0])))) {
+        max_training_target = std::log(std::abs(std::exp(trainingTargets_[i][0])));
       }
     }
 
     SetNormalisationTargets();
     for (int i = 0; i < normalisationTargets_.size(); i++) {
-      if (max_normalisation_target < std::abs(normalisationTargets_[i][0])) {
-        max_normalisation_target = std::abs(normalisationTargets_[i][0]);
+      if (max_normalisation_target < std::log(std::abs(std::exp(normalisationTargets_[i][0])))) {
+        max_normalisation_target = std::log(std::abs(std::exp(normalisationTargets_[i][0])));
       }
     }
 
