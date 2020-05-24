@@ -268,6 +268,7 @@ class Supervised {
       grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
       grad_num_3_ = grad_num_3_ + std::norm(value);
 
+      /*
       InfoMessage() << "Iteration: " << i << std::endl;
       InfoMessage() << "Target: " << target[0] << std::endl;
       InfoMessage() << "Sample: " << sample << std::endl;
@@ -286,6 +287,7 @@ class Supervised {
       InfoMessage() << "Grad Part 3: " << grad_part_3_ << std::endl;
       InfoMessage() << "Grad Num 3: " << grad_num_3_ << std::endl;
       InfoMessage() << "##########################" << std::endl << std::endl << std::endl << std::endl;
+      */
       
     }
 

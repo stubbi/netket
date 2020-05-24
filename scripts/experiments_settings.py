@@ -1,4 +1,4 @@
-experiment_name = 'learn-debug-after-each-gate-3'
+experiment_name = 'learn-debug-after-each-gate-4'
 circuit_generator_script = 'random_circuit.py'
 # parameters to be tested
 number_of_qubits = [8]
