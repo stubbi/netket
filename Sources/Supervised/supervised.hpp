@@ -118,14 +118,6 @@ class Supervised {
     distribution_uni_ =
         std::uniform_int_distribution<int>(0, trainingSamples_.size() - 1);
 
-    std::vector<double> trainingTarget_values_;
-    trainingTarget_values_.resize(trainingTargets_.size());
-    for (unsigned int i = 0; i < trainingTargets_.size(); i++) {
-      trainingTarget_values_[i] = exp(2 * trainingTargets_[i][0].real());
-    }
-    distribution_phi_ = std::discrete_distribution<>(
-        trainingTarget_values_.begin(), trainingTarget_values_.end());
-
     if (method == "Gd") {
       dosr_ = false;
     } else {
@@ -133,19 +125,6 @@ class Supervised {
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
-  }
-
-  void SetNormalisationTargets() {
-    normalisationTargets_.clear();
-
-    for(int i = 0; i < trainingTargets_.size(); i++) {
-        sa_.Reset(true);
-        sa_.Sweep();
-
-        Eigen::VectorXcd normalisationTarget(1);
-        normalisationTarget(0) = psi_.LogVal(sa_.Visible());
-        normalisationTargets_.push_back(normalisationTarget);
-    }
   }
 
   /// Computes the gradient estimate of the derivative of negative log
@@ -201,7 +180,7 @@ class Supervised {
     SumOnNodes(grad_num_1_);
     SumOnNodes(grad_part_2_);
     SumOnNodes(grad_num_2_);
-    /// No need to devide by totalnodes_
+    /// No need to divide by totalnodes_
     grad_ = grad_part_1_ / grad_num_1_ - grad_part_2_ / grad_num_2_;
   }
 
@@ -220,21 +199,21 @@ class Supervised {
 
     double max_training_target = -std::numeric_limits<double>::infinity();
     double max_normalisation_target = -std::numeric_limits<double>::infinity();
-    Eigen::VectorXcd sampleForMaxLogPsi(batchSamples[0]);
-    /// [TODO] avoid going through psi twice.
+
     for (int i = 0; i < trainingTargets_.size(); i++) {
-      if (max_training_target < std::log(std::abs(std::exp(trainingTargets_[i][0])))) {
-        max_training_target = std::log(std::abs(std::exp(trainingTargets_[i][0])));
+      sa_.Reset(true);
+      sa_.Sweep();
+
+      double normalisation_target = abs(exp(psi_.LogVal(sa_.Visible())));
+      if (max_normalisation_target < normalisation_target) {
+        max_normalisation_target = normalisation_target;
+      }
+
+      double training_target = abs(trainingTargets_[i][0]);
+      if (max_training_target < training_target) {
+        max_training_target = training_target;
       }
     }
-
-    SetNormalisationTargets();
-    for (int i = 0; i < normalisationTargets_.size(); i++) {
-      if (max_normalisation_target < std::log(std::abs(std::exp(normalisationTargets_[i][0])))) {
-        max_normalisation_target = std::log(std::abs(std::exp(normalisationTargets_[i][0])));
-      }
-    }
-
 
     Ok_.resize(batchsize_node_, psi_.Npar());
 
@@ -244,15 +223,12 @@ class Supervised {
       Eigen::VectorXd sample(batchSamples[i]);
       // And the corresponding target
       Eigen::VectorXcd target(batchTargets[i]);
-      Complex t = target[0] - max_training_target;
-      // Undo log
-      t = exp(t);
-
+      // Normalise
+      Complex t = target[0] / max_training_target;
 
       Complex value(psi_.LogVal(sample));
-      // Undo Log
-      value = value - max_normalisation_target;
-      value = exp(value);
+      // Undo log and normalise
+      value = exp(value) / max_normalisation_target;
 
       // Compute derivative of log
       auto der = psi_.DerLog(sample);
@@ -263,10 +239,7 @@ class Supervised {
       grad_num_1_ = grad_num_1_ + std::norm(value);
 
       grad_part_2_ = grad_part_2_ + der * t / value * std::norm(value);
-      grad_num_2_ = grad_num_2_ + std::norm(value);
-
       grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
-      grad_num_3_ = grad_num_3_ + std::norm(value);
 
       /*
       InfoMessage() << "Iteration: " << i << std::endl;
@@ -294,11 +267,9 @@ class Supervised {
     SumOnNodes(grad_part_1_);
     SumOnNodes(grad_num_1_);
     SumOnNodes(grad_part_2_);
-    SumOnNodes(grad_num_2_);
     SumOnNodes(grad_part_3_);
-    SumOnNodes(grad_num_3_);
     /// No need to devide by totalnodes_
-    grad_ = grad_part_1_ / grad_num_1_ - (grad_part_2_ / grad_num_2_ * grad_num_3_ / grad_part_3_);
+    grad_ = grad_part_1_ / grad_num_1_ - (grad_part_2_ / grad_num_1_ * grad_num_1_ / grad_part_3_);
   }
 
   /// Computes the gradient of the loss function with respect to
