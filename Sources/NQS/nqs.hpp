@@ -74,19 +74,12 @@ class NQS {
                 sampler.Reset(true);
                 sampler.Sweep(qubit1, qubit2);
 
-                sa_.Reset(true);
-                sa_.Sweep();
-
                 trainingSamples.push_back(sampler.Visible());
                 normalisationSamples.push_back(sa_.Visible());
 
                 Eigen::VectorXcd target(1);
                 target(0) = sampler.PsiAfterGate(sampler.Visible(), qubit1, qubit2);
                 trainingTargets.push_back(target);
-
-                Eigen:VectorXcd normalisationTarget(1);
-                normalisationTarget(0) = psi_.LogVal(sa_.Visible());
-                normalisationTargets.push_back(normalisationTarget);
 
                 int valueQubit2 = qubit2;
 
