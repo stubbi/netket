@@ -62,9 +62,6 @@ class NQS {
             std::vector<Eigen::VectorXd> trainingSamples;
             std::vector<Eigen::VectorXcd> trainingTargets;
 
-            std::vector<Eigen::VectorXd> normalisationSamples;
-            std::vector<Eigen::VectorXcd> normalisationTargets;
-            
             int count00 = 0;
             int count01 = 0;
             int count10 = 0;
@@ -75,7 +72,6 @@ class NQS {
                 sampler.Sweep(qubit1, qubit2);
 
                 trainingSamples.push_back(sampler.Visible());
-                normalisationSamples.push_back(sa_.Visible());
 
                 Eigen::VectorXcd target(1);
                 target(0) = sampler.PsiAfterGate(sampler.Visible(), qubit1, qubit2);
