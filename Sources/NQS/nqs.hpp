@@ -123,7 +123,7 @@ class NQS {
                 }
             }
 
-            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/10.0)), trainingSamples, trainingTargets);
+            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/5.0)), trainingSamples, trainingTargets);
             spvsd.Run(numIterations, "Overlap_phi");
         }
 
