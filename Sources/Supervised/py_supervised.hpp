@@ -39,6 +39,7 @@ void AddSupervisedModule(py::module &m) {
                        MetropolisLocal &sa,
                        int batch_size, std::vector<Eigen::VectorXd> samples,
                        std::vector<Eigen::VectorXcd> targets,
+                       double targetNormalisation,
                        const std::string &method, double diag_shift,
                        bool use_iterative, bool use_cholesky) {
              return Supervised{ma,
@@ -47,6 +48,7 @@ void AddSupervisedModule(py::module &m) {
                                batch_size,
                                std::move(samples),
                                std::move(targets),
+                               targetNormalisation,
                                method,
                                diag_shift,
                                use_iterative,
@@ -55,7 +57,7 @@ void AddSupervisedModule(py::module &m) {
            py::keep_alive<1, 2>(), py::keep_alive<1, 3>(), py::keep_alive<1, 4>(),
            py::arg("machine"), py::arg("optimizer"), py::arg("sampler"),
            py::arg("batch_size"), py::arg("samples"),
-           py::arg("targets"),
+           py::arg("targets"), py::arg("targetNormalisation"),
            py::arg("method") = "Gd",
            py::arg("diag_shift") = 0.01, py::arg("use_iterative") = false,
            py::arg("use_cholesky") = true,
@@ -70,6 +72,7 @@ void AddSupervisedModule(py::module &m) {
                batch_size: The batch size used in SGD.
                samples: The input data, i.e. many-body basis.
                targets: The output label, i.e. amplitude of the corresponding basis.
+               targetNormalisation: max abs of target psi
                method: The chosen method to learn the parameters of the
                    wave-function. Possible choices are `Gd` (Regular Gradient descent),
                    and `Sr` (Stochastic reconfiguration a.k.a. natural gradient).

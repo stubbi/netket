@@ -68,8 +68,9 @@ class Supervised {
   // Test samples and targets
   std::vector<Eigen::VectorXd> testSamples_;
   std::vector<Eigen::VectorXcd> testTargets_;
-  // Normalisation samples and targets
-  std::vector<Eigen::VectorXcd> normalisationTargets_;
+  // Normalisation
+  double targetNormalisation_;
+  double valueNormalisation_;
 
   // All loss function is real
   double loss_log_overlap_;
@@ -93,13 +94,15 @@ class Supervised {
              int batchsize,
              std::vector<Eigen::VectorXd> trainingSamples,
              std::vector<Eigen::VectorXcd> trainingTargets,
+             double targetNormalisation,
              const std::string &method = "Gd", double diag_shift = 0.01,
              bool use_iterative = false, bool use_cholesky = true)
       : psi_(psi),
         opt_(opt),
         sa_(sa),
         trainingSamples_(trainingSamples),
-        trainingTargets_(trainingTargets) {
+        trainingTargets_(trainingTargets),
+        targetNormalisation_(targetNormalisation) {
     npar_ = psi_.Npar();
 
     opt_.Init(npar_, psi_.IsHolomorphic());
@@ -197,21 +200,14 @@ class Supervised {
     grad_num_2_ = 0;
     grad_num_3_ = 0;
 
-    double max_training_target = -std::numeric_limits<double>::infinity();
-    double max_normalisation_target = -std::numeric_limits<double>::infinity();
 
     for (int i = 0; i < trainingTargets_.size(); i++) {
       sa_.Reset(true);
       sa_.Sweep();
 
-      double normalisation_target = abs(exp(psi_.LogVal(sa_.Visible())));
-      if (max_normalisation_target < normalisation_target) {
-        max_normalisation_target = normalisation_target;
-      }
-
-      double training_target = abs(trainingTargets_[i][0]);
-      if (max_training_target < training_target) {
-        max_training_target = training_target;
+      double valAbs = abs(exp(psi_.LogVal(sa_.Visible())));
+      if (valueNormalisation_ < valAbs) {
+        valueNormalisation_ = valAbs;
       }
     }
 
@@ -224,11 +220,11 @@ class Supervised {
       // And the corresponding target
       Eigen::VectorXcd target(batchTargets[i]);
       // Normalise
-      Complex t = target[0] / max_training_target;
+      Complex t = target[0] / targetNormalisation_;
 
       Complex value(psi_.LogVal(sample));
       // Undo log and normalise
-      value = exp(value) / max_normalisation_target;
+      value = exp(value) / valueNormalisation_;
 
       // Compute derivative of log
       auto der = psi_.DerLog(sample);

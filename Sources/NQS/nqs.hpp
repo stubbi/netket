@@ -61,6 +61,7 @@ class NQS {
             int numSamples_ = int(std::ceil(double(numSamples) / double(totalnodes_)));
             std::vector<Eigen::VectorXd> trainingSamples;
             std::vector<Eigen::VectorXcd> trainingTargets;
+            double maxTrainingTarget(0);
 
             int count00 = 0;
             int count01 = 0;
@@ -76,6 +77,11 @@ class NQS {
                 Eigen::VectorXcd target(1);
                 target(0) = sampler.PsiAfterGate(sampler.Visible(), qubit1, qubit2);
                 trainingTargets.push_back(target);
+
+                double targetAbs = abs(target(0));
+                if (maxTrainingTarget < targetAbs) {
+                    maxTrainingTarget = targetAbs;
+                }
 
                 int valueQubit2 = qubit2;
 
@@ -100,7 +106,6 @@ class NQS {
                 }
 
                 qubit2 = valueQubit2;
-
             }
 
 
@@ -116,10 +121,15 @@ class NQS {
                     Eigen::VectorXcd target(1);
                     target(0) = sampler.PsiAfterGate(sample, qubit1, qubit2);
                     trainingTargets.push_back(target);
+
+                    double targetAbs = abs(target(0));
+                    if (maxTrainingTarget < targetAbs) {
+                        maxTrainingTarget = targetAbs;
+                    }
                 }
             }
 
-            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/5.0)), trainingSamples, trainingTargets);
+            Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/5.0)), trainingSamples, trainingTargets, maxTrainingTarget);
             spvsd.Run(numIterations, "Overlap_phi");
         }
 
