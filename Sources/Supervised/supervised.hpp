@@ -242,7 +242,7 @@ class Supervised {
       InfoMessage() << "Sample: " << sample << std::endl << std::endl;
       InfoMessage() << "Target: " << target[0] << std::endl;
       InfoMessage() << "target normalisation: " << targetNormalisation_ << std::endl;
-      InfoMessage() << "t: " << t << std::endl << std::endl;;
+      InfoMessage() << "t: " << t << std::endl << std::endl;
       InfoMessage() << "Psi Value: " << exp(psi_.LogVal(sample)) << std::endl;
       InfoMessage() << "value normalisation: " << valueNormalisation_ << std::endl;
       InfoMessage() << "Value: " << value << std::endl << std::endl;
@@ -343,7 +343,7 @@ class Supervised {
     } else if (lossFunction == "Overlap_phi") {
       DerLogOverlap_phi(batchSamples, batchTargets);
       UpdateParameters();
-      ComputeLogOverlap()
+      ComputeLogOverlap();
       //ComputeLosses();
     } else {
       std::cout << "Supervised loss function \" " << lossFunction
