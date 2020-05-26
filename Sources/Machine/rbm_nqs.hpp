@@ -102,19 +102,7 @@ class RbmNQS : public AbstractMachine {
     y = 1.0 / (1.0 + Eigen::exp(-1.0 * x.array()));
   }
 
-  static double softplus(double x) {
-    const double xp = std::abs(x);
-    if (xp <= 12.) {
-      return std::log(1.0 + std::exp(xp));
-    } else {
-      const static double log2v = std::log(2.);
-      return xp - log2v;
-    }
-  }
-
   // softplus(x) for std::complex argument
-  // the modulus is computed by means of the previously defined function
-  // for real argument
   static Complex softplus(Complex x) {
     return std::log(1.0 + std::exp(x));
   }
@@ -132,7 +120,6 @@ class RbmNQS : public AbstractMachine {
       y(i) = softplus(x(i));
     }
   }
-
 
  private:
   inline void Init();
