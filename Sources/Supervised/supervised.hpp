@@ -221,11 +221,11 @@ class Supervised {
       // And the corresponding target
       Eigen::VectorXcd target(batchTargets[i]);
       // Normalise
-      Complex t = target[0] / targetNormalisation_;
+      Complex t = target[0];// / targetNormalisation_;
 
       Complex value(psi_.LogVal(sample));
       // Undo log and normalise
-      value = exp(value) / valueNormalisation_;
+      value = exp(value);// / valueNormalisation_;
 
       // Compute derivative of log
       auto der = psi_.DerLog(sample);
