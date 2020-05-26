@@ -103,7 +103,7 @@ class RbmNQS : public AbstractMachine {
   }
 
   static double softplus(double x) {
-    return std::log(1.0 + std::exp(xp));
+    return std::log(1.0 + std::exp(x));
   }
 
   // softplus(x) for std::complex argument
