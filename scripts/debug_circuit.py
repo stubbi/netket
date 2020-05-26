@@ -12,6 +12,7 @@ version 1.0
 qubits 8
 
 CZ q[1], q[3]
+CZ q[2], q[4]
 """
 
 f = open(qasmFile,'w')
