@@ -102,6 +102,10 @@ class RbmNQS : public AbstractMachine {
     y = 1.0 / (1.0 + Eigen::exp(-1.0 * x.array()));
   }
 
+  static double softplus(double x) {
+    return std::log(1.0 + std::exp(xp));
+  }
+
   // softplus(x) for std::complex argument
   static Complex softplus(Complex x) {
     return std::log(1.0 + std::exp(x));
