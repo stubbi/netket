@@ -164,7 +164,7 @@ class Supervised {
 
       Complex value(psi_.LogVal(sample));
       // Undo Log
-      value = value - max_log_psi;
+      value = value;// - max_log_psi;
       value = exp(value);
 
       // Compute derivative of log
