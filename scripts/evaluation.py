@@ -288,7 +288,7 @@ class Evaluation:
 
                     gates = len(content)
 
-                    for g in range(gates + 1):
+                    for g in range(gates + 2):
                         self.plotPDF(df.copy(), q, c, i, content, g-1)
 
         shutil.make_archive('plots', 'zip', 'plots')
