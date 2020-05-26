@@ -199,6 +199,7 @@ class Supervised {
     grad_num_1_ = 0;
     grad_num_2_ = 0;
     grad_num_3_ = 0;
+    valueNormalisation_ = 0;
 
 
     for (int i = 0; i < trainingTargets_.size(); i++) {
@@ -237,26 +238,23 @@ class Supervised {
       grad_part_2_ = grad_part_2_ + der * t / value * std::norm(value);
       grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
 
-      /*
       InfoMessage() << "Iteration: " << i << std::endl;
+      InfoMessage() << "Sample: " << sample << std::endl << std::endl;
       InfoMessage() << "Target: " << target[0] << std::endl;
-      InfoMessage() << "Sample: " << sample << std::endl;
-      InfoMessage() << "Max Training Target: " << max_training_target << std::endl;
-      InfoMessage() << "Max Normalisation Target: " << max_normalisation_target << std::endl;
-      InfoMessage() << "t: " << t << std::endl;
-      InfoMessage() << "Psi Value: " << psi_.LogVal(sample) << std::endl;
-      InfoMessage() << "Value: " << value << std::endl;
+      InfoMessage() << "target normalisation: " << targetNormalisation_ << std::endl;
+      InfoMessage() << "t: " << t << std::endl << std::endl;;
+      InfoMessage() << "Psi Value: " << exp(psi_.LogVal(sample)) << std::endl;
+      InfoMessage() << "value normalisation: " << valueNormalisation_ << std::endl;
+      InfoMessage() << "Value: " << value << std::endl << std::endl;
+      InfoMessage() << "Loss: " << GetLogOverlap() << std::endl;
       InfoMessage() << "norm(Value): " << std::norm(value) << std::endl;
       InfoMessage() << "Derivative: " << psi_.DerLog(sample) << std::endl;
       InfoMessage() << "Derivative conjugated: " << der << std::endl;
       InfoMessage() << "Grad Part 1: " << grad_part_1_ << std::endl;
       InfoMessage() << "Grad Num 1: " << grad_num_1_ << std::endl;
       InfoMessage() << "Grad Part 2: " << grad_part_2_ << std::endl;
-      InfoMessage() << "Grad Num 2: " << grad_num_2_ << std::endl;
       InfoMessage() << "Grad Part 3: " << grad_part_3_ << std::endl;
-      InfoMessage() << "Grad Num 3: " << grad_num_3_ << std::endl;
       InfoMessage() << "##########################" << std::endl << std::endl << std::endl << std::endl;
-      */
       
     }
 
@@ -345,6 +343,7 @@ class Supervised {
     } else if (lossFunction == "Overlap_phi") {
       DerLogOverlap_phi(batchSamples, batchTargets);
       UpdateParameters();
+      ComputeLogOverlap()
       //ComputeLosses();
     } else {
       std::cout << "Supervised loss function \" " << lossFunction
