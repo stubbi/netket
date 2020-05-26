@@ -264,6 +264,7 @@ class Supervised {
     SumOnNodes(grad_part_3_);
     /// No need to devide by totalnodes_
     grad_ = grad_part_1_ / grad_num_1_ - (grad_part_2_ / grad_num_1_ * grad_num_1_ / grad_part_3_);
+    InfoMessage() << "Grad_: " << grad_ << std::endl;
   }
 
   /// Computes the gradient of the loss function with respect to
@@ -469,7 +470,7 @@ class Supervised {
       Complex value(psi_.LogVal(sample));
       value = exp(value - max_log_psi);
       Complex t(target[0].real(), target[0].imag());
-      t = exp(t);
+      // setting t to exp already in NQS.hpp t = exp(t);
 
       num1 += std::conj(value) * t;
       num2 += value * std::conj(t);
