@@ -130,7 +130,7 @@ class NQS {
             }
 
             Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/5.0)), trainingSamples, trainingTargets, maxTrainingTarget);
-            spvsd.Run(numIterations, "Overlap_phi");
+            spvsd.Run(numIterations, "Overlap_uni");
         }
 
         void applyHadamard(int qubit, int numSamples, int numIterations) {

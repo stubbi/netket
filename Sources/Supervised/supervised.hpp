@@ -160,7 +160,7 @@ class Supervised {
       Eigen::VectorXcd target(batchTargets[i]);
       Complex t(target[0].real(), target[0].imag());
       // Undo log
-      t = exp(t);
+      // already in exp form t = exp(t);
 
       Complex value(psi_.LogVal(sample));
       // Undo Log
