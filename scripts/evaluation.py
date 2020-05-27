@@ -77,7 +77,7 @@ class Evaluation:
         return nqs
 
     def loadLogOverlap(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo):
-        with codecs.open("{directory}/{gateNo}.log".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo), 'r', encoding='utf-8') as f:
+        with codecs.open("{directory}/{gateNo}.log".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo), 'r', encoding='ascii') as f:
             print('load log overlap')
             data = json.load(f)
             print(data)
