@@ -77,7 +77,9 @@ class Evaluation:
 
     def loadLogOverlap(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo):
         with open("{directory}/{gateNo}.log".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo)) as f:
+            print('load log overlap')
             data = json.load(f)
+            print(data)
             return [d['log_overlap'] for d in data]
 
     def numberOfHadamards(self, qubits, cycles, circuit):
