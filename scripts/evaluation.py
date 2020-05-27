@@ -78,9 +78,7 @@ class Evaluation:
 
     def loadLogOverlap(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo):
         with codecs.open("{directory}/{gateNo}.log".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo), 'r', encoding='ascii') as f:
-            print('load log overlap')
             data = json.load(f)
-            print(data['Output'][0])
             return [d['log_overlap'] for d in data['Output']]
 
     def numberOfHadamards(self, qubits, cycles, circuit):
@@ -130,7 +128,6 @@ class Evaluation:
 
             if(gateNo > 0):
                 logOverlaps = self.loadLogOverlap(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo)
-                print(logOverlaps)
                 fig, ax = plt.subplots()
                 ax.plot(range(len(logOverlaps)), logOverlaps)
                 plt.legend()
@@ -138,7 +135,7 @@ class Evaluation:
                 plt.ylabel('log Overlap')
                 plt.xlabel('Iteration')
                 plt.title('{} qubits {} cycles circuit {}'.format(qubits, cycles, circuit), fontdict={'size':10})
-                plt.savefig('plots/circuits/gatewise/logOverlap_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
+                plt.savefig('plots/circuits/gatewise/logOverlap_{}qubits_{}cycles_circuit{}_gate{}.pdf'.format(qubits, cycles, circuit, gateNo))
                 plt.close()
 
             bestRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, minRBM)]
