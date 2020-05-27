@@ -370,13 +370,13 @@ class Supervised {
       writer.emplace(output_prefix + ".log", output_prefix + ".wf",
                      save_params_every);
 
-      InfoMessage << "Run:" << std::endl;
-      InfoMessage << "Training Set Size: " << trainingSamples_.size() << std::endl;
+      InfoMessage() << "Run:" << std::endl;
+      InfoMessage() << "Training Set Size: " << trainingSamples_.size() << std::endl;
       for (int i = 0; i < trainingSamples_.size(); i++) {
-        InfoMessage << "sample: " << std::endl;
-        InfoMessage << trainingSamples_[i] << std::endl;
-        InfoMessage << "target: " << std::endl;
-        InfoMessage << trainingTargets_[i] << std::endl << std::endl << std::endl;
+        InfoMessage() << "sample: " << std::endl;
+        InfoMessage() << trainingSamples_[i] << std::endl;
+        InfoMessage() << "target: " << std::endl;
+        InfoMessage() << trainingTargets_[i] << std::endl << std::endl << std::endl;
       }
     }
     
