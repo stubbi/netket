@@ -39,7 +39,7 @@ class NQS {
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)), samplesteps_(sampleSteps),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), nqubits*(nqubits-1)/2, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)),
-            op_(*new AdaMax()) {
+            op_(*new AdaMax()), gateNo_(0) {
                 VectorType a = getPsi_a();
                 VectorType b = getPsi_b();
                 MatrixType W = getPsi_W();
@@ -47,8 +47,6 @@ class NQS {
                 a.setZero();
                 b.setZero();
                 W.setZero();
-
-                gateNo_(0);
 
                 setPsiParams(a,b,W);
 
