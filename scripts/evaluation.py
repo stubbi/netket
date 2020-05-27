@@ -75,6 +75,11 @@ class Evaluation:
         nqs.load(f)
         return nqs
 
+    def loadLogOverlap(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo):
+        with open("{directory}/{gateNo}.log".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo)) as f:
+            data = json.load(f)
+            return [d['log_overlap'] for d in data]
+
     def numberOfHadamards(self, qubits, cycles, circuit):
         hadamards = 0
         with open("{directory}/{qubits}qubits/{cycles}cycles/circuit{circuit}/in.qc".format(directory=self.experimentFolder,qubits=qubits, cycles=cycles, circuit=circuit), "r") as f:
@@ -119,6 +124,18 @@ class Evaluation:
 
             minRBM = self.loadRBM(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo)
             maxRBM = self.loadRBM(maxRow['#qubits'].iloc[0],maxRow['#cycles'].iloc[0],maxRow['circuit'].iloc[0],maxRow['#nodes'].iloc[0],maxRow['#tasks'].iloc[0],maxRow['#threads'].iloc[0],maxRow['#samples'].iloc[0],maxRow['#iterations'].iloc[0],maxRow['#initialHidden'].iloc[0],maxRow['#sampleSteps'].iloc[0],maxRow['run'].iloc[0], gateNo)
+
+            if(gateNo > 0):
+                logOverlaps = self.loadLogOverlap(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo)
+                fig, ax = plt.subplots()
+                ax.plot(range(len(logOverlaps)), logOverlaps)
+                plt.legend()
+                plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
+                plt.ylabel('log Overlap')
+                plt.xlabel('Iteration')
+                plt.title('{} qubits {} cycles circuit {}'.format(qubits, cycles, circuit, fontdict={'size':10})
+                plt.savefig('plots/circuits/logOverlap_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
+                plt.close()
 
             bestRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, minRBM)]
             worstRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, maxRBM)]
@@ -165,6 +182,7 @@ class Evaluation:
         plt.xlabel('Depht')
         plt.savefig('plots/circuits/entropy_{}qubits.pdf'.format(qubits))
         plt.close()
+
 
     def circuitEntropy(self, qubits, cycles, circuit):
         try:
