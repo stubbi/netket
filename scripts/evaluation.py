@@ -80,7 +80,7 @@ class Evaluation:
             print('load log overlap')
             data = json.load(f)
             print(data)
-            return [d['log_overlap'] for d in data]
+            return [d['log_overlap'] for d in data['Output']]
 
     def numberOfHadamards(self, qubits, cycles, circuit):
         hadamards = 0
