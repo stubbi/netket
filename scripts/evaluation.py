@@ -127,6 +127,7 @@ class Evaluation:
 
             if(gateNo > 0):
                 logOverlaps = self.loadLogOverlap(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo)
+                print(logOverlaps)
                 fig, ax = plt.subplots()
                 ax.plot(range(len(logOverlaps)), logOverlaps)
                 plt.legend()
