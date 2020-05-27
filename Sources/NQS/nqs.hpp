@@ -11,6 +11,7 @@
 #include <iostream>
 #include <chrono>
 #include <math.h>
+#include <string>
 
 
 namespace nqs {
@@ -30,6 +31,7 @@ class NQS {
     // Total number of computational nodes to run on
     int totalnodes_;
     int samplesteps_;
+    int gateNo_;
 
     public:
 
@@ -46,6 +48,8 @@ class NQS {
                 b.setZero();
                 W.setZero();
 
+                gateNo_(0);
+
                 setPsiParams(a,b,W);
 
                 for(int j = 0; j < initialHidden; j++) {
@@ -56,6 +60,7 @@ class NQS {
             }
 
         void learnGate(int qubit1, int qubit2, int numSamples, int numIterations, MatrixType gateMatrix) {
+            gateNo_++;
             MetropolisLocalGate sampler = MetropolisLocalGate(psi_, gateMatrix, samplesteps_);
 
             int numSamples_ = int(std::ceil(double(numSamples) / double(totalnodes_)));
@@ -130,7 +135,7 @@ class NQS {
             }
 
             Supervised spvsd = Supervised(psi_, op_, sa_, int(std::ceil(double(trainingSamples.size())/5.0)), trainingSamples, trainingTargets, maxTrainingTarget);
-            spvsd.Run(numIterations, "Overlap_uni");
+            spvsd.Run(numIterations, "Overlap_uni", std::to_string(gateNo_));
         }
 
         void applyHadamard(int qubit, int numSamples, int numIterations) {
