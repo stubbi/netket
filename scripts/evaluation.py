@@ -133,7 +133,7 @@ class Evaluation:
                 plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
                 plt.ylabel('log Overlap')
                 plt.xlabel('Iteration')
-                plt.title('{} qubits {} cycles circuit {}'.format(qubits, cycles, circuit, fontdict={'size':10})
+                plt.title('{} qubits {} cycles circuit {}'.format(qubits, cycles, circuit), fontdict={'size':10})
                 plt.savefig('plots/circuits/logOverlap_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
                 plt.close()
 
