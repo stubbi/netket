@@ -134,7 +134,7 @@ class Evaluation:
                 plt.ylabel('log Overlap')
                 plt.xlabel('Iteration')
                 plt.title('{} qubits {} cycles circuit {}'.format(qubits, cycles, circuit), fontdict={'size':10})
-                plt.savefig('plots/circuits/logOverlap_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
+                plt.savefig('plots/circuits/gatewise/logOverlap_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
                 plt.close()
 
             bestRBMProbs = [len(exact) * p for p in self.loadRBMProbs(exact, minRBM)]
