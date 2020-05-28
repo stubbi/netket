@@ -95,7 +95,7 @@ class Supervised {
              std::vector<Eigen::VectorXd> trainingSamples,
              std::vector<Eigen::VectorXcd> trainingTargets,
              double targetNormalisation,
-             const std::string &method = "Gd", double diag_shift = 0.01,
+             const std::string &method = "", double diag_shift = 0.01,
              bool use_iterative = false, bool use_cholesky = true)
       : psi_(psi),
         opt_(opt),
