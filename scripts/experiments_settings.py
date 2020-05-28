@@ -1,7 +1,7 @@
 experiment_name = 'debug-sr-rcs'
 circuit_generator_script = 'random_circuit.py'
 # parameters to be tested
-number_of_qubits = [8]
+number_of_qubits = [4]
 number_of_cycles = [2]
 number_of_circuits = 1 #number of random circuits with same number of qubits and cycles
 
