@@ -13,5 +13,5 @@ number_of_training_samples = [10 + i * 20 for i in range(5)]
 number_of_training_iterations = [1000 + i * 2000 for i in range(5)]
 
 number_of_initial_hidden_units = [0]
-number_of_sample_steps = [0] #[q if q%2 != 0 else q+1 for q in number_of_qubits]
+number_of_sample_steps = [q if q%2 != 0 else q+1 for q in number_of_qubits]
 number_of_runs = 3 #number of runs for a specific circuit
