@@ -136,7 +136,7 @@ class Supervised {
       opt_(*new RMSProb());
     } else if (method == "Sgd") {
       opt_(*new Sgd());
-    } else if (method == "StochasticReconfiguration")
+    } else if (method == "StochasticReconfiguration") {
       dosr_ = true;
       setSrParameters(diag_shift, use_iterative, use_cholesky);
     }
