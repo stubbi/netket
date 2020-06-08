@@ -98,25 +98,16 @@ void AddSupervisedModule(py::module &m) {
           "loss_mse_log", &Supervised::GetMseLog,
           R"EOF(double: The mean square error of the log of amplitudes.)EOF")
       .def("run", &Supervised::Run, py::arg("n_iter"),
-           py::arg("loss_function") = "Overlap_phi",
+           py::arg("earlyStopping"),
            py::arg("output_prefix") = "output",
            py::arg("save_params_every") = 50, R"EOF(
            Run supervised learning.
 
            Args:
                n_iter: The number of iterations for running.
-               loss_function: The loss function choosing for learning, Default: Overlap_phi
+               earlyStopping: If true, training will be stopped as soon as testing error increases during training iterations
                output_prefix: The output file name, without extension.
                save_params_every: Frequency to dump wavefunction parameters. The default is 50.
-
-           )EOF")
-      .def("advance", &Supervised::Advance,
-           py::arg("loss_function") = "Overlap_phi", R"EOF(
-           Run one iteration of supervised learning. This should be helpful for testing and
-           having self-defined control sequence in python.
-
-           Args:
-               loss_function: The loss function choosing for learning, Default: Overlap_phi
 
            )EOF");
 }
