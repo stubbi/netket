@@ -135,18 +135,6 @@ void AddNQSModule(py::module &m) {
            Args:
                qubit: The index of the qubit the gate will be applied to
            )EOF")
-      .def("applyToffoli", &NQS::applyToffoli,
-            py::arg("qubit1"), py::arg("qubit2"), py::arg("qubit3"), py::arg("numSamples"), py::arg("numIterations"),
-            R"EOF(
-           Apply Toffoli gate
-
-           Args:
-               qubit1: The index of the first qubit the Toffoli gate will be applied to
-               qubit2: The index of the second qubit the Toffoli gate will be applied to
-               qubit3: The index of the third qubit the Toffoli gate will be applied to
-               numSamples: Number of samples to draw for Hadamard gates being applied along the way
-               numIterations: Number of training iterations for Hadamard gates being applied along the way
-           )EOF")
       .def("sample", &NQS::sample,
             R"EOF(
            Sample from the nqs.
