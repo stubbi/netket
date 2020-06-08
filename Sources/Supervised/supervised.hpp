@@ -36,7 +36,7 @@ class Supervised {
   using MatrixT = Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic>;
 
   AbstractMachine &psi_;
-  AbstractOptimizer &opt_;
+  AbstractOptimizer opt_;
   MetropolisLocal& sa_;
 
   SR sr_;
@@ -104,7 +104,6 @@ class Supervised {
         testTargets_(testTargets) {
     npar_ = psi_.Npar();
 
-    opt_.Init(npar_, psi_.IsHolomorphic());
 
     grad_.resize(npar_);
     grad_part_1_.resize(npar_);
@@ -140,6 +139,7 @@ class Supervised {
       dosr_ = true;
       setSrParameters(diag_shift, use_iterative, use_cholesky);
     }
+    opt_.Init(npar_, psi_.IsHolomorphic());
 
     MPI_Barrier(MPI_COMM_WORLD);
   }
