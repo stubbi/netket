@@ -68,9 +68,6 @@ class Supervised {
   // Test samples and targets
   std::vector<Eigen::VectorXd> testSamples_;
   std::vector<Eigen::VectorXcd> testTargets_;
-  // Normalisation
-  double targetNormalisation_;
-  double valueNormalisation_;
 
   // All loss function is real
   double loss_log_overlap_;
@@ -90,19 +87,21 @@ class Supervised {
   DistributedRandomEngine engine_;
 
  public:
-  Supervised(AbstractMachine &psi, AbstractOptimizer &opt, MetropolisLocal &sa,
+  Supervised(AbstractMachine &psi,
+             MetropolisLocal &sa,
              int batchsize,
              std::vector<Eigen::VectorXd> trainingSamples,
              std::vector<Eigen::VectorXcd> trainingTargets,
-             double targetNormalisation,
+             std::vector<Eigen::VectorXd> testSamples,
+             std::vector<Eigen::VectorXcd> testTargets,
              const std::string &method = "", double diag_shift = 0.01,
              bool use_iterative = false, bool use_cholesky = true)
       : psi_(psi),
-        opt_(opt),
         sa_(sa),
         trainingSamples_(trainingSamples),
         trainingTargets_(trainingTargets),
-        targetNormalisation_(targetNormalisation) {
+        testSamples_(testSamples),
+        testTargets_(testTargets) {
     npar_ = psi_.Npar();
 
     opt_.Init(npar_, psi_.IsHolomorphic());
@@ -121,9 +120,24 @@ class Supervised {
     distribution_uni_ =
         std::uniform_int_distribution<int>(0, trainingSamples_.size() - 1);
 
-    if (method == "Gd") {
-      dosr_ = false;
-    } else {
+
+    dosr_ = false;
+    if (method == "AdaDelta") {
+      op_(*new AdaDelta())
+    } else if (method == "AdaGrad") {
+      op_(*new AdaGrad())
+    } else if (method == "AdaMax") {
+      op_(*new AdaMax())
+    } else if (method == "AMSGrad") {
+      op_(*new AMSGrad())
+    } else if (method == "Momentum") {
+      op_(*new Momentum())
+    } else if (method == "RMSProb") {
+      op_(*new RMSProb())
+    } else if (method == "Sgd") {
+      op_(*new Sgd())
+    } else if (method == "StochasticReconfiguration")
+      dosr_ = true;
       setSrParameters(diag_shift, use_iterative, use_cholesky);
     }
 
@@ -187,203 +201,46 @@ class Supervised {
     grad_ = grad_part_1_ / grad_num_1_ - grad_part_2_ / grad_num_2_;
   }
 
-  /// Computes the gradient estimate of the derivative of negative log
-  /// of wavefunction overlap, with index Xi sampled from Phi
-  void DerLogOverlap_phi(std::vector<Eigen::VectorXd> &batchSamples,
-                         std::vector<Eigen::VectorXcd> &batchTargets) {
-    // ... and zero them out
-    grad_.setZero(psi_.Npar());
-    grad_part_1_.setZero(psi_.Npar());
-    grad_part_2_.setZero(psi_.Npar());
-    grad_part_3_ = 0;
-    grad_num_1_ = 0;
-    grad_num_2_ = 0;
-    grad_num_3_ = 0;
-    valueNormalisation_ = 0;
-
-
-    for (int i = 0; i < trainingTargets_.size(); i++) {
-      sa_.Reset(true);
-      sa_.Sweep();
-
-      double valAbs = abs(exp(psi_.LogVal(sa_.Visible())));
-      if (valueNormalisation_ < valAbs) {
-        valueNormalisation_ = valAbs;
-      }
-    }
-
-    Ok_.resize(batchsize_node_, psi_.Npar());
-
-    // For each sample in the batch
-    for (int i = 0; i < batchsize_node_; i++) {
-      // Extract log(config)
-      Eigen::VectorXd sample(batchSamples[i]);
-      // And the corresponding target
-      Eigen::VectorXcd target(batchTargets[i]);
-      // Normalise
-      Complex t = target[0];// / targetNormalisation_;
-
-      Complex value(psi_.LogVal(sample));
-      // Undo log and normalise
-      value = exp(value);// / valueNormalisation_;
-
-      // Compute derivative of log
-      auto der = psi_.DerLog(sample);
-      Ok_.row(i) = der;
-      der = der.conjugate();
-
-      grad_part_1_ = grad_part_1_ + der * std::norm(value);
-      grad_num_1_ = grad_num_1_ + std::norm(value);
-
-      grad_part_2_ = grad_part_2_ + der * t / value * std::norm(value);
-      grad_part_3_ = grad_part_3_ + t / value * std::norm(value);
-
-      InfoMessage() << "Iteration: " << i << std::endl;
-      InfoMessage() << "Sample: " << sample << std::endl << std::endl;
-      InfoMessage() << "Target: " << target[0] << std::endl;
-      InfoMessage() << "target normalisation: " << targetNormalisation_ << std::endl;
-      InfoMessage() << "t: " << t << std::endl << std::endl;
-      InfoMessage() << "Psi Value: " << exp(psi_.LogVal(sample)) << std::endl;
-      InfoMessage() << "value normalisation: " << valueNormalisation_ << std::endl;
-      InfoMessage() << "Value: " << value << std::endl << std::endl;
-      InfoMessage() << "Loss: " << GetLogOverlap() << std::endl;
-      InfoMessage() << "norm(Value): " << std::norm(value) << std::endl;
-      InfoMessage() << "Derivative: " << psi_.DerLog(sample) << std::endl;
-      InfoMessage() << "Derivative conjugated: " << der << std::endl;
-      InfoMessage() << "Grad Part 1: " << grad_part_1_ << std::endl;
-      InfoMessage() << "Grad Num 1: " << grad_num_1_ << std::endl;
-      InfoMessage() << "Grad Part 2: " << grad_part_2_ << std::endl;
-      InfoMessage() << "Grad Part 3: " << grad_part_3_ << std::endl;
-      InfoMessage() << "##########################" << std::endl << std::endl << std::endl << std::endl;
-      
-    }
-
-    SumOnNodes(grad_part_1_);
-    SumOnNodes(grad_num_1_);
-    SumOnNodes(grad_part_2_);
-    SumOnNodes(grad_part_3_);
-    /// No need to devide by totalnodes_
-    grad_ = grad_part_1_ / grad_num_1_ - (grad_part_2_ / grad_num_1_ * grad_num_1_ / grad_part_3_);
-    InfoMessage() << "Grad_: " << grad_ << std::endl;
-  }
-
-  /// Computes the gradient of the loss function with respect to
-  /// the machine's parameters for a given batch of samples and targets
-  /// TODO(everthmore): User defined loss function instead of hardcoded MSE
-  /// Loss = 0.5 * (log(psi) - log(target)) * (log(psi) - log(target)).conj()
-  /// Partial Der = Real part of (derlog(psi)*(log(psi) - log(t)).conj()
-  void GradientComplexMse(std::vector<Eigen::VectorXd> &batchSamples,
-                          std::vector<Eigen::VectorXcd> &batchTargets) {
-    // Allocate a vector for storing the derivatives ...
-    Eigen::VectorXcd der(psi_.Npar());
-    // ... and zero it out
-    der.setZero(psi_.Npar());
-
-    Ok_.resize(batchsize_node_, psi_.Npar());
-
-    // Foreach sample in the batch
-    for (int i = 0; i < batchsize_node_; i++) {
-      // Extract complex value of log(config)
-      Eigen::VectorXd sample(batchSamples[i]);
-      Complex value(psi_.LogVal(sample));
-
-      // And the corresponding target
-      Eigen::VectorXcd target(batchTargets[i]);
-      Complex t(target[0].real(), target[0].imag());
-
-      // Compute derivative of log(psi)
-      auto partial_gradient = psi_.DerLog(sample);
-      Ok_.row(i) = partial_gradient;
-
-      // MSE loss
-      der = der + (partial_gradient.conjugate()) * (value - t);
-    }
-    // Store derivatives in grad_ ...
-    grad_ = der / batchsize_node_;
-
-    // ... and compute the mean of the gradient over the nodes
-    SumOnNodes(grad_);
-    grad_ /= double(totalnodes_);
-  }
-
-  void Advance(std::string lossFunction) {
-    std::vector<Eigen::VectorXd> batchSamples(batchsize_node_);
-    std::vector<Eigen::VectorXcd> batchTargets(batchsize_node_);
-
-    int index;
-
-    if (lossFunction == "MSE" || lossFunction == "Overlap_uni") {
-      // Randomly select a batch of training data
-      for (int k = 0; k < batchsize_node_; k++) {
-        // Draw from the distribution using the nqs random number generator
-        index = distribution_uni_(this->GetRandomEngine());
-        batchSamples[k] = trainingSamples_[index];
-        batchTargets[k] = trainingTargets_[index];
-      }
-    } else if (lossFunction == "Overlap_phi") {
-      // Randomly select a batch of training data
-      for (int k = 0; k < batchsize_node_; k++) {
-        // Draw from the distribution using the nqs random number generator
-        index = distribution_uni_(this->GetRandomEngine());
-        batchSamples[k] = trainingSamples_[index];
-        batchTargets[k] = trainingTargets_[index];
-      }
-    } else {
-      std::cout << "Supervised loss function \" " << lossFunction
-                << "\" undefined!" << std::endl;
-    }
-
-    if (lossFunction == "MSE") {
-      GradientComplexMse(batchSamples, batchTargets);
-      UpdateParameters();
-      ComputeLosses();
-    } else if (lossFunction == "Overlap_uni") {
-      DerLogOverlap_uni(batchSamples, batchTargets);
-      UpdateParameters();
-      ComputeLosses();
-    } else if (lossFunction == "Overlap_phi") {
-      DerLogOverlap_phi(batchSamples, batchTargets);
-      UpdateParameters();
-      ComputeLogOverlap();
-      //ComputeLosses();
-    } else {
-      std::cout << "Supervised loss function \" " << lossFunction
-                << "\" undefined!" << std::endl;
-    }
-  }
 
   /// Runs the supervised learning on the training samples and targets
-  /// TODO(everthmore): Override w/ function call that sets testSamples_
-  ///                   and testTargets_ and reports on accuracy on those.
-  void Run(int n_iter, const std::string &lossFunction = "MSE",
+  void Run(int n_iter, bool early_stopping,
            const std::string &output_prefix = "output",
            int save_params_every = 50) {
     assert(n_iter > 0);
     assert(save_params_every > 0);
 
+    // for early stopping
+    double last_log_overlap = std::numeric_limits<double>::infinity();
+
     /// Writer to the output
     /// This optional will contain a value iff the MPI rank is 0.
-    
     nonstd::optional<JsonOutputWriter> writer;
     if (mynode_ == 0) {
       /// Initializes the output log and wavefunction files
       writer.emplace(output_prefix + ".log", output_prefix + ".wf",
                      save_params_every);
-
-      InfoMessage() << "Run:" << std::endl;
-      InfoMessage() << "Training Set Size: " << trainingSamples_.size() << std::endl;
-      for (int i = 0; i < trainingSamples_.size(); i++) {
-        InfoMessage() << "sample: " << std::endl;
-        InfoMessage() << trainingSamples_[i] << std::endl;
-        InfoMessage() << "target: " << std::endl;
-        InfoMessage() << trainingTargets_[i] << std::endl << std::endl << std::endl;
-      }
     }
-    
 
     opt_.Reset();
+
+    std::vector<Eigen::VectorXd> batchSamples(batchsize_node_);
+    std::vector<Eigen::VectorXcd> batchTargets(batchsize_node_);
+
     for (int i = 0; i < n_iter; i++) {
-      Advance(lossFunction);
+
+      int index;
+
+      // Randomly select a batch of training data
+      for (int k = 0; k < batchsize_node_; k++) {
+        // Draw from the distribution using the nqs random number generator
+        index = distribution_uni_(this->GetRandomEngine());
+        batchSamples[k] = trainingSamples_[index];
+        batchTargets[k] = trainingTargets_[index];
+      }
+
+      DerLogOverlap_uni(batchSamples, batchTargets);
+      UpdateParameters();
+      ComputeLosses();
       // writer.has_value() iff the MPI rank is 0, so the output is only
       // written once
       
@@ -396,6 +253,13 @@ class Supervised {
         writer->WriteLog(i, out_data);
         writer->WriteState(i, psi_);
       }
+
+      // early stopping
+      if (early_stopping && last_log_overlap < loss_log_overlap_) {
+        break;
+      }
+
+      last_log_overlap = loss_log_overlap_;
       
       MPI_Barrier(MPI_COMM_WORLD);
     }
@@ -497,7 +361,6 @@ class Supervised {
 
   void setSrParameters(double diag_shift = 0.01, bool use_iterative = false,
                        bool use_cholesky = true) {
-    dosr_ = true;
     sr_.setParameters(diag_shift, use_iterative, use_cholesky,
                       psi_.IsHolomorphic());
   }

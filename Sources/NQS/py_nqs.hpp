@@ -35,12 +35,15 @@ void AddNQSModule(py::module &m) {
   py::class_<NQS>(
       subm, "NQS",
       R"EOF(Neural Quantum state for classical simulation of quantum circuits using RBMs.)EOF")
-      .def(py::init([](int nqubits, int initialHidden, int sampleSteps) {
-             return NQS{nqubits, initialHidden, sampleSteps};
+    .def(py::init([](int nqubits, int initialHidden, int sampleSteps, bool randomRestarts, bool earlyStopping, const std::string &optimizer) {
+                    return NQS{nqubits, initialHidden, sampleSteps, randomRestarts, earlyStopping, optimizer};
            }),
            py::arg("nqubits"),
            py::arg("initialHidden"),
            py::arg("sampleSteps"),
+           py::arg("randomRestarts"),
+           py::arg("earlyStopping"),
+           py::arg("optimizer"),
            R"EOF(
            Construct a NQS object with the given number of qubits.
 
@@ -48,6 +51,9 @@ void AddNQSModule(py::module &m) {
                nqubits: Number of Qubits of the circuit to be simulated.
                initialHidden: Initial number of hidden units of the underlying Boltzmann machine.
                sampleSteps: The number of sample steps in the MCMC for the Hadamard. 
+               randomRestarts: If true, small random permutations will be applied to the RBM's parameters. The training will be performed X times and the parameters with lowest testing error will be set. 
+               earlyStopping: If true, the training will stop as soon as the testing error increases from one iteration to the next one. 
+               optimizer: The optimizer. One of XXX. 
            )EOF")
       .def("applyHadamard", &NQS::applyHadamard, py::arg("qubit"),
                             py::arg("numSamples"), py::arg("numIterations"),
