@@ -123,19 +123,19 @@ class Supervised {
 
     dosr_ = false;
     if (method == "AdaDelta") {
-      op_(*new AdaDelta())
+      opt_(*new AdaDelta());
     } else if (method == "AdaGrad") {
-      op_(*new AdaGrad())
+      opt_(*new AdaGrad());
     } else if (method == "AdaMax") {
-      op_(*new AdaMax())
+      opt_(*new AdaMax());
     } else if (method == "AMSGrad") {
-      op_(*new AMSGrad())
+      opt_(*new AMSGrad());
     } else if (method == "Momentum") {
-      op_(*new Momentum())
+      opt_(*new Momentum());
     } else if (method == "RMSProb") {
-      op_(*new RMSProb())
+      opt_(*new RMSProb());
     } else if (method == "Sgd") {
-      op_(*new Sgd())
+      opt_(*new Sgd());
     } else if (method == "StochasticReconfiguration")
       dosr_ = true;
       setSrParameters(diag_shift, use_iterative, use_cholesky);
