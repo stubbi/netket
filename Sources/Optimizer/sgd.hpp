@@ -35,7 +35,7 @@ class Sgd : public AbstractOptimizer {
   double decay_factor_;
 
  public:
-  explicit Sgd(double learning_rate, double l2reg = 0,
+  explicit Sgd(double learning_rate = 0.001, double l2reg = 0,
                double decay_factor = 1.0)
       : eta_(learning_rate), l2reg_(l2reg) {
     npar_ = -1;
