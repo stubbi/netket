@@ -1,28 +1,34 @@
 import cmath
-import numpy as np
 import nqs as nq
 import collections
 import json
 import sys
 import pickle
 from qupy import Qubits
-from qupy.operator import H, X, Y, Z, T, Tdag, rz, swap, sqrt_X, sqrt_Y
+from qupy.operator import H, X, Y, Z, T, Tdag, rz, sqrt_X, sqrt_Y
 import time
 
 samples = int(sys.argv[1])
 epochs = int(sys.argv[2])
 initialHidden = int(sys.argv[3])
 sampleSteps = int(sys.argv[4])
-method = str(sys.argv[5])
-shots = 10000
+randomRestarts = int(sys.argv[5])
+earlyStopping = int(sys.argv[6])
+optimizer = int(sys.argv[7])
+method = str(sys.argv[8])
+shots = 1000
+
 
 class QASMReader:
-    def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps):
+    def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps, numRandomRestarts, earlyStopping, optimizer):
         assert(method == 'nqs' or method == 'exact')
         self.numSamples = numSamples
         self.numIterations = numIterations
         self.numInitialHidden = numInitialHidden
         self.numSampleSteps = numSampleSteps
+        self.numRandomRestarts = numRandomRestarts
+        self.earlyStopping = earlyStopping
+        self.optimizer = optimizer
         self.nqs = None
         self.exact = None
         self.method = method
@@ -64,7 +70,7 @@ class QASMReader:
         if(line.startswith('qubits')):
             qubits = int(line[7:])
             if(self.is_nqs()):
-                self.nqs = nq.nqs.NQS(qubits, self.numInitialHidden, self.numSampleSteps)
+                self.nqs = nq.nqs.NQS(qubits, self.numInitialHidden, self.numSampleSteps, self.numRandomRestarts, self.earlyStopping, self.optimizer)
             else:
                 self.exact = Qubits(qubits)
                 for q in range(qubits):
@@ -196,7 +202,7 @@ class QASMReader:
         with open('duration.time', 'w') as f:
             f.write(str(self.end-self.start))
 
-qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps)
+qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps, randomRestarts, earlyStopping, optimizer)
 qasm.start = time.time()
 qasm.buildCircuit("in.qc")
 qasm.end = time.time()
