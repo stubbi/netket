@@ -70,9 +70,12 @@ class Supervised {
   std::vector<Eigen::VectorXcd> testTargets_;
 
   // All loss function is real
-  double loss_log_overlap_;
-  double loss_mse_;
-  double loss_mse_log_;
+  double training_loss_log_overlap_;
+  double training_loss_mse_;
+  double training_loss_mse_log_;
+  double test_loss_log_overlap_;
+  double test_loss_mse_;
+  double test_loss_mse_log_;
 
   std::uniform_int_distribution<int> distribution_uni_;
   std::discrete_distribution<> distribution_phi_;
@@ -198,7 +201,7 @@ class Supervised {
     assert(save_params_every > 0);
 
     // for early stopping
-    double last_log_overlap = std::numeric_limits<double>::infinity();
+    double last_test_log_overlap = std::numeric_limits<double>::infinity();
 
     /// Writer to the output
     /// This optional will contain a value iff the MPI rank is 0.
@@ -234,20 +237,23 @@ class Supervised {
       
       if (writer.has_value()) {
         json out_data;
-        out_data["log_overlap"] = loss_log_overlap_;
-        out_data["mse"] = loss_mse_;
-        out_data["mse_log"] = loss_mse_log_;
+        out_data["training_log_overlap"] = training_loss_log_overlap_;
+        out_data["training_mse"] = training_loss_mse_;
+        out_data["training_mse_log"] = training_loss_mse_log_;
+        out_data["test_log_overlap"] = test_loss_log_overlap_;
+        out_data["test_mse"] = test_loss_mse_;
+        out_data["test_mse_log"] = test_loss_mse_log_;
 
         writer->WriteLog(i, out_data);
         writer->WriteState(i, psi_);
       }
 
       // early stopping
-      if (early_stopping && last_log_overlap < loss_log_overlap_) {
+      if (early_stopping && last_test_log_overlap < test_loss_log_overlap_) {
         break;
       }
 
-      last_log_overlap = loss_log_overlap_;
+      last_test_log_overlap = test_loss_log_overlap_;
       
       MPI_Barrier(MPI_COMM_WORLD);
     }
@@ -272,38 +278,42 @@ class Supervised {
   }
 
   void ComputeLosses() {
-    ComputeMse();
-    ComputeLogOverlap();
+    ComputeMse(trainingSamples_, trainingTargets_, &training_loss_mse_, &training_loss_mse_log_);
+    ComputeMse(testSamples_, testTargets_, &test_loss_mse_, &test_loss_mse_log_);
+    ComputeLogOverlap(trainingSamples_, trainingTargets_, &training_loss_log_overlap_);
+    ComputeLogOverlap(testSamples_, testTargets_, &test_loss_log_overlap_);
   }
 
   /// Compute the MSE of psi and the MSE of log(psi)
   /// for monitoring the convergence.
-  void ComputeMse() {
-    const int numSamples = trainingSamples_.size();
+  void ComputeMse(std::vector<Eigen::VectorXd> samples, std::vector<Eigen::VectorXcd> targets, double* loss_mse, double* loss_mse_log) {
+    const int numSamples = samples.size();
 
     double mse_log = 0.0;
     double mse = 0.0;
     for (int i = 0; i < numSamples; i++) {
-      Eigen::VectorXd sample = trainingSamples_[i];
+      Eigen::VectorXd sample = samples[i];
       Complex value(psi_.LogVal(sample));
 
-      Eigen::VectorXcd target = trainingTargets_[i];
+      Eigen::VectorXcd target = targets[i];
       Complex t(target[0].real(), target[0].imag());
 
       mse_log += 0.5 * std::norm(value - t);
       mse += 0.5 * std::norm(exp(value) - exp(t));
     }
 
-    loss_mse_ = mse / numSamples;
-    loss_mse_log_ = mse_log / numSamples;
+    *loss_mse = mse / numSamples;
+    *loss_mse_log = mse_log / numSamples;
   }
 
-  double GetMse() const { return loss_mse_; }
+  double GetTrainingMse() const { return training_loss_mse_; }
+  double GetTestMse() const { return test_loss_mse_; }
 
-  double GetMseLog() const { return loss_mse_log_; }
+  double GetTrainingMseLog() const { return training_loss_mse_log_; }
+  double GetTestMseLog() const { return test_loss_mse_log_; }
 
-  void ComputeLogOverlap() {
-    const int numSamples = trainingSamples_.size();
+  void ComputeLogOverlap(std::vector<Eigen::VectorXd> samples, std::vector<Eigen::VectorXcd> targets, double* loss_log_overlap) {
+    const int numSamples = samples_.size();
 
     // Allocate vectors for storing the derivatives ...
     Complex num1(0.0, 0.0);
@@ -315,7 +325,7 @@ class Supervised {
     double max_log_psi = -std::numeric_limits<double>::infinity();
 
     for (int i = 0; i < numSamples; i++) {
-      logpsi(i) = psi_.LogVal(trainingSamples_[i]);
+      logpsi(i) = psi_.LogVal(samples[i]);
       if (std::real(logpsi(i)) > max_log_psi) {
         max_log_psi = std::real(logpsi(i));
       }
@@ -323,9 +333,9 @@ class Supervised {
 
     for (int i = 0; i < numSamples; i++) {
       // Extract log(config)
-      Eigen::VectorXd sample(trainingSamples_[i]);
+      Eigen::VectorXd sample(samples[i]);
       // And the corresponding target
-      Eigen::VectorXcd target(trainingTargets_[i]);
+      Eigen::VectorXcd target(targets[i]);
 
       // Cast value and target to Complex and undo logs
       Complex value(psi_.LogVal(sample));
@@ -342,10 +352,11 @@ class Supervised {
     Complex complex_log_overlap_ =
         -(log(num1) + log(num2) - log(num3) - log(num4));
     assert(std::abs(complex_log_overlap_.imag()) < 1e-8);
-    loss_log_overlap_ = complex_log_overlap_.real();
+    *loss_log_overlap = complex_log_overlap_.real();
   }
 
-  double GetLogOverlap() const { return loss_log_overlap_; }
+  double GetTrainingLogOverlap() const { return training_loss_log_overlap_; }
+  double GetTestLogOverlap() const { return test_loss_log_overlap_; }
 
   void setSrParameters(double diag_shift = 0.01, bool use_iterative = false,
                        bool use_cholesky = true) {
