@@ -35,7 +35,7 @@ void AddNQSModule(py::module &m) {
   py::class_<NQS>(
       subm, "NQS",
       R"EOF(Neural Quantum state for classical simulation of quantum circuits using RBMs.)EOF")
-    .def(py::init([](int nqubits, int initialHidden, int sampleSteps, bool randomRestarts, bool earlyStopping, std::string &optimizer) {
+    .def(py::init([](int nqubits, int initialHidden, int sampleSteps, int randomRestarts, bool earlyStopping, std::string &optimizer) {
                     return NQS{nqubits, initialHidden, sampleSteps, randomRestarts, earlyStopping, optimizer};
            }),
            py::arg("nqubits"),

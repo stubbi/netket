@@ -7,6 +7,7 @@
 #include "Operator/local_operator.hpp"
 #include "Optimizer/abstract_optimizer.hpp"
 #include "Utils/parallel_utils.hpp"
+#include "Utils/random_utils.hpp"
 #include <vector>
 #include <iostream>
 #include <chrono>
@@ -28,16 +29,15 @@ class NQS {
     MetropolisLocal& sa_;
     std::string& optimizer_;
 
-    // Total number of computational nodes to run on
     int totalnodes_;
     int samplesteps_;
     int gateNo_;
-    bool randomRestarts_;
+    int randomRestarts_;
     bool earlyStopping_;
 
     public:
 
-  NQS(int nqubits, int initialHidden, int sampleSteps, bool randomRestarts, bool earlyStopping, std::string &optimizer)
+  NQS(int nqubits, int initialHidden, int sampleSteps, int randomRestarts, bool earlyStopping, std::string &optimizer)
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)), samplesteps_(sampleSteps),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), initialHidden, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)), optimizer_(optimizer), gateNo_(0), randomRestarts_(randomRestarts), earlyStopping_(earlyStopping) {
@@ -90,8 +90,36 @@ class NQS {
               sr = true;
             }
 
-            Supervised spvsd = Supervised(psi_, sa_, opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
-            spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
+            if (randomRestarts_ <= 0) {
+              Supervised spvsd = Supervised(psi_, sa_, opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
+              spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
+            } else {
+              savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(0) + ".json");
+
+              double minLogOverlap = std::numeric_limits<double>::infinity();
+              int rMinLogOverlap = 0;
+
+              for (int r = 0; r < randomRestarts_; r++) {
+                loadPsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(0) + ".json");
+
+                RbmNQS::VectorType pars = psi_.GetParameters();
+                nqs::RandomGaussianPermutation(pars, r, 0.01);
+                psi_.SetParameters(pars);
+
+                Supervised spvsd = Supervised(psi_, sa_, opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
+                spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
+
+                if (spvsd.GetTestLogOverlap() < minLogOverlap) {
+                  minLogOverlap = spvsd.GetTestLogOverlap();
+                  rMinLogOverlap = r;
+                }
+
+                savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(r) + ".json");
+              }
+
+              loadPsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(rMinLogOverlap) + ".json");
+            }
+
         }
 
 

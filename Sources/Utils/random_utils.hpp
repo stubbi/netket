@@ -45,6 +45,15 @@ inline void RandomGaussian(Eigen::Matrix<Complex, Eigen::Dynamic, 1> &par,
   }
 }
 
+inline void RandomGaussianPermutation(Eigen::Matrix<Complex, Eigen::Dynamic, 1> &par,
+                          int seed, double sigma) {
+  std::default_random_engine generator(seed);
+  std::normal_distribution<double> distribution(0, sigma);
+  for (int i = 0; i < par.size(); i++) {
+    par(i) += Complex(distribution(generator), distribution(generator));
+  }
+}
+
 /**
  * Random engine that supports deterministic seeding but uses a different
  * derived seed for every MPI process.
