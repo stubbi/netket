@@ -72,20 +72,18 @@ class NQS {
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, trainingSamples, trainingTargets);
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, testSamples, testTargets);
 
-            AbstractOptimizer opt_;
-            if (optimizer == "AdaDelta") {
-              opt_ = AdaDelta();
-            } else if (optimizer == "AdaGrad") {
+            AbstractOptimizer opt_ = AdaDelta();
+            if (optimizer_ == "AdaGrad") {
               opt_ = AdaGrad();
-            } else if (optimizer == "AdaMax") {
+            } else if (optimizer_ == "AdaMax") {
               opt_ = AdaMax();
-            } else if (optimizer == "AMSGrad") {
+            } else if (optimizer_ == "AMSGrad") {
               opt_ = AMSGrad();
-            } else if (optimizer == "Momentum") {
+            } else if (optimizer_ == "Momentum") {
               opt_ = Momentum();
-            } else if (optimizer == "RMSProb") {
-              opt_ = RMSProb();
-            } else if (optimizer == "Sgd") {
+            } else if (optimizer_ == "RMSProp") {
+              opt_ = RMSProp();
+            } else if (optimizer_ == "Sgd") {
               opt_ = Sgd();
             }
 
