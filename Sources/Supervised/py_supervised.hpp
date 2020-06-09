@@ -60,7 +60,7 @@ void AddSupervisedModule(py::module &m) {
                                use_cholesky};
            }),
            py::keep_alive<1, 2>(), py::keep_alive<1, 3>(), py::keep_alive<1, 4>(),
-           py::arg("machine"), py::arg("sampler"), py::arg("opt")
+           py::arg("machine"), py::arg("sampler"), py::arg("opt"),
            py::arg("batch_size"), py::arg("trainingSamples"),
            py::arg("trainingTargets"),
            py::arg("testSamples"), py::arg("testTargets"), py::arg("sr"),
