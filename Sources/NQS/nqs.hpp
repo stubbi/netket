@@ -5,6 +5,7 @@
 #include "Sampler/metropolis_local_gate.hpp"
 #include "Supervised/supervised.hpp"
 #include "Operator/local_operator.hpp"
+#include "Optimizer/abstract_optimizer.hpp"
 #include "Utils/parallel_utils.hpp"
 #include <vector>
 #include <iostream>
@@ -40,7 +41,7 @@ class NQS {
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)), samplesteps_(sampleSteps),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), initialHidden, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)), optimizer_(optimizer), gateNo_(0), randomRestarts_(randomRestarts), earlyStopping_(earlyStopping) {
-              VectorType a = getPsi_a();
+                VectorType a = getPsi_a();
                 VectorType b = getPsi_b();
                 MatrixType W = getPsi_W();
                 
@@ -71,7 +72,24 @@ class NQS {
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, trainingSamples, trainingTargets);
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, testSamples, testTargets);
 
-            Supervised spvsd = Supervised(psi_, sa_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, optimizer_);
+            AbstractOptimizer opt_;
+            if (optimizer == "AdaDelta") {
+              opt_ = AdaDelta();
+            } else if (optimizer == "AdaGrad") {
+              opt_ = AdaGrad();
+            } else if (optimizer == "AdaMax") {
+              opt_ = AdaMax();
+            } else if (optimizer == "AMSGrad") {
+              opt_ = AMSGrad();
+            } else if (optimizer == "Momentum") {
+              opt_ = Momentum();
+            } else if (optimizer == "RMSProb") {
+              opt_ = RMSProb();
+            } else if (optimizer == "Sgd") {
+              opt_ = Sgd();
+            }
+
+            Supervised spvsd = Supervised(psi_, sa_, opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets);
             spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
         }
 

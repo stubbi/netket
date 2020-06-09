@@ -36,7 +36,7 @@ class Supervised {
   using MatrixT = Eigen::Matrix<Complex, Eigen::Dynamic, Eigen::Dynamic>;
 
   AbstractMachine &psi_;
-  AbstractOptimizer opt_;
+  AbstractOptimizer &opt_;
   MetropolisLocal& sa_;
 
   SR sr_;
@@ -89,15 +89,17 @@ class Supervised {
  public:
   Supervised(AbstractMachine &psi,
              MetropolisLocal &sa,
+             AbstractOptimizer &opt,
              int batchsize,
              std::vector<Eigen::VectorXd> trainingSamples,
              std::vector<Eigen::VectorXcd> trainingTargets,
              std::vector<Eigen::VectorXd> testSamples,
              std::vector<Eigen::VectorXcd> testTargets,
-             const std::string &method = "", double diag_shift = 0.01,
+             double diag_shift = 0.01,
              bool use_iterative = false, bool use_cholesky = true)
       : psi_(psi),
         sa_(sa),
+        opt_(opt),
         trainingSamples_(trainingSamples),
         trainingTargets_(trainingTargets),
         testSamples_(testSamples),
@@ -119,27 +121,13 @@ class Supervised {
     distribution_uni_ =
         std::uniform_int_distribution<int>(0, trainingSamples_.size() - 1);
 
-
-    dosr_ = false;
-    if (method == "AdaDelta") {
-      opt_(*new AdaDelta());
-    } else if (method == "AdaGrad") {
-      opt_(*new AdaGrad());
-    } else if (method == "AdaMax") {
-      opt_(*new AdaMax());
-    } else if (method == "AMSGrad") {
-      opt_(*new AMSGrad());
-    } else if (method == "Momentum") {
-      opt_(*new Momentum());
-    } else if (method == "RMSProb") {
-      opt_(*new RMSProb());
-    } else if (method == "Sgd") {
-      opt_(*new Sgd());
-    } else if (method == "StochasticReconfiguration") {
+    if (method == "StochasticReconfiguration") {
       dosr_ = true;
       setSrParameters(diag_shift, use_iterative, use_cholesky);
+    } else {
+      dosr_ = false;
+      opt_.Init(npar_, psi_.IsHolomorphic());
     }
-    opt_.Init(npar_, psi_.IsHolomorphic());
 
     MPI_Barrier(MPI_COMM_WORLD);
   }
