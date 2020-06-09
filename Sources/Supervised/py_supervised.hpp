@@ -90,15 +90,6 @@ void AddSupervisedModule(py::module &m) {
                    is true.
 
            )EOF")
-      .def_property_readonly(
-          "loss_log_overlap", &Supervised::GetLogOverlap,
-          R"EOF(double: The current negative log fidelity.)EOF")
-      .def_property_readonly(
-          "loss_mse", &Supervised::GetMse,
-          R"EOF(double: The mean square error of amplitudes.)EOF")
-      .def_property_readonly(
-          "loss_mse_log", &Supervised::GetMseLog,
-          R"EOF(double: The mean square error of the log of amplitudes.)EOF")
       .def("run", &Supervised::Run, py::arg("n_iter"),
            py::arg("earlyStopping"),
            py::arg("output_prefix") = "output",
