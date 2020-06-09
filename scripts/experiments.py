@@ -1,5 +1,5 @@
 import subprocess, os, errno, time
-from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs, experiment_name, circuit_generator_script
+from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs, experiment_name, circuit_generator_script, randomRestarts, earlyStopping, optimizer
 
 noctua_partition = 'batch'
 max_wall_time = '12:00:00'
@@ -59,7 +59,7 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS=1
 
-mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 exact > out 2> err""".format(
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 0 False none exact > out 2> err""".format(
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
                         noctua_partition=noctua_partition,
@@ -117,7 +117,7 @@ module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS={threads}
 
 cp {circuitDirectory}/in.qc {directory}/in.qc
-mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} nqs > out 2> err""".format(
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py {samples} {iterations} {initial_hidden} {sample_steps} {randomRestarts} {earlyStopping} {optimizer} nqs > out 2> err""".format(
                         nodes=nodes,
                         experiment_name=experiment_name,
                         tasks=tasks,
@@ -136,7 +136,10 @@ mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity
                         circuitDirectory=circuitDirectory,
                         qubits=qubits,
                         cycles=cycles,
-                        circuit=circuit
+                        circuit=circuit,
+                        randomRestarts=randomRestarts,
+                        earlyStopping=earlyStopping,
+                        optimizer=optimizer
                     )
 
                                             f = open("{directory}/job.slurm".format(directory=directory),'w')
