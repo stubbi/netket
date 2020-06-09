@@ -313,7 +313,7 @@ class Supervised {
   double GetTestMseLog() const { return test_loss_mse_log_; }
 
   void ComputeLogOverlap(std::vector<Eigen::VectorXd> samples, std::vector<Eigen::VectorXcd> targets, double* loss_log_overlap) {
-    const int numSamples = samples_.size();
+    const int numSamples = samples.size();
 
     // Allocate vectors for storing the derivatives ...
     Complex num1(0.0, 0.0);
