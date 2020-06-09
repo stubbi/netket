@@ -43,6 +43,7 @@ void AddSupervisedModule(py::module &m) {
                        std::vector<Eigen::VectorXcd> trainingTargets,
                        std::vector<Eigen::VectorXd> testSamples,
                        std::vector<Eigen::VectorXcd> testTargets,
+                       bool sr,
                        double diag_shift,
                        bool use_iterative, bool use_cholesky) {
              return Supervised{ma,
@@ -53,6 +54,7 @@ void AddSupervisedModule(py::module &m) {
                                std::move(trainingTargets),
                                std::move(testSamples),
                                std::move(testTargets),
+                               sr,
                                diag_shift,
                                use_iterative,
                                use_cholesky};
@@ -61,7 +63,7 @@ void AddSupervisedModule(py::module &m) {
            py::arg("machine"), py::arg("sampler"), py::arg("opt")
            py::arg("batch_size"), py::arg("trainingSamples"),
            py::arg("trainingTargets"),
-           py::arg("testSamples"), py::arg("testTargets"),
+           py::arg("testSamples"), py::arg("testTargets"), py::arg("sr"),
            py::arg("diag_shift") = 0.01, py::arg("use_iterative") = false,
            py::arg("use_cholesky") = true,
            R"EOF(
