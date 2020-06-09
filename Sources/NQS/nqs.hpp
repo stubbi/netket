@@ -37,7 +37,7 @@ class NQS {
 
     public:
 
-  NQS(int nqubits, int initialHidden, int sampleSteps, bool randomRestarts, bool earlyStopping, const std::string &optimizer)
+  NQS(int nqubits, int initialHidden, int sampleSteps, bool randomRestarts, bool earlyStopping, std::string &optimizer)
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)), samplesteps_(sampleSteps),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), initialHidden, 0, true, true)),
             sa_(*new MetropolisLocal(psi_)), optimizer_(optimizer), gateNo_(0), randomRestarts_(randomRestarts), earlyStopping_(earlyStopping) {
@@ -72,22 +72,25 @@ class NQS {
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, trainingSamples, trainingTargets);
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, testSamples, testTargets);
 
-            AbstractOptimizer opt_ = AdaDelta();
+            AbstractOptimizer& opt_ = *new AdaDelta();
+            bool sr = false;
             if (optimizer_ == "AdaGrad") {
-              opt_ = AdaGrad();
+              opt_ = *new AdaGrad();
             } else if (optimizer_ == "AdaMax") {
-              opt_ = AdaMax();
+              opt_ = *new AdaMax();
             } else if (optimizer_ == "AMSGrad") {
-              opt_ = AMSGrad();
+              opt_ = *new AMSGrad();
             } else if (optimizer_ == "Momentum") {
-              opt_ = Momentum();
+              opt_ = *new Momentum();
             } else if (optimizer_ == "RMSProp") {
-              opt_ = RMSProp();
+              opt_ = *new RMSProp();
             } else if (optimizer_ == "Sgd") {
-              opt_ = Sgd();
+              opt_ = *new Sgd();
+            } else {
+              sr = true;
             }
 
-            Supervised spvsd = Supervised(psi_, sa_, opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets);
+            Supervised spvsd = Supervised(psi_, sa_, opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
             spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
         }
 

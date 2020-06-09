@@ -95,6 +95,7 @@ class Supervised {
              std::vector<Eigen::VectorXcd> trainingTargets,
              std::vector<Eigen::VectorXd> testSamples,
              std::vector<Eigen::VectorXcd> testTargets,
+             bool sr,
              double diag_shift = 0.01,
              bool use_iterative = false, bool use_cholesky = true)
       : psi_(psi),
@@ -103,7 +104,8 @@ class Supervised {
         trainingSamples_(trainingSamples),
         trainingTargets_(trainingTargets),
         testSamples_(testSamples),
-        testTargets_(testTargets) {
+        testTargets_(testTargets),
+        dosr_(sr) {
     npar_ = psi_.Npar();
 
 
@@ -121,11 +123,9 @@ class Supervised {
     distribution_uni_ =
         std::uniform_int_distribution<int>(0, trainingSamples_.size() - 1);
 
-    if (method == "StochasticReconfiguration") {
-      dosr_ = true;
+    if (dosr_) {
       setSrParameters(diag_shift, use_iterative, use_cholesky);
     } else {
-      dosr_ = false;
       opt_.Init(npar_, psi_.IsHolomorphic());
     }
 
