@@ -72,32 +72,51 @@ class NQS {
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, trainingSamples, trainingTargets);
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, testSamples, testTargets);
 
+            InfoMessage() << "trainingSamples.size()" << trainingSamples.size() << std::endl;
+            InfoMessage() << "trainingTargets.size()" << trainingTargets.size() << std::endl;
+            InfoMessage() << "testSamples.size()" << testSamples.size() << std::endl;
+            InfoMessage() << "testTargets.size()" << testTargets.size() << std::endl;
+
             AbstractOptimizer* opt_;
             bool sr = false;
 
+            InfoMessage() << "optimizer_ " << optimizer_ << std::endl;
+
             if (optimizer_ == "AdaDelta") {
               opt_ = new AdaDelta();
+              InfoMessage() << "initialized AdaDelta()" << std::endl;
             } else if (optimizer_ == "AdaGrad") {
               opt_ = new AdaGrad();
+              InfoMessage() << "initialized AdaGrad()" << std::endl;
             } else if (optimizer_ == "AdaMax") {
               opt_ = new AdaMax();
+              InfoMessage() << "initialized AdaMax()" << std::endl;
             } else if (optimizer_ == "AMSGrad") {
               opt_ = new AMSGrad();
+              InfoMessage() << "initialized AMSGrad()" << std::endl;
             } else if (optimizer_ == "Momentum") {
               opt_ = new Momentum();
+              InfoMessage() << "initialized Momentum()" << std::endl;
             } else if (optimizer_ == "RMSProp") {
               opt_ = new RMSProp();
+              InfoMessage() << "initialized RMSProb()" << std::endl;
             } else if (optimizer_ == "Sgd") {
               opt_ = new Sgd();
+              InfoMessage() << "initialized Sgd()" << std::endl;
             } else {
               sr = true;
               // avoid deferencing nullptr later on
               opt_ = new Sgd();
+              InfoMessage() << "initialized Sgd() [for stochastic reconfiguration]" << std::endl;
             }
+
+            InfoMessage() << "randomRstearts_ " << randomRestarts_ << std::endl;
 
             if (randomRestarts_ <= 0) {
               Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
+              InfoMessage() << "initialized spvsd()" << std::endl;
               spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
+              InfoMessage() << "ran spvsd" << std::endl;
             } else {
               savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(0) + ".json");
 
@@ -112,7 +131,9 @@ class NQS {
                 psi_.SetParameters(pars);
 
                 Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
+                InfoMessage() << "initialized spvsd()" << std::endl;
                 spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
+                InfoMessage() << "ran spvsd" << std::endl;
 
                 if (spvsd.GetTestLogOverlap() < minLogOverlap) {
                   minLogOverlap = spvsd.GetTestLogOverlap();
