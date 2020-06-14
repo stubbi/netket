@@ -13,7 +13,7 @@ epochs = int(sys.argv[2])
 initialHidden = int(sys.argv[3])
 sampleSteps = int(sys.argv[4])
 randomRestarts = int(sys.argv[5])
-earlyStopping = int(sys.argv[6])
+earlyStopping = (str(sys.argv[6]) == 'True')
 optimizer = int(sys.argv[7])
 method = str(sys.argv[8])
 shots = 1000
