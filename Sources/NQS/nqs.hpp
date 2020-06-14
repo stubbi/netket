@@ -72,26 +72,31 @@ class NQS {
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, trainingSamples, trainingTargets);
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, testSamples, testTargets);
 
-            AbstractOptimizer& opt_ = *new AdaDelta();
+            AbstractOptimizer* opt_;
             bool sr = false;
-            if (optimizer_ == "AdaGrad") {
-              opt_ = *new AdaGrad();
+
+            if (optimizer_ == "AdaDelta") {
+              opt_ = new AdaDelta();
+            } else if (optimizer_ == "AdaGrad") {
+              opt_ = new AdaGrad();
             } else if (optimizer_ == "AdaMax") {
-              opt_ = *new AdaMax();
+              opt_ = new AdaMax();
             } else if (optimizer_ == "AMSGrad") {
-              opt_ = *new AMSGrad();
+              opt_ = new AMSGrad();
             } else if (optimizer_ == "Momentum") {
-              opt_ = *new Momentum();
+              opt_ = new Momentum();
             } else if (optimizer_ == "RMSProp") {
-              opt_ = *new RMSProp();
+              opt_ = new RMSProp();
             } else if (optimizer_ == "Sgd") {
-              opt_ = *new Sgd();
+              opt_ = new Sgd();
             } else {
               sr = true;
+              // avoid deferencing nullptr later on
+              opt_ = new Sgd();
             }
 
             if (randomRestarts_ <= 0) {
-              Supervised spvsd = Supervised(psi_, sa_, opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
+              Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
               spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
             } else {
               savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(0) + ".json");
@@ -106,7 +111,7 @@ class NQS {
                 nqs::RandomGaussianPermutation(pars, r, 0.01);
                 psi_.SetParameters(pars);
 
-                Supervised spvsd = Supervised(psi_, sa_, opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
+                Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
                 spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
 
                 if (spvsd.GetTestLogOverlap() < minLogOverlap) {
@@ -119,6 +124,8 @@ class NQS {
 
               loadPsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(rMinLogOverlap) + ".json");
             }
+
+            delete opt_;
 
         }
 
