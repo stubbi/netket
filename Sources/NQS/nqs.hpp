@@ -83,30 +83,30 @@ class NQS {
             InfoMessage() << "optimizer_ " << optimizer_ << std::endl;
 
             if (optimizer_ == "AdaDelta") {
-              opt_ = new AdaDelta();
+              opt_ = std::make_shared<AdaDelta>();
               InfoMessage() << "initialized AdaDelta()" << std::endl;
             } else if (optimizer_ == "AdaGrad") {
-              opt_ = new AdaGrad();
+              opt_ = std::make_shared<AdaGrad>();
               InfoMessage() << "initialized AdaGrad()" << std::endl;
             } else if (optimizer_ == "AdaMax") {
-              opt_ = new AdaMax();
+              opt_ = std::make_shared<AdaMax>();
               InfoMessage() << "initialized AdaMax()" << std::endl;
             } else if (optimizer_ == "AMSGrad") {
-              opt_ = new AMSGrad();
+              opt_ = std::make_shared<AMSGrad>();
               InfoMessage() << "initialized AMSGrad()" << std::endl;
             } else if (optimizer_ == "Momentum") {
-              opt_ = new Momentum();
+              opt_ = std::make_shared<Momentum>();
               InfoMessage() << "initialized Momentum()" << std::endl;
             } else if (optimizer_ == "RMSProp") {
-              opt_ = new RMSProp();
+              opt_ = std::make_shared<RMSProp>();
               InfoMessage() << "initialized RMSProb()" << std::endl;
             } else if (optimizer_ == "Sgd") {
-              opt_ = new Sgd();
+              opt_ = std::make_shared<Sgd>();
               InfoMessage() << "initialized Sgd()" << std::endl;
             } else {
               sr = true;
               // avoid deferencing nullptr later on
-              opt_ = new Sgd();
+              opt_ = std::make_shared<AdaDelta>();
               InfoMessage() << "initialized Sgd() [for stochastic reconfiguration]" << std::endl;
             }
 
