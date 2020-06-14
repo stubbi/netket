@@ -231,11 +231,6 @@ class NQS {
 
         void generateSamples(int qubit1, int qubit2, int numSamples, MetropolisLocalGate& sampler, std::vector<Eigen::VectorXd>& samples, std::vector<Eigen::VectorXcd>& targets) {
 
-            int count00 = 0;
-            int count01 = 0;
-            int count10 = 0;
-            int count11 = 0;
-
             for(int i = 0; i < numSamples; i++) {
                 sampler.Reset(true);
                 sampler.Sweep(qubit1, qubit2);
@@ -246,45 +241,6 @@ class NQS {
                 target(0) = sampler.PsiAfterGate(sampler.Visible(), qubit1, qubit2);
                 targets.push_back(target);
 
-                int valueQubit2 = qubit2;
-
-                if(qubit2 == -1) {
-                    qubit2 = 0;
-                }
-
-                if(sampler.Visible()(qubit1) == 0 && sampler.Visible()(qubit2) == 0) {
-                    count00++;
-                }
-
-                if(sampler.Visible()(qubit1) == 0 && sampler.Visible()(qubit2) == 1) {
-                    count01++;
-                }
-
-                if(sampler.Visible()(qubit1) == 1 && sampler.Visible()(qubit2) == 0) {
-                    count10++;
-                }
-
-                if(sampler.Visible()(qubit1) == 1 && sampler.Visible()(qubit2) == 1) {
-                    count11++;
-                }
-
-                qubit2 = valueQubit2;
-            }
-
-
-            // in these cases, the gradient factors out and collapses
-            if(count00 == numSamples || count01 == numSamples || count10 == numSamples || count11 == numSamples) {
-                // we have to add more samples
-                for(int i = 0; i < numSamples; i++) {
-                    sampler.Reset(true);
-
-                    auto sample = sampler.Visible();
-                    samples.push_back(sample);
-
-                    Eigen::VectorXcd target(1);
-                    target(0) = sampler.PsiAfterGate(sample, qubit1, qubit2);
-                    targets.push_back(target);
-                }
             }
         }
 
