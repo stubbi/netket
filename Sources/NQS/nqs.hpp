@@ -146,8 +146,6 @@ class NQS {
               loadPsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(rMinLogOverlap) + ".json");
             }
 
-            delete opt_;
-
         }
 
 
