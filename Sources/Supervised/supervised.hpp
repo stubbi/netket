@@ -278,15 +278,15 @@ class Supervised {
   }
 
   void ComputeLosses() {
-    ComputeMse(trainingSamples_, trainingTargets_, &training_loss_mse_, &training_loss_mse_log_);
-    ComputeMse(testSamples_, testTargets_, &test_loss_mse_, &test_loss_mse_log_);
-    ComputeLogOverlap(trainingSamples_, trainingTargets_, &training_loss_log_overlap_);
-    ComputeLogOverlap(testSamples_, testTargets_, &test_loss_log_overlap_);
+    ComputeMse(trainingSamples_, trainingTargets_, training_loss_mse_, training_loss_mse_log_);
+    ComputeMse(testSamples_, testTargets_, test_loss_mse_, test_loss_mse_log_);
+    ComputeLogOverlap(trainingSamples_, trainingTargets_, training_loss_log_overlap_);
+    ComputeLogOverlap(testSamples_, testTargets_, test_loss_log_overlap_);
   }
 
   /// Compute the MSE of psi and the MSE of log(psi)
   /// for monitoring the convergence.
-  void ComputeMse(std::vector<Eigen::VectorXd> samples, std::vector<Eigen::VectorXcd> targets, double* loss_mse, double* loss_mse_log) {
+  void ComputeMse(std::vector<Eigen::VectorXd> samples, std::vector<Eigen::VectorXcd> targets, double& loss_mse, double& loss_mse_log) {
     const int numSamples = samples.size();
 
     double mse_log = 0.0;
@@ -302,8 +302,8 @@ class Supervised {
       mse += 0.5 * std::norm(exp(value) - exp(t));
     }
 
-    *loss_mse = mse / numSamples;
-    *loss_mse_log = mse_log / numSamples;
+    loss_mse = mse / numSamples;
+    loss_mse_log = mse_log / numSamples;
   }
 
   double GetTrainingMse() const { return training_loss_mse_; }
@@ -312,7 +312,7 @@ class Supervised {
   double GetTrainingMseLog() const { return training_loss_mse_log_; }
   double GetTestMseLog() const { return test_loss_mse_log_; }
 
-  void ComputeLogOverlap(std::vector<Eigen::VectorXd> samples, std::vector<Eigen::VectorXcd> targets, double* loss_log_overlap) {
+  void ComputeLogOverlap(std::vector<Eigen::VectorXd> samples, std::vector<Eigen::VectorXcd> targets, double& loss_log_overlap) {
     const int numSamples = samples.size();
 
     // Allocate vectors for storing the derivatives ...
@@ -352,7 +352,7 @@ class Supervised {
     Complex complex_log_overlap_ =
         -(log(num1) + log(num2) - log(num3) - log(num4));
     assert(std::abs(complex_log_overlap_.imag()) < 1e-8);
-    *loss_log_overlap = complex_log_overlap_.real();
+    loss_log_overlap = complex_log_overlap_.real();
   }
 
   double GetTrainingLogOverlap() const { return training_loss_log_overlap_; }
