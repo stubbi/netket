@@ -77,7 +77,7 @@ class NQS {
             InfoMessage() << "testSamples.size()" << testSamples.size() << std::endl;
             InfoMessage() << "testTargets.size()" << testTargets.size() << std::endl;
 
-            AbstractOptimizer* opt_;
+            std::shared_ptr<const AbstractOptimizer> opt_;
             bool sr = false;
 
             InfoMessage() << "optimizer_ " << optimizer_ << std::endl;
