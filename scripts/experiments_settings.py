@@ -1,4 +1,4 @@
-experiment_name = 'AdaMax-0Restarts-NoEarlyStopping-test'
+experiment_name = 'AdaDelta-0Restarts-NoEarlyStopping-test'
 circuit_generator_script = 'random_circuit.py'
 # parameters to be tested
 number_of_qubits = [4]
@@ -18,4 +18,4 @@ number_of_runs = 1 #number of runs for a specific circuit
 
 randomRestarts = 0
 earlyStopping = False
-optimizer = 'AdaMax'
+optimizer = 'AdaDelta'
