@@ -35,14 +35,15 @@ class NQS {
     int gateNo_;
     int randomRestarts_;
     bool earlyStopping_;
-    bool sr;
+    bool sr_;
+    bool learnCZ_;
 
     public:
 
   NQS(int nqubits, int initialHidden, int sampleSteps, int randomRestarts, bool earlyStopping, std::string &optimizer)
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)), samplesteps_(sampleSteps),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), initialHidden, 0, true, true)),
-              sa_(*new MetropolisLocal(psi_)), optimizer_(optimizer), gateNo_(0), randomRestarts_(randomRestarts), earlyStopping_(earlyStopping), sr(false) {
+              sa_(*new MetropolisLocal(psi_)), optimizer_(optimizer), gateNo_(0), randomRestarts_(randomRestarts), earlyStopping_(earlyStopping), sr_(false) {
                 VectorType a = getPsi_a();
                 VectorType b = getPsi_b();
                 MatrixType W = getPsi_W();
@@ -53,34 +54,24 @@ class NQS {
 
                 setPsiParams(a,b,W);
 
-                // InfoMessage() << "optimizer_ " << optimizer_ << std::endl;
-
                 if (optimizer_ == "AdaDelta") {
                   opt_ = std::make_shared<AdaDelta>();
-                  InfoMessage() << "initialized AdaDelta()" << std::endl;
                 } else if (optimizer_ == "AdaGrad") {
                   opt_ = std::make_shared<AdaGrad>();
-                  InfoMessage() << "initialized AdaGrad()" << std::endl;
                 } else if (optimizer_ == "AdaMax") {
                   opt_ = std::make_shared<AdaMax>();
-                  InfoMessage() << "initialized AdaMax()" << std::endl;
                 } else if (optimizer_ == "AMSGrad") {
                   opt_ = std::make_shared<AMSGrad>();
-                  InfoMessage() << "initialized AMSGrad()" << std::endl;
                 } else if (optimizer_ == "Momentum") {
                   opt_ = std::make_shared<Momentum>();
-                  InfoMessage() << "initialized Momentum()" << std::endl;
                 } else if (optimizer_ == "RMSProp") {
                   opt_ = std::make_shared<RMSProp>();
-                  InfoMessage() << "initialized RMSProb()" << std::endl;
                 } else if (optimizer_ == "Sgd") {
                   opt_ = std::make_shared<Sgd>();
-                  InfoMessage() << "initialized Sgd()" << std::endl;
                 } else {
-                  sr = true;
+                  sr_ = true;
                   // avoid deferencing nullptr later on
                   opt_ = std::make_shared<AdaDelta>();
-                  InfoMessage() << "initialized Sgd() [for stochastic reconfiguration]" << std::endl;
                 }
 
                 MPI_Comm_size(MPI_COMM_WORLD, &totalnodes_);
@@ -104,18 +95,9 @@ class NQS {
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, trainingSamples, trainingTargets);
             generateSamples(qubit1, qubit2, numSamplesNode, sampler, testSamples, testTargets);
 
-            InfoMessage() << "trainingSamples.size()" << trainingSamples.size() << std::endl;
-            InfoMessage() << "trainingTargets.size()" << trainingTargets.size() << std::endl;
-            InfoMessage() << "testSamples.size()" << testSamples.size() << std::endl;
-            InfoMessage() << "testTargets.size()" << testTargets.size() << std::endl;
-
-            InfoMessage() << "randomRstearts_ " << randomRestarts_ << std::endl;
-
             if (randomRestarts_ <= 0) {
-              Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
-              InfoMessage() << "initialized spvsd()" << std::endl;
+              Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr_);
               spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
-              InfoMessage() << "ran spvsd" << std::endl;
             } else {
               savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(0) + ".json");
 
@@ -129,10 +111,8 @@ class NQS {
                 nqs::RandomGaussianPermutation(pars, r, 0.01);
                 psi_.SetParameters(pars);
 
-                Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr);
-                InfoMessage() << "initialized spvsd()" << std::endl;
+                Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr_);
                 spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
-                InfoMessage() << "ran spvsd" << std::endl;
 
                 if (spvsd.GetTestLogOverlap() < minLogOverlap) {
                   minLogOverlap = spvsd.GetTestLogOverlap();
