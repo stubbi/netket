@@ -9,7 +9,7 @@ number_of_nodes = [1]
 number_of_tasks_per_node = [1]
 number_of_omp_threads = [1]
 
-number_of_training_samples = [10 + i * 20 for i in range(3)] 
+number_of_training_samples = [100,200,300] 
 number_of_training_iterations = [1000 + i * 2000 for i in range(3)]
 
 number_of_initial_hidden_units = [int(q*(q-1)/2.0) for q in number_of_qubits]
