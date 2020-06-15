@@ -82,10 +82,10 @@ class Evaluation:
         nqs.load(f)
         return nqs
 
-    def loadLogOverlap(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo):
+    def loadLogOverlap(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo, data='test'):
         with codecs.open("{directory}/{gateNo}.log".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo), 'r', encoding='ascii') as f:
             data = json.load(f)
-            return [d['test_log_overlap'] for d in data['Output']]
+            return [d["{}_log_overlap".format(data)] for d in data['Output']]
 
     def numberOfHadamards(self, qubits, cycles, circuit):
         hadamards = 0
@@ -133,9 +133,11 @@ class Evaluation:
             maxRBM = self.loadRBM(maxRow['#qubits'].iloc[0],maxRow['#cycles'].iloc[0],maxRow['circuit'].iloc[0],maxRow['#nodes'].iloc[0],maxRow['#tasks'].iloc[0],maxRow['#threads'].iloc[0],maxRow['#samples'].iloc[0],maxRow['#iterations'].iloc[0],maxRow['#initialHidden'].iloc[0],maxRow['#sampleSteps'].iloc[0],maxRow['run'].iloc[0], gateNo)
 
             if(gateNo > 0):
-                logOverlaps = self.loadLogOverlap(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo)
+                testLogOverlaps = self.loadLogOverlap(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo, 'test')
+                trainingLogOverlaps = self.loadLogOverlap(minRow['#qubits'].iloc[0],minRow['#cycles'].iloc[0],minRow['circuit'].iloc[0],minRow['#nodes'].iloc[0],minRow['#tasks'].iloc[0],minRow['#threads'].iloc[0],minRow['#samples'].iloc[0],minRow['#iterations'].iloc[0],minRow['#initialHidden'].iloc[0],minRow['#sampleSteps'].iloc[0],minRow['run'].iloc[0], gateNo, 'training')
                 fig, ax = plt.subplots()
-                ax.plot(range(len(logOverlaps)), logOverlaps)
+                ax.plot(range(len(testLogOverlaps)), testLogOverlaps, label='test')
+                ax.plot(range(len(trainingLogOverlaps)), trainingLogOverlaps, label='training')
                 plt.legend()
                 plt.suptitle(self.experiment(), fontsize=14, fontweight='bold')
                 plt.ylabel('log Overlap')
