@@ -25,9 +25,12 @@ listIterations = sys.argv[9].split(',')
 listInitialHidden = sys.argv[10].split(',')
 listSampleSteps = sys.argv[11].split(',')
 numRuns = int(sys.argv[12])
+randomRestarts = int(sys.argv[13])
+earlyStopping = (str(sys.argv[14]) == 'True')
+optimizer = str(sys.argv[15])
 
 class Evaluation:
-    def __init__(self, experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns):
+    def __init__(self, experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns, randomRestarts, earlyStoppings, optimizer):
         self.experimentFolder=experimentFolder
         self.listSystemSizes=listSystemSizes
         self.listCycles=listCycles
@@ -40,6 +43,9 @@ class Evaluation:
         self.listInitialHidden=listInitialHidden
         self.listSampleSteps=listSampleSteps
         self.numRuns=numRuns
+        self.randomRestarts=randomRestarts
+        self.earlyStopping=earlyStopping
+        self.optimizer=optimizer
 
     def plotTVDIterations(self):
         pass
@@ -72,7 +78,7 @@ class Evaluation:
             f = "{directory}/parameters.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
         else:
             f = "{directory}/parameters_gate_{gateNo}.json".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo+1)
-        nqs = nq.nqs.NQS(int(size),int(numInitialHidden),int(numSamples))
+        nqs = nq.nqs.NQS(int(size),int(numInitialHidden),int(numSamples), self.randomRestarts, self.earlyStopping, self.optimizer)
         nqs.load(f)
         return nqs
 
@@ -373,7 +379,7 @@ class Evaluation:
             histogram[key] = float(histogram[key])/float(total)
         return histogram
 
-ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns)
+ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns, randomRestarts, earlyStopping, optimizer)
 ev.generateCSV()
 ev.generateReport()
 ev.generatePlots()

@@ -1,5 +1,5 @@
 import subprocess, os, errno
-from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs, experiment_name
+from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs, experiment_name, randomRestarts, earlyStopping, optimizer
 
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
@@ -26,7 +26,7 @@ export OMP_NUM_THREADS=1
 module reset
 module load vis/matplotlib
 module load singularity
-singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} > evaluation_out 2> evaluation_err""".format(
+singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} {randomRestarts} {earlyStopping} {optimizer} > evaluation_out 2> evaluation_err""".format(
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
@@ -42,7 +42,10 @@ singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/evalua
                         listInitialHidden=','.join(map(str, number_of_initial_hidden_units)),
                         listSampleSteps=','.join(map(str, number_of_sample_steps)),
                         numRuns=number_of_runs,
-                        singularity_image_location=singularity_image_location
+                        singularity_image_location=singularity_image_location,
+                        randomRestarts=randomRestarts,
+                        earlyStopping=earlyStopping,
+                        optimizer=optimizer
                         )
 
 f = open("{epxperiment_folder}/evaluation.slurm".format(epxperiment_folder=epxperiment_folder),'w')
