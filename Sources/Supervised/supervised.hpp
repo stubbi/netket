@@ -126,10 +126,10 @@ class Supervised {
     distribution_uni_ =
         std::uniform_int_distribution<int>(0, trainingSamples_.size() - 1);
 
+    opt_.Init(npar_, psi_.IsHolomorphic());
+
     if (dosr_) {
       setSrParameters(diag_shift, use_iterative, use_cholesky);
-    } else {
-      opt_.Init(npar_, psi_.IsHolomorphic());
     }
 
     MPI_Barrier(MPI_COMM_WORLD);
