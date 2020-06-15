@@ -28,6 +28,7 @@ class NQS {
     RbmNQS& psi_;
     MetropolisLocal& sa_;
     std::string& optimizer_;
+    std::shared_ptr<AbstractOptimizer> opt_;
 
     int totalnodes_;
     int samplesteps_;
@@ -50,6 +51,36 @@ class NQS {
                 W.setZero();
 
                 setPsiParams(a,b,W);
+
+                // InfoMessage() << "optimizer_ " << optimizer_ << std::endl;
+
+                if (optimizer_ == "AdaDelta") {
+                  opt_ = std::make_shared<AdaDelta>();
+                  InfoMessage() << "initialized AdaDelta()" << std::endl;
+                } else if (optimizer_ == "AdaGrad") {
+                  opt_ = std::make_shared<AdaGrad>();
+                  InfoMessage() << "initialized AdaGrad()" << std::endl;
+                } else if (optimizer_ == "AdaMax") {
+                  opt_ = std::make_shared<AdaMax>();
+                  InfoMessage() << "initialized AdaMax()" << std::endl;
+                } else if (optimizer_ == "AMSGrad") {
+                  opt_ = std::make_shared<AMSGrad>();
+                  InfoMessage() << "initialized AMSGrad()" << std::endl;
+                } else if (optimizer_ == "Momentum") {
+                  opt_ = std::make_shared<Momentum>();
+                  InfoMessage() << "initialized Momentum()" << std::endl;
+                } else if (optimizer_ == "RMSProp") {
+                  opt_ = std::make_shared<RMSProp>();
+                  InfoMessage() << "initialized RMSProb()" << std::endl;
+                } else if (optimizer_ == "Sgd") {
+                  opt_ = std::make_shared<Sgd>();
+                  InfoMessage() << "initialized Sgd()" << std::endl;
+                } else {
+                  sr = true;
+                  // avoid deferencing nullptr later on
+                  opt_ = std::make_shared<AdaDelta>();
+                  InfoMessage() << "initialized Sgd() [for stochastic reconfiguration]" << std::endl;
+                }
 
                 MPI_Comm_size(MPI_COMM_WORLD, &totalnodes_);
         }
@@ -77,38 +108,8 @@ class NQS {
             InfoMessage() << "testSamples.size()" << testSamples.size() << std::endl;
             InfoMessage() << "testTargets.size()" << testTargets.size() << std::endl;
 
-            std::shared_ptr<AbstractOptimizer> opt_;
             bool sr = false;
 
-            InfoMessage() << "optimizer_ " << optimizer_ << std::endl;
-
-            if (optimizer_ == "AdaDelta") {
-              opt_ = std::make_shared<AdaDelta>();
-              InfoMessage() << "initialized AdaDelta()" << std::endl;
-            } else if (optimizer_ == "AdaGrad") {
-              opt_ = std::make_shared<AdaGrad>();
-              InfoMessage() << "initialized AdaGrad()" << std::endl;
-            } else if (optimizer_ == "AdaMax") {
-              opt_ = std::make_shared<AdaMax>();
-              InfoMessage() << "initialized AdaMax()" << std::endl;
-            } else if (optimizer_ == "AMSGrad") {
-              opt_ = std::make_shared<AMSGrad>();
-              InfoMessage() << "initialized AMSGrad()" << std::endl;
-            } else if (optimizer_ == "Momentum") {
-              opt_ = std::make_shared<Momentum>();
-              InfoMessage() << "initialized Momentum()" << std::endl;
-            } else if (optimizer_ == "RMSProp") {
-              opt_ = std::make_shared<RMSProp>();
-              InfoMessage() << "initialized RMSProb()" << std::endl;
-            } else if (optimizer_ == "Sgd") {
-              opt_ = std::make_shared<Sgd>();
-              InfoMessage() << "initialized Sgd()" << std::endl;
-            } else {
-              sr = true;
-              // avoid deferencing nullptr later on
-              opt_ = std::make_shared<AdaDelta>();
-              InfoMessage() << "initialized Sgd() [for stochastic reconfiguration]" << std::endl;
-            }
 
             InfoMessage() << "randomRstearts_ " << randomRestarts_ << std::endl;
 
