@@ -82,10 +82,10 @@ class Evaluation:
         nqs.load(f)
         return nqs
 
-    def loadLogOverlap(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo, data='test'):
+    def loadLogOverlap(self, size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run, gateNo, testOrTraining='test'):
         with codecs.open("{directory}/{gateNo}.log".format(directory=self.directory(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run), gateNo=gateNo), 'r', encoding='ascii') as f:
             data = json.load(f)
-            return [d["{}_log_overlap".format(data)] for d in data['Output']]
+            return [d["{}_log_overlap".format(testOrTraining)] for d in data['Output']]
 
     def numberOfHadamards(self, qubits, cycles, circuit):
         hadamards = 0
