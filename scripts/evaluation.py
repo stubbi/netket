@@ -176,7 +176,8 @@ class Evaluation:
                 plt.title('{} qubits {} cycles circuit {} entropy: {:.2f} Porter-Thomas: {:.2f} '.format(qubits, cycles, circuit, self.circuitEntropy(qubits, cycles, circuit), self.porterThomasEntropy(qubits)), fontdict={'size':10})
                 plt.savefig('plots/circuits/pdf_{}qubits_{}cycles_circuit{}.pdf'.format(qubits, cycles, circuit))
             plt.close()
-        except:
+        except Exception as e:
+            print(e)
             print('no plot for {} qubits {} cycles circuit {} gateNo {}'.format(qubits, cycles, circuit, gateNo))
 
     def plotDepthEntropy(self, qubits):
