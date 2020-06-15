@@ -35,13 +35,14 @@ class NQS {
     int gateNo_;
     int randomRestarts_;
     bool earlyStopping_;
+    bool sr;
 
     public:
 
   NQS(int nqubits, int initialHidden, int sampleSteps, int randomRestarts, bool earlyStopping, std::string &optimizer)
             : nqubits_(nqubits), g_(*new Hypercube(nqubits,1,false)), samplesteps_(sampleSteps),
             hi_(*new Spin(g_, 0.5)), psi_(*new RbmNQS(std::make_shared<Spin>(hi_), initialHidden, 0, true, true)),
-            sa_(*new MetropolisLocal(psi_)), optimizer_(optimizer), gateNo_(0), randomRestarts_(randomRestarts), earlyStopping_(earlyStopping) {
+              sa_(*new MetropolisLocal(psi_)), optimizer_(optimizer), gateNo_(0), randomRestarts_(randomRestarts), earlyStopping_(earlyStopping), sr(false) {
                 VectorType a = getPsi_a();
                 VectorType b = getPsi_b();
                 MatrixType W = getPsi_W();
@@ -107,9 +108,6 @@ class NQS {
             InfoMessage() << "trainingTargets.size()" << trainingTargets.size() << std::endl;
             InfoMessage() << "testSamples.size()" << testSamples.size() << std::endl;
             InfoMessage() << "testTargets.size()" << testTargets.size() << std::endl;
-
-            bool sr = false;
-
 
             InfoMessage() << "randomRstearts_ " << randomRestarts_ << std::endl;
 
