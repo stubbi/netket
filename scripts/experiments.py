@@ -1,8 +1,8 @@
 import subprocess, os, errno, time
 from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs, experiment_name, circuit_generator_script, randomRestarts, earlyStopping, optimizer
 
-noctua_partition = 'short'
-max_wall_time = '00:30:00'
+noctua_partition = 'batch'
+max_wall_time = '08:00:00'
 noctua_user = 'hpc-prf-nqs'
 singularity_image_location = "{pc2pfs}/{noctua_user}/nqs.sif".format(
                         noctua_user=noctua_user,
