@@ -15,12 +15,13 @@ sampleSteps = int(sys.argv[4])
 randomRestarts = int(sys.argv[5])
 earlyStopping = (str(sys.argv[6]) == 'True')
 optimizer = str(sys.argv[7])
-method = str(sys.argv[8])
+learnCZ = str(sys.argv[8] == 'True')
+method = str(sys.argv[9])
 shots = 1000
 
 
 class QASMReader:
-    def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps, numRandomRestarts, earlyStopping, optimizer):
+    def __init__(self, method, numSamples, numIterations, numInitialHidden, numSampleSteps, numRandomRestarts, earlyStopping, optimizer, learnCZ):
         assert(method == 'nqs' or method == 'exact')
         self.numSamples = numSamples
         self.numIterations = numIterations
@@ -35,6 +36,7 @@ class QASMReader:
         self.start = None
         self.end = None
         self.gateNo = 0
+        self.learnCZ = learnCZ
 
     def is_nqs(self):
         return self.method == 'nqs'
@@ -100,7 +102,7 @@ class QASMReader:
         elif(line.startswith('H')):
             for q in self.readQubits(line.strip('H')):
                 if(self.is_nqs()):
-                    self.nqs.applyHadamard(q, self.numSamples, self.numIterations)
+                    self.nqs.learnHadamard(q, self.numSamples, self.numIterations)
                 else:
                     self.exact.gate(H, target=q)
 
@@ -152,14 +154,14 @@ class QASMReader:
         elif(line.startswith('sqrt_X')):
             for q in self.readQubits(line.strip('sqrt_X')):
                 if(self.is_nqs()):
-                    self.nqs.applySqrtX(q, self.numSamples, self.numIterations)
+                    self.nqs.learnSqrtX(q, self.numSamples, self.numIterations)
                 else:
                     self.exact.gate(sqrt_X, target=q)
 
         elif(line.startswith('sqrt_Y')):
             for q in self.readQubits(line.strip('sqrt_Y')):
                 if(self.is_nqs()):
-                    self.nqs.applySqrtY(q, self.numSamples, self.numIterations)
+                    self.nqs.learnSqrtY(q, self.numSamples, self.numIterations)
                 else:
                     self.exact.gate(sqrt_Y, target=q)
                     
@@ -167,7 +169,10 @@ class QASMReader:
             q0 = self.readQubits(line.strip('CZ').split(',')[0])[0]
             q1 = self.readQubits(line.strip('CZ').split(',')[1])[0]
             if(self.is_nqs()):
-                self.nqs.applyControlledZRotation(q0, q1, cmath.pi, self.numSamples, self.numIterations)
+                if(self.learnCZ):
+                    self.nqs.learnControlledZRotation(q0, q1, cmath.pi, self.numSamples, self.numIterations)
+                else:
+                    self.nqs.applyControlledZRotation(q0, q1, cmath.pi)
             else:
                 self.exact.gate(Z, target=q0, control=q1)
 
@@ -202,7 +207,7 @@ class QASMReader:
         with open('duration.time', 'w') as f:
             f.write(str(self.end-self.start))
 
-qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps, randomRestarts, earlyStopping, optimizer)
+qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps, randomRestarts, earlyStopping, optimizer, learnCZ)
 qasm.start = time.time()
 qasm.buildCircuit("in.qc")
 qasm.end = time.time()

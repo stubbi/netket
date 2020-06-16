@@ -20,3 +20,4 @@ randomRestarts = 5
 earlyStopping = False
 # AdaDelta, AdaGrad, AdaMax, AMSGrad, Momentum, RMSProp, Sgd, StochasticReconfiguration
 optimizer = 'StochasticReconfiguration'
+learnCZ = True
