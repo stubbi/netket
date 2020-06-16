@@ -36,7 +36,6 @@ class NQS {
     int randomRestarts_;
     bool earlyStopping_;
     bool sr_;
-    bool learnCZ_;
 
     public:
 
@@ -128,20 +127,20 @@ class NQS {
         }
 
 
-        void applyHadamard(int qubit, int numSamples, int numIterations) {
+        void learnHadamard(int qubit, int numSamples, int numIterations) {
             MatrixType H(2,2);
             H << 1,1,1,-1;
             H = 1.0/sqrt(2.0) * H;
             learnGate(qubit, -1, numSamples, numIterations, H);
         }
 
-        void applySqrtX(int qubit, int numSamples, int numIterations) {
+        void learnSqrtX(int qubit, int numSamples, int numIterations) {
             MatrixType sqrtX(2,2);
             sqrtX << std::complex<double>(1, 1), std::complex<double>(1, -1), std::complex<double>(1, -1), std::complex<double>(1, 1);
             learnGate(qubit, -1, numSamples, numIterations, 0.5*sqrtX);
         }
         
-        void applySqrtY(int qubit, int numSamples, int numIterations) {
+        void learnSqrtY(int qubit, int numSamples, int numIterations) {
             MatrixType sqrtY(2,2);
             sqrtY << std::complex<double>(1, 1), std::complex<double>(-1, -1), std::complex<double>(1, 1), std::complex<double>(1, 1);
             learnGate(qubit, -1, numSamples, numIterations, 0.5*sqrtY);
@@ -195,7 +194,25 @@ class NQS {
             setPsiParams(a,b,W);
         }
 
-        void applyControlledZRotation(int controlQubit, int qubit, double theta, int numSamples, int numIterations) {
+        void applyControlledZRotation(int controlQubit, int qubit, double theta) {
+          std::complex<double> A_theta = std::acosh(std::exp(std::complex<double>(0, -theta/2.0)));
+
+          psi_.addHidden();
+
+          VectorType a = getPsi_a();
+          VectorType b = getPsi_b();
+          MatrixType W = getPsi_W();
+
+          W(qubit, W.cols()-1) = -2.0 * A_theta;
+          W(controlQubit, W.cols()-1) = 2.0 * A_theta;
+
+          a(qubit) += std::complex<double>(0, theta/2.0) + A_theta;
+          a(controlQubit) += std::complex<double>(0, theta/2.0) - A_theta;
+
+          setPsiParams(a,b,W);
+        }
+
+        void learnControlledZRotation(int controlQubit, int qubit, double theta, int numSamples, int numIterations) {
             MatrixType cZ(4,4);
             cZ << 1,0,0,0,0,1,0,0,0,0,1,0,0,0,0,std::exp(std::complex<double>(0, theta));
             learnGate(controlQubit, qubit, numSamples, numIterations, cZ);

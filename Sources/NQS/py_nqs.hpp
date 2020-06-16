@@ -55,7 +55,7 @@ void AddNQSModule(py::module &m) {
                earlyStopping: If true, the training will stop as soon as the testing error increases from one iteration to the next one. 
                optimizer: The optimizer. One of XXX. 
            )EOF")
-      .def("applyHadamard", &NQS::applyHadamard, py::arg("qubit"),
+      .def("learnHadamard", &NQS::learnHadamard, py::arg("qubit"),
                             py::arg("numSamples"), py::arg("numIterations"),
             R"EOF(
            Apply Hadamard gate to qubit.
@@ -63,7 +63,7 @@ void AddNQSModule(py::module &m) {
            Args:
                qubit: The index of the qubit the gate will be applied to
            )EOF")
-      .def("applySqrtX", &NQS::applySqrtX, py::arg("qubit"),
+      .def("learnSqrtX", &NQS::learnSqrtX, py::arg("qubit"),
                             py::arg("numSamples"), py::arg("numIterations"),
             R"EOF(
            Apply sqrtX gate to qubit.
@@ -71,7 +71,7 @@ void AddNQSModule(py::module &m) {
            Args:
                qubit: The index of the qubit the gate will be applied to
            )EOF")
-      .def("applySqrtY", &NQS::applySqrtY, py::arg("qubit"),
+      .def("learnSqrtY", &NQS::learnSqrtY, py::arg("qubit"),
                             py::arg("numSamples"), py::arg("numIterations"),
             R"EOF(
            Apply sqrtY gate to qubit.
@@ -109,10 +109,10 @@ void AddNQSModule(py::module &m) {
                theta: angle of the rotation
 
            )EOF")
-      .def("applyControlledZRotation", &NQS::applyControlledZRotation, py::arg("controlQubit"),
+      .def("learnControlledZRotation", &NQS::learnControlledZRotation, py::arg("controlQubit"),
             py::arg("qubit"), py::arg("theta"), py::arg("numSamples"), py::arg("numIterations"),
             R"EOF(
-           Apply Controlled Z rotation to qubit.
+           Apply Controlled Z rotation to qubit by learning it
 
            Args:
                qubit: The index of the qubit the gate will be applied to
@@ -120,6 +120,16 @@ void AddNQSModule(py::module &m) {
                theta: angle of the rotation
                numSamples: number of training samples
                numIterations: number of training iterations
+           )EOF")
+      .def("applyControlledZRotation", &NQS::applyControlledZRotation, py::arg("controlQubit"),
+            py::arg("qubit"), py::arg("theta"),
+            R"EOF(
+           Apply Controlled Z rotation to qubit.
+
+           Args:
+               qubit: The index of the qubit the gate will be applied to
+               controlQubit: The index of the qubit depending on which value the rotation will be applied
+               theta: angle of the rotation
            )EOF")
       .def("applyT", &NQS::applyT, py::arg("qubit"),
             R"EOF(
