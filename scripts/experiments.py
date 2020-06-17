@@ -59,7 +59,7 @@ module load singularity
 module load mpi/OpenMPI/3.1.4-GCC-8.3.0
 export OMP_NUM_THREADS=1
 
-mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 0 False none exact > out 2> err""".format(
+mpirun -mca pml cm -mca mtl psm2 --report-bindings singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 0 False none False exact > out 2> err""".format(
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
                         noctua_partition=noctua_partition,
