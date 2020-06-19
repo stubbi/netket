@@ -196,7 +196,7 @@ class Supervised {
   /// Runs the supervised learning on the training samples and targets
   void Run(int n_iter, bool early_stopping,
            const std::string &output_prefix = "output",
-           int save_params_every = 50) {
+           int save_params_every = 500) {
     assert(n_iter > 0);
     assert(save_params_every > 0);
 
