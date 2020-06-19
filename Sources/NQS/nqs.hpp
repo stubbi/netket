@@ -31,6 +31,7 @@ class NQS {
     std::shared_ptr<AbstractOptimizer> opt_;
 
     int totalnodes_;
+    int rank_;
     int samplesteps_;
     int gateNo_;
     int randomRestarts_;
@@ -73,6 +74,7 @@ class NQS {
                   opt_ = std::make_shared<AdaDelta>();
                 }
 
+                MPI_Comm_rank(MPI_COMM_WORLD,&rank_);
                 MPI_Comm_size(MPI_COMM_WORLD, &totalnodes_);
         }
 
@@ -98,7 +100,12 @@ class NQS {
               Supervised spvsd = Supervised(psi_, sa_, *opt_, batchSize, trainingSamples, trainingTargets, testSamples, testTargets, sr_);
               spvsd.Run(numIterations, earlyStopping_, std::to_string(gateNo_));
             } else {
-              savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(0) + ".json");
+
+              if(rank_ == 0) {
+                savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(0) + ".json");
+              }
+              
+              MPI_Barrier(MPI_COMM_WORLD);
 
               double minLogOverlap = std::numeric_limits<double>::infinity();
               int rMinLogOverlap = 0;
@@ -118,7 +125,11 @@ class NQS {
                   rMinLogOverlap = r;
                 }
 
-                savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(r) + ".json");
+                if(rank_ == 0) {
+                  savePsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(r) + ".json");
+                }
+
+                MPI_Barrier(MPI_COMM_WORLD);
               }
 
               loadPsiParams("supervised_gate_" + std::to_string(gateNo_) + "_random_restarts_" + std::to_string(rMinLogOverlap) + ".json");
