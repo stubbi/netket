@@ -7,6 +7,7 @@ import pickle
 from qupy import Qubits
 from qupy.operator import H, X, Y, Z, T, Tdag, rz, sqrt_X, sqrt_Y
 import time
+from mpi4py import MPI
 
 samples = int(sys.argv[1])
 epochs = int(sys.argv[2])
@@ -18,6 +19,7 @@ optimizer = str(sys.argv[7])
 learnCZ = str(sys.argv[8] == 'True')
 method = str(sys.argv[9])
 shots = 1000
+comm = MPI.COMM_WORLD
 
 
 class QASMReader:
@@ -48,10 +50,12 @@ class QASMReader:
             self.circuitFromLine(line)
             if(oldGateNo != self.gateNo):
                 if(self.is_nqs()):
-                    self.nqs.save('parameters_gate_{}.json'.format(self.gateNo))
+                    if(comm.rank == 0):
+                        self.nqs.save('parameters_gate_{}.json'.format(self.gateNo))
                 else:
-                    with open('exact_gate_{}.json'.format(self.gateNo), 'wb') as f:
-                        pickle.dump(self.exact.get_state(), f)
+                    if(comm.rank == 0):
+                        with open('exact_gate_{}.json'.format(self.gateNo), 'wb') as f:
+                            pickle.dump(self.exact.get_state(), f)
             oldGateNo = self.gateNo
         f.close()
 
@@ -184,28 +188,30 @@ class QASMReader:
         return int("".join(str(int(x)) for x in sample), 2)
 
     def display(self):
-        if(self.is_nqs()):
-            startSampling = time.time()
-            raw_data = [self.toDecimal(self.nqs.sample()) for _ in range(shots)]
-            histogram = collections.Counter(raw_data)
-            endSampling = time.time()
+        if(comm.rank == 0):
+            if(self.is_nqs()):
+                startSampling = time.time()
+                raw_data = [self.toDecimal(self.nqs.sample()) for _ in range(shots)]
+                histogram = collections.Counter(raw_data)
+                endSampling = time.time()
 
-            with open('raw_data.json', 'w') as f:
-                json.dump(raw_data, f)
+                with open('raw_data.json', 'w') as f:
+                    json.dump(raw_data, f)
 
-            with open('histogram.json', 'w') as f:
-                json.dump(histogram, f)
+                with open('histogram.json', 'w') as f:
+                    json.dump(histogram, f)
 
-            with open('duration_sampling.time', 'w') as f:
-                f.write(str(endSampling-startSampling))
+                with open('duration_sampling.time', 'w') as f:
+                    f.write(str(endSampling-startSampling))
 
-            self.nqs.save('parameters.json')
-        else:
-            with open('exact.json', 'wb') as f:
-                pickle.dump(self.exact.get_state(), f)
+                self.nqs.save('parameters.json')
+            else:
+                with open('exact.json', 'wb') as f:
+                    pickle.dump(self.exact.get_state(), f)
 
-        with open('duration.time', 'w') as f:
-            f.write(str(self.end-self.start))
+            with open('duration.time', 'w') as f:
+                f.write(str(self.end-self.start))
+
 
 qasm = QASMReader(method, samples, epochs, initialHidden, sampleSteps, randomRestarts, earlyStopping, optimizer, learnCZ)
 qasm.start = time.time()
