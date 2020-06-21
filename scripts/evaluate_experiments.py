@@ -26,6 +26,7 @@ export OMP_NUM_THREADS=1
 module reset
 module load vis/matplotlib
 module load singularity
+mpirun -mca pml cm -mca mtl psm2 --report-bindings --mca mpi_warn_on_fork 0 singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/qasm_reader.py 0 0 0 0 0 False none False exact > out 2> err""".format(
 singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} {randomRestarts} {earlyStopping} {optimizer} > evaluation_out 2> evaluation_err""".format(
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
