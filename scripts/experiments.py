@@ -158,3 +158,6 @@ for directory in jobDirs:
     bashCommand = "sbatch -D {directory} {directory}/job.slurm".format(directory=directory)
     process = subprocess.Popen(bashCommand.split(), stdout=subprocess.PIPE)  
     print "started job in {}".format(directory)           
+
+# try to avoid the last job not being submitted
+time.sleep(10)
