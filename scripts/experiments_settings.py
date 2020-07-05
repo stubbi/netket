@@ -1,9 +1,9 @@
 experiment_name = 'StochasticReconfiguration-5-10-5-False'
 circuit_generator_script = 'random_circuit.py'
 # parameters to be tested
-number_of_qubits = [5]
-number_of_cycles = [10]
-number_of_circuits = 3 #number of random circuits with same number of qubits and cycles
+number_of_qubits = [2]
+number_of_cycles = [2]
+number_of_circuits = 1 #number of random circuits with same number of qubits and cycles
 
 number_of_nodes = [4]
 number_of_tasks_per_node = [4]
