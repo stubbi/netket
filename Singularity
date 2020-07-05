@@ -13,6 +13,7 @@ From: python:3.7
     pip install -U pip setuptools numpy scipy
     pip install matplotlib
     pip install pandas
+    pip install mpi4py
     chmod -R 755 /nqs/
     cd nqs
     python setup.py install
