@@ -14,7 +14,7 @@ number_of_training_iterations = [500]
 
 number_of_initial_hidden_units = [int(q*(q-1)/2.0) for q in number_of_qubits]
 number_of_sample_steps = [0]#q if q%2 != 0 else q+1 for q in number_of_qubits]
-number_of_runs = 1 #number of runs for a specific circuit
+number_of_runs = 3 #number of runs for a specific circuit
 
 randomRestarts = 5
 earlyStopping = False
