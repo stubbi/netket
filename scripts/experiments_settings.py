@@ -2,7 +2,7 @@ import math
 
 
 def samples(n):
-    return n * (math.log(n) + 0.577216) + 1.0/2.0
+    return int(n * (math.log(n) + 0.577216) + 1.0/2.0)
 
 
 experiment_name = 'final-4-SR-restarts-learned'
