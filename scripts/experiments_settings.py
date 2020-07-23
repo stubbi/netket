@@ -5,7 +5,7 @@ def samples(n):
     return int(n * (math.log(n) + 0.577216) + 1.0/2.0)
 
 
-experiment_name = 'final-4-SR-restarts-learned'
+experiment_name = 'final-4-AdaMax-restarts-learned'
 circuit_generator_script = 'random_circuit.py'
 # parameters to be tested
 number_of_qubits = [4]
@@ -28,7 +28,7 @@ number_of_runs = 5 #number of runs for a specific circuit
 randomRestarts = 5
 earlyStopping = False
 # AdaDelta, AdaGrad, AdaMax, AMSGrad, Momentum, RMSProp, Sgd, StochasticReconfiguration
-optimizer = 'StochasticReconfiguration'
+optimizer = 'AdaMax'
 learnCZ = True
 
 
