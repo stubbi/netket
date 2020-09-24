@@ -123,18 +123,18 @@ class Evaluation:
         return f_xeb/shots
 
     def plotAvgBestPDF(self, qubits):
-        results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
-        df = pandas.read_csv(results_file)
-        df = df[df['success'] == True]
-        df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
+        try:
+            results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
+            df = pandas.read_csv(results_file)
+            df = df[df['success'] == True]
+            df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
 
-        fig, axs = plt.subplots(2,2)
-        plt.rc(usetex = True)
-        for c in self.listCycles:
-            allSortedRbmProbs = []
-            allSortedExactProbs = []
-            for i in range(self.numCircuits):
-                try:
+            fig, axs = plt.subplots(2,2)
+            plt.rc(usetex = True)
+            for c in self.listCycles:
+                allSortedRbmProbs = []
+                allSortedExactProbs = []
+                for i in range(self.numCircuits):
                     exact = self.loadExact(qubits, c, i, -1)
                     df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(c)) & (df['circuit'] == int(i))]
 
@@ -149,45 +149,48 @@ class Evaluation:
 
                     allSortedRbmProbs.append(rbmProbsSorted)
                     allSortedExactProbs.append(exactProbsSorted)
-            
-            idx0=0
-            idx1=0
-            if(int(c) == 10):
-                idx1=1
-            elif(int(c) == 15):
-                idx0=1
-            elif(int(c) == 20):
-                idx0=1
-                idx1=1
+                
+                idx0=0
+                idx1=0
+                if(int(c) == 10):
+                    idx1=1
+                elif(int(c) == 15):
+                    idx0=1
+                elif(int(c) == 20):
+                    idx0=1
+                    idx1=1
 
-            meanRBM = np.mean(allSortedRbmProbs, axis=1)
-            meanExact = np.mean(allSortedExactProbs, axis=1)
+                meanRBM = np.mean(allSortedRbmProbs, axis=1)
+                meanExact = np.mean(allSortedExactProbs, axis=1)
 
-            axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
-            axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
+                axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
+                axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
 
-            axs[idx0,idx1].set_title(f'{c} Cycles')
+                axs[idx0,idx1].set_title(f'{c} Cycles')
 
-        for ax in axs.flat:
-            ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
+            for ax in axs.flat:
+                ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
 
-        plt.legend()
-        plt.savefig('avgBestPDF.pdf')
-        plt.close()
+            plt.legend()
+            plt.savefig('avgBestPDF.pdf')
+            plt.close()
+
+        except Exception as e:
+            print(e)
 
     def plotAvgPDF(self, qubits):
-        results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
-        df = pandas.read_csv(results_file)
-        df = df[df['success'] == True]
-        df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
+        try:
+            results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
+            df = pandas.read_csv(results_file)
+            df = df[df['success'] == True]
+            df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
 
-        fig, axs = plt.subplots(2,2)
-        plt.rc(usetex = True)
-        for c in self.listCycles:
-            allSortedRbmProbs = []
-            allSortedExactProbs = []
-            for i in range(self.numCircuits):
-                try:
+            fig, axs = plt.subplots(2,2)
+            plt.rc(usetex = True)
+            for c in self.listCycles:
+                allSortedRbmProbs = []
+                allSortedExactProbs = []
+                for i in range(self.numCircuits):
                     exact = self.loadExact(qubits, c, i, -1)
                     df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(c)) & (df['circuit'] == int(i))]
 
@@ -202,31 +205,34 @@ class Evaluation:
 
                         allSortedRbmProbs.append(rbmProbsSorted)
                         allSortedExactProbs.append(exactProbsSorted)
-            
-            idx0=0
-            idx1=0
-            if(int(c) == 10):
-                idx1=1
-            elif(int(c) == 15):
-                idx0=1
-            elif(int(c) == 20):
-                idx0=1
-                idx1=1
+                
+                idx0=0
+                idx1=0
+                if(int(c) == 10):
+                    idx1=1
+                elif(int(c) == 15):
+                    idx0=1
+                elif(int(c) == 20):
+                    idx0=1
+                    idx1=1
 
-            meanRBM = np.mean(allSortedRbmProbs, axis=1)
-            meanExact = np.mean(allSortedExactProbs, axis=1)
+                meanRBM = np.mean(allSortedRbmProbs, axis=1)
+                meanExact = np.mean(allSortedExactProbs, axis=1)
 
-            axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
-            axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
+                axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
+                axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
 
-            axs[idx0,idx1].set_title(f'{c} Cycles')
+                axs[idx0,idx1].set_title(f'{c} Cycles')
 
-        for ax in axs.flat:
-            ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
+            for ax in axs.flat:
+                ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
 
-        plt.legend()
-        plt.savefig('avgPDF.pdf')
-        plt.close()
+            plt.legend()
+            plt.savefig('avgPDF.pdf')
+            plt.close()
+
+        except Exception as e:
+            print(e)
 
     def plotPDF(self, df, qubits, cycles, circuit, circuitFile, gateNo = -1):
         try:
@@ -447,7 +453,7 @@ class Evaluation:
                                                         f_xeb = '{:f}'.format(self.f_xeb(self.loadExact(size, cycles, circuits), self.normalise(histogram), int(size)))
                                                         duration = '{:f}'.format(self.loadDuration(size, cycles, circuits, nodes, tasks, threads, numSamples, numIterations, numInitialHidden, numSampleSteps, run))
                                                         success = True
-                                                    except Exception, e:
+                                                    except Exception as e:
                                                         print("Unexpected error: {}".format(str(e)))
                                                         tvd = '-'
                                                         f_xeb = '-'
