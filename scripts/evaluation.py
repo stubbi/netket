@@ -166,7 +166,7 @@ class Evaluation:
                 axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
                 axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
 
-                axs[idx0,idx1].set_title(f'{c} Cycles')
+                axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
 
             for ax in axs.flat:
                 ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
@@ -222,7 +222,7 @@ class Evaluation:
                 axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
                 axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
 
-                axs[idx0,idx1].set_title(f'{c} Cycles')
+                axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
 
             for ax in axs.flat:
                 ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
