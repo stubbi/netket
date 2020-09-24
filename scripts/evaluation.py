@@ -130,7 +130,6 @@ class Evaluation:
             df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
 
             fig, axs = plt.subplots(2,2)
-            plt.rc(usetex = True)
             for c in self.listCycles:
                 allSortedRbmProbs = []
                 allSortedExactProbs = []
@@ -186,7 +185,6 @@ class Evaluation:
             df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
 
             fig, axs = plt.subplots(2,2)
-            plt.rc(usetex = True)
             for c in self.listCycles:
                 allSortedRbmProbs = []
                 allSortedExactProbs = []
