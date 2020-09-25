@@ -276,6 +276,8 @@ class Evaluation:
                                     try:
                                         testLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'test')
                                         trainLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'training')
+
+                                        print(testLogOverlaps[:100])
                                         
                                         allTest.append(testLogOverlaps[:cutIterations])
                                         allTrain.append(trainLogOverlaps[:cutIterations])
@@ -622,6 +624,6 @@ ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, list
 #ev.generateCSV()
 #ev.generateReport()
 #ev.generatePlots()
-ev.plotAvgPDF(4)
-ev.plotAvgBestPDF(4)
+#ev.plotAvgPDF(4)
+#ev.plotAvgBestPDF(4)
 ev.plotAvgLogOverlap(4)
