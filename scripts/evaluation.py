@@ -163,8 +163,8 @@ class Evaluation:
                 idx0=1
                 idx1=1
 
-            meanRBM = np.mean(allSortedRbmProbs, axis=1)
-            meanExact = np.mean(allSortedExactProbs, axis=1)
+            meanRBM = np.mean(allSortedRbmProbs, axis=0)
+            meanExact = np.mean(allSortedExactProbs, axis=0)
 
             axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
             axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
@@ -220,12 +220,8 @@ class Evaluation:
                 idx0=1
                 idx1=1
 
-            print(c)
-            print(allSortedRbmProbs)
-            print(allSortedExactProbs)
-
-            meanRBM = np.mean(allSortedRbmProbs, axis=1)
-            meanExact = np.mean(allSortedExactProbs, axis=1)
+            meanRBM = np.mean(allSortedRbmProbs, axis=0)
+            meanExact = np.mean(allSortedExactProbs, axis=0)
 
             axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
             axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
