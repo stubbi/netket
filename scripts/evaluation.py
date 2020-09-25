@@ -177,7 +177,7 @@ class Evaluation:
         for ax in axs.flat:
             ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
 
-        figure.tight_layout(pad=3.0)
+        plt.tight_layout()
         plt.savefig('avgBestPDF.pdf')
         plt.close()
 
@@ -237,7 +237,7 @@ class Evaluation:
         for ax in axs.flat:
             ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
 
-        figure.tight_layout(pad=3.0)
+        plt.tight_layout()
         plt.savefig('avgPDF.pdf')
         plt.close()
 
