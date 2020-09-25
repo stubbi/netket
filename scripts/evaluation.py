@@ -273,34 +273,46 @@ class Evaluation:
                                 idx = idx + 1
                                 for r in range(self.numRuns):
                                     #TODO: numInitialHidden is not always 6!
-                                    testLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'test')
-                                    trainLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'training')
-                                    
-                                    allTest.append(testLogOverlaps[:cutIterations])
-                                    allTrain.append(trainLogOverlaps[:cutIterations])
+                                    try:
+                                        testLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'test')
+                                        trainLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'training')
+                                        
+                                        allTest.append(testLogOverlaps[:cutIterations])
+                                        allTrain.append(trainLogOverlaps[:cutIterations])
 
-                                    if(gate == 'sqrt_X'):
-                                        sqrt_XTrain.append(trainLogOverlaps[:cutIterations])
-                                        sqrt_XTest.append(testLogOverlaps[:cutIterations])
-                                    elif(gate == 'sqrt_Y'):
-                                        sqrt_YTrain.append(trainLogOverlaps[:cutIterations])
-                                        sqrt_YTest.append(testLogOverlaps[:cutIterations])
-                                    elif(gate == 'CZ'):
-                                        CZTrain.append(trainLogOverlaps[:cutIterations])
-                                        CZTest.append(testLogOverlaps[:cutIterations])
+                                        if(gate == 'sqrt_X'):
+                                            sqrt_XTrain.append(trainLogOverlaps[:cutIterations])
+                                            sqrt_XTest.append(testLogOverlaps[:cutIterations])
+                                        elif(gate == 'sqrt_Y'):
+                                            sqrt_YTrain.append(trainLogOverlaps[:cutIterations])
+                                            sqrt_YTest.append(testLogOverlaps[:cutIterations])
+                                        elif(gate == 'CZ'):
+                                            CZTrain.append(trainLogOverlaps[:cutIterations])
+                                            CZTest.append(testLogOverlaps[:cutIterations])
+
+                                    except Exception as e:
+                                        print(e)
             
             fig, axs = plt.subplots(2,2)
             meanAllTrain = np.mean(allTrain, axis=0)
             meanAllTest = np.mean(allTest, axis=0)
+            stdAllTrain = np.std(allTrain, axis=0)
+            stdAllTest = np.std(allTest, axis=0)
 
             meanSqrtXTrain = np.mean(sqrt_XTrain, axis=0)
             meanSqrtXTest = np.mean(sqrt_XTest, axis=0)
+            stdSqrtXTrain = np.std(sqrt_XTrain, axis=0)
+            stdSqrtXTest = np.std(sqrt_XTest, axis=0)
 
             meanSqrtYTrain = np.mean(sqrt_YTrain, axis=0)
             meanSqrtYTest = np.mean(sqrt_YTest, axis=0)
+            stdSqrtYTrain = np.std(sqrt_YTrain, axis=0)
+            stdSqrtYTest = np.std(sqrt_YTest, axis=0)
 
             meanCZTrain = np.mean(CZTrain, axis=0)
             meanCZTest = np.mean(CZTest, axis=0)
+            stdCZTrain = np.std(CZTrain, axis=0)
+            stdCZTest = np.std(CZTest, axis=0)
 
             axs[0,0].plot(range(len(meanSqrtXTest)), meanAllTest, label = 'test')
             axs[0,0].plot(range(len(meanSqrtXTrain)), meanAllTrain, label = 'train')
