@@ -124,15 +124,16 @@ class Evaluation:
 
     def plotAvgBestPDF(self, qubits):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
-        df = pandas.read_csv(results_file)
-        df = df[df['success'] == True]
-        df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
+        dfo = pandas.read_csv(results_file)
+        dfo = dfo[dfo['success'] == True]
+        dfo = dfo.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
 
         fig, axs = plt.subplots(2,2)
         for c in self.listCycles:
             allSortedRbmProbs = []
             allSortedExactProbs = []
             for i in range(self.numCircuits):
+                df = dfo.copy()
                 try:
                     exact = self.loadExact(qubits, c, i, -1)
                     df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(c)) & (df['circuit'] == int(i))]
@@ -180,15 +181,16 @@ class Evaluation:
 
     def plotAvgPDF(self, qubits):
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
-        df = pandas.read_csv(results_file)
-        df = df[df['success'] == True]
-        df = df.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
+        dfo = pandas.read_csv(results_file)
+        dfo = dfo[dfo['success'] == True]
+        dfo = dfo.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
 
         fig, axs = plt.subplots(2,2)
         for c in self.listCycles:
             allSortedRbmProbs = []
             allSortedExactProbs = []
             for i in range(self.numCircuits):
+                df = dfo.copy()
                 df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(c)) & (df['circuit'] == int(i))]
 
                 for index, row in df.iterrows():
