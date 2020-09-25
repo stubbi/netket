@@ -257,7 +257,7 @@ class Evaluation:
             allTrain = []
             allTest = []
 
-            for c in self.listCycles:
+            for c in [5]:#self.listCycles:
                 for i in [1,2,3,4]:#range(self.numCircuits):
 
                     with open("{}/{}qubits/{}cycles/circuit{}/in.qc".format(self.experimentFolder,qubits,c,i)) as f:
