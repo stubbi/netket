@@ -244,7 +244,7 @@ class Evaluation:
     def plotAvgLogOverlap(self, qubits):
         maxIterations = 10000
         cutIterations = 2000
-        for s in [8]:#self.listSamples:
+        for s in [303]:#self.listSamples:
             sqrt_XTrain = []
             sqrt_XTest = []
 
