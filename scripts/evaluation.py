@@ -205,9 +205,6 @@ class Evaluation:
                         allSortedRbmProbs.append(rbmProbsSorted)
                         allSortedExactProbs.append(exactProbsSorted)
 
-                        print(rbmProbsSorted)
-                        print(exactProbsSorted)
-
                     except Exception as e:
                         print(e)
             
@@ -220,6 +217,10 @@ class Evaluation:
             elif(int(c) == 20):
                 idx0=1
                 idx1=1
+
+            print(c)
+            print(allSortedRbmProbs)
+            print(allSortedExactProbs)
 
             meanRBM = np.mean(allSortedRbmProbs, axis=1)
             meanExact = np.mean(allSortedExactProbs, axis=1)
