@@ -242,9 +242,9 @@ class Evaluation:
         plt.close()
 
     def plotAvgLogOverlap(self, qubits):
-        maxIterations = 100000
-        cutIterations = 12000
-        for s in self.listSamples:
+        maxIterations = 10000
+        cutIterations = 2000
+        for s in [8]:#self.listSamples:
             sqrt_XTrain = []
             sqrt_XTest = []
 
@@ -258,7 +258,7 @@ class Evaluation:
             allTest = []
 
             for c in self.listCycles:
-                for i in range(self.numCircuits):
+                for i in [1,2,3,4]:#range(self.numCircuits):
 
                     with open("{}/{}qubits/{}cycles/circuit{}/in.qc".format(self.experimentFolder,qubits,c,i)) as f:
                         content = f.readlines()
@@ -298,42 +298,58 @@ class Evaluation:
             meanAllTest = np.mean(allTest, axis=0)
             stdAllTrain = np.std(allTrain, axis=0)
             stdAllTest = np.std(allTest, axis=0)
+            ciAllTrain = 1.96 * stdAllTrain/meanAllTrain
+            ciAllTest = 1.96 * stdAllTest/meanAllTest
 
             meanSqrtXTrain = np.mean(sqrt_XTrain, axis=0)
             meanSqrtXTest = np.mean(sqrt_XTest, axis=0)
             stdSqrtXTrain = np.std(sqrt_XTrain, axis=0)
             stdSqrtXTest = np.std(sqrt_XTest, axis=0)
+            ciSqrtXTrain = 1.96 * stdSqrtXTrain/meanSqrtXTrain
+            ciSqrtXTest = 1.96 * stdSqrtXTest/meanSqrtXTest
 
             meanSqrtYTrain = np.mean(sqrt_YTrain, axis=0)
             meanSqrtYTest = np.mean(sqrt_YTest, axis=0)
             stdSqrtYTrain = np.std(sqrt_YTrain, axis=0)
             stdSqrtYTest = np.std(sqrt_YTest, axis=0)
+            ciSqrtYTrain = 1.96 * stdSqrtYTrain/meanSqrtYTrain
+            ciSqrtYTest = 1.96 * stdSqrtYTest/meanSqrtYTest
 
             meanCZTrain = np.mean(CZTrain, axis=0)
             meanCZTest = np.mean(CZTest, axis=0)
             stdCZTrain = np.std(CZTrain, axis=0)
             stdCZTest = np.std(CZTest, axis=0)
+            ciCZTrain = 1.96 * stdCZTrain/meanCZTrain
+            ciCZTest = 1.96 * stdCZTest/meanCZTest
 
             axs[0,0].plot(range(len(meanSqrtXTest)), meanAllTest, label = 'test')
             axs[0,0].plot(range(len(meanSqrtXTrain)), meanAllTrain, label = 'train')
+            axs[0,0].fill_between(range(len(meanSqrtXTest)), (np.array(meanSqrtXTest)-ciSqrtXTest), (np.array(meanSqrtXTest)+ciSqrtXTest), alpha=.1)
+            axs[0,0].fill_between(range(len(meanSqrtXTrain)), (np.array(meanSqrtXTrain)-ciSqrtXTrain), (np.array(meanSqrtXTrain)+ciSqrtXTrain), alpha=.1)
 
             axs[0,0].set_title('sqrt X')
             axs[0,0].legend()
 
             axs[0,1].plot(range(len(meanSqrtYTest)), meanAllTest, label = 'test')
             axs[0,1].plot(range(len(meanSqrtYTrain)), meanAllTrain, label = 'train')
+            axs[0,1].fill_between(range(len(meanSqrtYTest)), (np.array(meanSqrtYTest)-ciSqrtYTest), (np.array(meanSqrtYTest)+ciSqrtYTest), alpha=.1)
+            axs[0,1].fill_between(range(len(meanSqrtYTrain)), (np.array(meanSqrtYTrain)-ciSqrtYTrain), (np.array(meanSqrtYTrain)+ciSqrtYTrain), alpha=.1)
 
             axs[0,1].set_title('sqrt Y')
             axs[0,1].legend()
 
             axs[1,0].plot(range(len(meanCZTest)), meanAllTest, label = 'test')
             axs[1,0].plot(range(len(meanCZTrain)), meanAllTrain, label = 'train')
+            axs[1,0].fill_between(range(len(meanCZTest)), (np.array(meanCZTest)-ciCZTest), (np.array(meanCZTest)+ciCZTest), alpha=.1)
+            axs[1,0].fill_between(range(len(meanCZTrain)), (np.array(meanCZTrain)-ciCZTrain), (np.array(meanCZTrain)+ciCZTrain), alpha=.1)
 
             axs[1,0].set_title('CZ')
             axs[1,0].legend()
 
             axs[1,1].plot(range(len(meanAllTest)), meanAllTest, label = 'test')
             axs[1,1].plot(range(len(meanAllTrain)), meanAllTrain, label = 'train')
+            axs[1,1].fill_between(range(len(meanAllTest)), (np.array(meanAllTest)-ciAllTest), (np.array(meanAllTest)+ciAllTest), alpha=.1)
+            axs[1,1].fill_between(range(len(meanAllTrain)), (np.array(meanAllTrain)-ciAllTrain), (np.array(meanAllTrain)+ciAllTrain), alpha=.1)
 
             axs[1,1].set_title('All Gates')
             axs[1,1].legend()
