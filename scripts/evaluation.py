@@ -205,6 +205,9 @@ class Evaluation:
                         allSortedRbmProbs.append(rbmProbsSorted)
                         allSortedExactProbs.append(exactProbsSorted)
 
+                        print(rbmProbsSorted)
+                        print(exactProbsSorted)
+
                     except Exception as e:
                         print(e)
             
