@@ -241,6 +241,102 @@ class Evaluation:
         plt.savefig('avgPDF.pdf')
         plt.close()
 
+    def plotAvgLogOverlap(self, qubits):
+        maxIterations = 100000
+        cutIterations = 12000
+        for s in self.listSamples:
+            sqrt_XTrain = []
+            sqrt_XTest = []
+
+            sqrt_YTrain = []
+            sqrt_YTest = []
+
+            CZTrain = []
+            CZTest = []
+
+            allTrain = []
+            allTest = []
+
+            for c in self.listCycles:
+                for i in range(self.numCircuits):
+
+                    with open("{}/{}qubits/{}cycles/circuit{}/in.qc".format(self.experimentFolder,qubits,c,i)) as f:
+                        content = f.readlines()
+
+                        # TODO only works for current RCSs!
+                        content = [x for x in content if x.startswith('T') or x.startswith('sqrt_X') or x.startswith('sqrt_Y') or x.startswith('CZ')] 
+
+                        idx = 0
+                        for line in content:
+                            gate = line.split()[0]
+                            if(gate != 'T'): #TODO: one method does not learn CZ!
+                                idx = idx + 1
+                                for r in range(self.numRuns):
+                                    #TODO: numInitialHidden is not always 6!
+                                    testLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'test')
+                                    trainLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'training')
+                                    
+                                    allTest.append(testLogOverlaps[:cutIterations])
+                                    allTrain.append(trainLogOverlaps[:cutIterations])
+
+                                    if(gate == 'sqrt_X'):
+                                        sqrt_XTrain.append(trainLogOverlaps[:cutIterations])
+                                        sqrt_XTest.append(testLogOverlaps[:cutIterations])
+                                    elif(gate == 'sqrt_Y'):
+                                        sqrt_YTrain.append(trainLogOverlaps[:cutIterations])
+                                        sqrt_YTest.append(testLogOverlaps[:cutIterations])
+                                    elif(gate == 'CZ'):
+                                        CZTrain.append(trainLogOverlaps[:cutIterations])
+                                        CZTest.append(testLogOverlaps[:cutIterations])
+            
+            fig, axs = plt.subplots(2,2)
+            meanAllTrain = np.mean(allTrain, axis=0)
+            meanAllTest = np.mean(allTest, axis=0)
+
+            meanSqrtXTrain = np.mean(sqrt_XTrain, axis=0)
+            meanSqrtXTest = np.mean(sqrt_XTest, axis=0)
+
+            meanSqrtYTrain = np.mean(sqrt_YTrain, axis=0)
+            meanSqrtYTest = np.mean(sqrt_YTest, axis=0)
+
+            meanCZTrain = np.mean(CZTrain, axis=0)
+            meanCZTest = np.mean(CZTest, axis=0)
+
+            axs[0,0].plot(range(len(meanSqrtXTest)), meanAllTest, label = 'test')
+            axs[0,0].plot(range(len(meanSqrtXTrain)), meanAllTrain, label = 'train')
+
+            axs[0,0].set_title('sqrt X')
+            axs[0,0].legend()
+
+            axs[0,1].plot(range(len(meanSqrtYTest)), meanAllTest, label = 'test')
+            axs[0,1].plot(range(len(meanSqrtYTrain)), meanAllTrain, label = 'train')
+
+            axs[0,1].set_title('sqrt Y')
+            axs[0,1].legend()
+
+            axs[1,0].plot(range(len(meanCZTest)), meanAllTest, label = 'test')
+            axs[1,0].plot(range(len(meanCZTrain)), meanAllTrain, label = 'train')
+
+            axs[1,0].set_title('CZ')
+            axs[1,0].legend()
+
+            axs[1,1].plot(range(len(meanAllTest)), meanAllTest, label = 'test')
+            axs[1,1].plot(range(len(meanAllTrain)), meanAllTrain, label = 'train')
+
+            axs[1,1].set_title('All Gates')
+            axs[1,1].legend()
+
+            for ax in axs.flat:
+                ax.set(xlabel='Iteration', ylabel='log Overlap')
+
+            plt.tight_layout()
+            plt.savefig("avgOverlap_{s}.pdf".format(s=s))
+            plt.close()
+
+
+
+
+
 
     def plotPDF(self, df, qubits, cycles, circuit, circuitFile, gateNo = -1):
         try:
@@ -500,3 +596,4 @@ ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, list
 #ev.generatePlots()
 ev.plotAvgPDF(4)
 ev.plotAvgBestPDF(4)
+ev.plotAvgLogOverlap(4)
