@@ -171,7 +171,7 @@ class Evaluation:
 
             axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
             axs[idx0,idx1].legend()
-            axs[idx0,idx1].set_xlim([0, 16])
+            axs[idx0,idx1].set_xlim([0, 15])
             axs[idx0,idx1].set_ylim([0, 4])
 
         for ax in axs.flat:
@@ -231,7 +231,7 @@ class Evaluation:
 
             axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
             axs[idx0,idx1].legend()
-            axs[idx0,idx1].set_xlim([0, 16])
+            axs[idx0,idx1].set_xlim([0, 15])
             axs[idx0,idx1].set_ylim([0, 4])
 
         for ax in axs.flat:
