@@ -123,6 +123,7 @@ class Evaluation:
         return f_xeb/shots
 
     def plotAvgBestPDF(self, qubits):
+        #TODO compute f_xeb
         results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
         dfo = pandas.read_csv(results_file)
         dfo = dfo[dfo['success'] == True]
