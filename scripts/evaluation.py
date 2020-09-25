@@ -170,11 +170,14 @@ class Evaluation:
             axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
 
             axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
+            axs[idx0,idx1].legend()
+            axs[idx0,idx1].xlim(0,16)
+            axs[idx0,idx1].ylim(0,4)
 
         for ax in axs.flat:
             ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
 
-        plt.legend()
+        figure.tight_layout(pad=3.0)
         plt.savefig('avgBestPDF.pdf')
         plt.close()
 
@@ -227,11 +230,14 @@ class Evaluation:
             axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
 
             axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
+            axs[idx0,idx1].legend()
+            axs[idx0,idx1].xlim(0,16)
+            axs[idx0,idx1].ylim(0,4)
 
         for ax in axs.flat:
             ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
 
-        plt.legend()
+        figure.tight_layout(pad=3.0)
         plt.savefig('avgPDF.pdf')
         plt.close()
 
