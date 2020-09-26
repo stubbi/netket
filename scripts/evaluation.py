@@ -193,27 +193,52 @@ class Evaluation:
         for c in self.listCycles:
             allSortedRbmProbs = []
             allSortedExactProbs = []
-            for i in range(self.numCircuits):
-                df = dfo.copy()
-                df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(c)) & (df['circuit'] == int(i))]
 
-                for index, row in df.iterrows():
-                    try:
-                        exact = self.loadExact(qubits, c, i, -1)
-                        rbm = self.loadRBM(row['#qubits'],row['#cycles'],row['circuit'],row['#nodes'],row['#tasks'],row['#threads'],row['#samples'],row['#iterations'],row['#initialHidden'],row['#sampleSteps'],row['run'], -1)
+            heatmap = []
+            for iteration in self.listIterations:
+                heatmapRow = []
+                for sample in self.listSamples:
+                    iterationSampleCombiRbmProbs = []
+                    iterationSampleCombiExactProbs = []
 
-                        rbmProbs = [len(exact) * p for p in self.loadRBMProbs(exact, rbm)]
-                        normalisedProbs = [len(exact) * abs(e)**2 for e in exact] 
+                    for i in range(self.numCircuits):
+                        df = dfo.copy()
+                        df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(c)) & (df['circuit'] == int(i)) & (df['#samples'] == int(sample)) & (df['#iterations'] == int(iteration))]
 
-                        rbmProbsSorted = [p for _,p in sorted(zip(normalisedProbs, rbmProbs))]
-                        exactProbsSorted = sorted(normalisedProbs)
+                        for index, row in df.iterrows():
+                            try:
+                                exact = self.loadExact(qubits, c, i, -1)
+                                rbm = self.loadRBM(row['#qubits'],row['#cycles'],row['circuit'],row['#nodes'],row['#tasks'],row['#threads'],row['#samples'],row['#iterations'],row['#initialHidden'],row['#sampleSteps'],row['run'], -1)
 
-                        allSortedRbmProbs.append(rbmProbsSorted)
-                        allSortedExactProbs.append(exactProbsSorted)
+                                rbmProbs = [len(exact) * p for p in self.loadRBMProbs(exact, rbm)]
+                                normalisedProbs = [len(exact) * abs(e)**2 for e in exact] 
 
-                    except Exception as e:
-                        print(e)
-            
+                                rbmProbsSorted = [p for _,p in sorted(zip(normalisedProbs, rbmProbs))]
+                                exactProbsSorted = sorted(normalisedProbs)
+
+                                allSortedRbmProbs.append(rbmProbsSorted)
+                                allSortedExactProbs.append(exactProbsSorted)
+
+                                iterationSampleCombiRbmProbs.append([p/len(exact) for p in rbmProbsSorted])
+                                iterationSampleCombiExactProbs.append([p/len(exact) for p in exactProbsSorted])
+
+                            except Exception as e:
+                                print(e)
+
+                    meanIterationSampleCombiRbmProbs = np.mean(iterationSampleCombiRbmProbs, axis=0)
+                    meanIterationSampleCombiExactProbs = np.mean(iterationSampleCombiExactProbs, axis=0)
+
+                    f_xeb = 0
+                    for p in range(len(meanIterationSampleCombiExactProbs)):
+                        f_xeb += meanIterationSampleCombiRbmProbs[p] * meanIterationSampleCombiExactProbs[p]
+                    f_xeb = 2**len(exact) * f_xeb - 1
+
+                    heatmapRow.append(f_xeb)
+
+                heatmap.append(heatmapRow)
+
+            fig, axs = plt.subplots(2,2)
+
             idx0=0
             idx1=0
             if(int(c) == 10):
@@ -223,6 +248,41 @@ class Evaluation:
             elif(int(c) == 20):
                 idx0=1
                 idx1=1
+
+            ax = axs[idx1, idx2]
+            im = ax.imshow(heatmap)
+
+            # We want to show all ticks...
+            ax.set_xticks(np.arange(len(self.listSamples)))
+            ax.set_yticks(np.arange(len(self.listIterations)))
+            # ... and label them with the respective list entries
+            ax.set_xticklabels(self.listSamples)
+            ax.set_yticklabels(self.listIterations)
+
+            # Rotate the tick labels and set their alignment.
+            plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
+                    rotation_mode="anchor")
+
+            # Loop over data dimensions and create text annotations.
+            for i in range(len(self.listIterations)):
+                for j in range(len(self.listSamples)):
+                    t = 'n/a'
+                    if heatmap[i][j] > 0:
+                        t = format(heatmap[i][j], '.2f')
+                    text = ax.text(j, i, t, ha="center", va="center", color="w")
+            
+            ax.set_title(f'{c} Cycles')
+            for ax in axs.flat:
+                ax.set(xlabel='Samples', ylabel='Iterations')
+
+            fig.suptitle(f'mean F_xeb', fontsize=16)
+            fig.tight_layout()
+            plt.savefig('heatmap.pdf')
+            plt.close()
+                
+
+            
+            
 
             meanRBM = np.mean(allSortedRbmProbs, axis=0)
             meanExact = np.mean(allSortedExactProbs, axis=0)
@@ -633,6 +693,6 @@ ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, list
 #ev.generateCSV()
 #ev.generateReport()
 #ev.generatePlots()
-#ev.plotAvgPDF(4)
-#ev.plotAvgBestPDF(4)
+ev.plotAvgPDF(4)
+ev.plotAvgBestPDF(4)
 ev.plotAvgLogOverlap(4)
