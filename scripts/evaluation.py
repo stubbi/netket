@@ -329,6 +329,8 @@ class Evaluation:
                     t = 'n/a'
                     if heatmap[i][j] > 0:
                         t = format(heatmap[i][j], '.2f')
+                    elif heatmap[i][j] < 0:
+                        t = format(0.0, '.2f')
                     text = ax.text(j, i, t, ha="center", va="center", color="w")
             
             ax.set_title('{c} Cycles'.format(c=c))
