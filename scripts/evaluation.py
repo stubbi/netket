@@ -285,16 +285,16 @@ class Evaluation:
                             except Exception as e:
                                 print(e)
 
-                    meanIterationSampleCombiRbmProbs = np.mean(iterationSampleCombiRbmProbs, axis=0)
-                    meanIterationSampleCombiExactProbs = np.mean(iterationSampleCombiExactProbs, axis=0)
 
                     f_xeb = 0
                     if(len(iterationSampleCombiRbmProbs) > 1):
+                        meanIterationSampleCombiRbmProbs = np.mean(iterationSampleCombiRbmProbs, axis=0)
+                        meanIterationSampleCombiExactProbs = np.mean(iterationSampleCombiExactProbs, axis=0)
+
                         for p in range(len(meanIterationSampleCombiExactProbs)):
                             f_xeb += meanIterationSampleCombiRbmProbs[p] * meanIterationSampleCombiExactProbs[p]
                         f_xeb = len(exact) * f_xeb - 1
 
-                    print(f_xeb)
                     heatmapRow.append(f_xeb)
 
                 heatmap.append(heatmapRow)
