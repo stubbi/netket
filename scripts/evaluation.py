@@ -249,7 +249,7 @@ class Evaluation:
                 idx0=1
                 idx1=1
 
-            ax = axs[idx1, idx2]
+            ax = axs[idx0, idx1]
             im = ax.imshow(heatmap)
 
             # We want to show all ticks...
