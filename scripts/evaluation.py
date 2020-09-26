@@ -290,10 +290,10 @@ class Evaluation:
                     meanIterationSampleCombiExactProbs = np.mean(iterationSampleCombiExactProbs, axis=0)
 
                     f_xeb = 0
-                    if()
-                    for p in range(len(meanIterationSampleCombiExactProbs)):
-                        f_xeb += meanIterationSampleCombiRbmProbs[p] * meanIterationSampleCombiExactProbs[p]
-                    f_xeb = 2**len(exact) * f_xeb - 1
+                    if(len(iterationSampleCombiRbmProbs) > 1):
+                        for p in range(len(meanIterationSampleCombiExactProbs)):
+                            f_xeb += meanIterationSampleCombiRbmProbs[p] * meanIterationSampleCombiExactProbs[p]
+                        f_xeb = 2**len(exact) * f_xeb - 1
 
                     print(f_xeb)
                     heatmapRow.append(f_xeb)
