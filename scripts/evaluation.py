@@ -278,6 +278,14 @@ class Evaluation:
                                         testLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'test')
                                         trainLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'training')
 
+                                        for x in testLogOverlaps:
+                                            if(not isinstance(x,float)):
+                                                raise Exception('contains non-numbers')
+
+                                        for x in trainLogOverlaps:
+                                            if(not isinstance(x,float)):
+                                                raise Exception('contains non-numbers')
+
                                         allTest.append(testLogOverlaps[:cutIterations])
                                         allTrain.append(trainLogOverlaps[:cutIterations])
 
