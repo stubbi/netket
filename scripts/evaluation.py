@@ -194,6 +194,66 @@ class Evaluation:
             allSortedRbmProbs = []
             allSortedExactProbs = []
 
+            for i in range(self.numCircuits):
+                df = dfo.copy()
+                df = df[(df['#qubits'] == int(qubits)) & (df['#cycles'] == int(c)) & (df['circuit'] == int(i))]
+
+                for index, row in df.iterrows():
+                    try:
+                        exact = self.loadExact(qubits, c, i, -1)
+                        rbm = self.loadRBM(row['#qubits'],row['#cycles'],row['circuit'],row['#nodes'],row['#tasks'],row['#threads'],row['#samples'],row['#iterations'],row['#initialHidden'],row['#sampleSteps'],row['run'], -1)
+
+                        rbmProbs = [len(exact) * p for p in self.loadRBMProbs(exact, rbm)]
+                        normalisedProbs = [len(exact) * abs(e)**2 for e in exact] 
+
+                        rbmProbsSorted = [p for _,p in sorted(zip(normalisedProbs, rbmProbs))]
+                        exactProbsSorted = sorted(normalisedProbs)
+
+                        allSortedRbmProbs.append(rbmProbsSorted)
+                        allSortedExactProbs.append(exactProbsSorted)
+
+                    except Exception as e:
+                        print(e)
+
+            idx0=0
+            idx1=0
+            if(int(c) == 10):
+                idx1=1
+            elif(int(c) == 15):
+                idx0=1
+            elif(int(c) == 20):
+                idx0=1
+                idx1=1
+
+            meanRBM = np.mean(allSortedRbmProbs, axis=0)
+            meanExact = np.mean(allSortedExactProbs, axis=0)
+
+            axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
+            axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
+
+            axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
+            axs[idx0,idx1].legend()
+            axs[idx0,idx1].set_xlim([0, 15])
+            axs[idx0,idx1].set_ylim([0, 4])
+
+        for ax in axs.flat:
+            ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
+
+        plt.tight_layout()
+        plt.savefig('avgPDF.pdf')
+        plt.close()
+
+    def plotFxebHeatmap(self, qubits):
+        results_file = "{directory}/results.csv".format(directory=self.experimentFolder)
+        dfo = pandas.read_csv(results_file)
+        dfo = dfo[dfo['success'] == True]
+        dfo = dfo.astype({'tvd': 'float64', 'duration': 'float64', 'f_xeb': 'float64'})
+
+        fig, axs = plt.subplots(2,2)
+        for c in self.listCycles:
+            allSortedRbmProbs = []
+            allSortedExactProbs = []
+
             heatmap = []
             for iteration in self.listIterations:
                 heatmapRow = []
@@ -275,31 +335,10 @@ class Evaluation:
             for ax in axs.flat:
                 ax.set(xlabel='Samples', ylabel='Iterations')
 
-            fig.tight_layout()
-            plt.savefig('heatmap.pdf')
-            plt.close()
-                
-
-            
-            
-
-            meanRBM = np.mean(allSortedRbmProbs, axis=0)
-            meanExact = np.mean(allSortedExactProbs, axis=0)
-
-            axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
-            axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
-
-            axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
-            axs[idx0,idx1].legend()
-            axs[idx0,idx1].set_xlim([0, 15])
-            axs[idx0,idx1].set_ylim([0, 4])
-
-        for ax in axs.flat:
-            ax.set(xlabel=r'Bit-string index $j$ ($p(x_j)$-ordered)', ylabel=r'$Np$')
-
-        plt.tight_layout()
-        plt.savefig('avgPDF.pdf')
+        fig.tight_layout()
+        plt.savefig('heatmap.pdf')
         plt.close()
+          
 
     def plotAvgLogOverlap(self, qubits):
         maxIterations = 10000
