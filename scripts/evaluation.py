@@ -271,11 +271,10 @@ class Evaluation:
                         t = format(heatmap[i][j], '.2f')
                     text = ax.text(j, i, t, ha="center", va="center", color="w")
             
-            ax.set_title(f'{c} Cycles')
+            ax.set_title('{c} Cycles'.format(c=c))
             for ax in axs.flat:
                 ax.set(xlabel='Samples', ylabel='Iterations')
 
-            fig.suptitle(f'mean F_xeb', fontsize=16)
             fig.tight_layout()
             plt.savefig('heatmap.pdf')
             plt.close()
