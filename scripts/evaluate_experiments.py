@@ -1,9 +1,9 @@
 import subprocess, os, errno
 from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs, earlyStopping
 
-experiment_name = 'final-4-SR-restarts-learned'
+experiment_name = 'final-4-AdaMax-restarts-learned'
 randomRestarts = 5
-optimizer = 'StochasticReconfiguration'
+optimizer = 'AdaMax'
 
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
