@@ -335,7 +335,6 @@ class Evaluation:
 
             axs[0,0].plot(range(len(meanSqrtXTest)), meanSqrtXTest, label = 'test')
             axs[0,0].plot(range(len(meanSqrtXTrain)), meanSqrtXTrain, label = 'train')
-            axs[0,0].set_ylim([0, maxy])
             #axs[0,0].fill_between(range(len(meanSqrtXTest)), (np.array(meanSqrtXTest)-ciSqrtXTest), (np.array(meanSqrtXTest)+ciSqrtXTest), alpha=.1)
             #axs[0,0].fill_between(range(len(meanSqrtXTrain)), (np.array(meanSqrtXTrain)-ciSqrtXTrain), (np.array(meanSqrtXTrain)+ciSqrtXTrain), alpha=.1)
 
@@ -344,7 +343,6 @@ class Evaluation:
 
             axs[0,1].plot(range(len(meanSqrtYTest)), meanSqrtYTest, label = 'test')
             axs[0,1].plot(range(len(meanSqrtYTrain)), meanSqrtYTrain, label = 'train')
-            axs[0,1].set_ylim([0, maxy])
             #axs[0,1].fill_between(range(len(meanSqrtYTest)), (np.array(meanSqrtYTest)-ciSqrtYTest), (np.array(meanSqrtYTest)+ciSqrtYTest), alpha=.1)
             #axs[0,1].fill_between(range(len(meanSqrtYTrain)), (np.array(meanSqrtYTrain)-ciSqrtYTrain), (np.array(meanSqrtYTrain)+ciSqrtYTrain), alpha=.1)
 
@@ -353,7 +351,6 @@ class Evaluation:
 
             axs[1,0].plot(range(len(meanCZTest)), meanCZTest, label = 'test')
             axs[1,0].plot(range(len(meanCZTrain)), meanCZTrain, label = 'train')
-            axs[1,0].set_ylim([0, maxy])
             #axs[1,0].fill_between(range(len(meanCZTest)), (np.array(meanCZTest)-ciCZTest), (np.array(meanCZTest)+ciCZTest), alpha=.1)
             #axs[1,0].fill_between(range(len(meanCZTrain)), (np.array(meanCZTrain)-ciCZTrain), (np.array(meanCZTrain)+ciCZTrain), alpha=.1)
 
@@ -362,7 +359,6 @@ class Evaluation:
 
             axs[1,1].plot(range(len(meanAllTest)), meanAllTest, label = 'test')
             axs[1,1].plot(range(len(meanAllTrain)), meanAllTrain, label = 'train')
-            axs[1,1].set_ylim([0, maxy])
             #axs[1,1].fill_between(range(len(meanAllTest)), (np.array(meanAllTest)-ciAllTest), (np.array(meanAllTest)+ciAllTest), alpha=.1)
             #axs[1,1].fill_between(range(len(meanAllTrain)), (np.array(meanAllTrain)-ciAllTrain), (np.array(meanAllTrain)+ciAllTrain), alpha=.1)
 
