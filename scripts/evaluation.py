@@ -285,7 +285,6 @@ class Evaluation:
                             except Exception as e:
                                 print(e)
 
-100047514.6340
                     meanIterationSampleCombiRbmProbs = np.mean(iterationSampleCombiRbmProbs, axis=0)
                     meanIterationSampleCombiExactProbs = np.mean(iterationSampleCombiExactProbs, axis=0)
 
