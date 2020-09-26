@@ -28,7 +28,7 @@ number_of_runs = 5 #number of runs for a specific circuit
 randomRestarts = 5
 earlyStopping = False
 # AdaDelta, AdaGrad, AdaMax, AMSGrad, Momentum, RMSProp, Sgd, StochasticReconfiguration
-optimizer = 'StochasticReconfiguration'
+optimizer = 'AdaMax'
 learnCZ = False
 
 
