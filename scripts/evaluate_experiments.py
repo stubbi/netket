@@ -1,9 +1,5 @@
 import subprocess, os, errno
-from experiments_settings import number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs, earlyStopping
-
-experiment_name = 'final-4-AdaMax-restarts-learned'
-randomRestarts = 5
-optimizer = 'AdaMax'
+from experiments_settings import experiment_name, randomRestarts, optimizer, number_of_qubits, number_of_cycles, number_of_circuits, number_of_nodes, number_of_tasks_per_node, number_of_omp_threads, number_of_training_samples, number_of_training_iterations, number_of_initial_hidden_units, number_of_sample_steps, number_of_runs, earlyStopping, learnCZ
 
 noctua_user = 'hpc-prf-nqs'
 email = 'stubbi@mail.upb.de'
@@ -30,7 +26,7 @@ export OMP_NUM_THREADS=1
 module reset
 module load vis/matplotlib
 module load singularity
-mpirun --mca mpi_warn_on_fork 0 singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} {randomRestarts} {earlyStopping} {optimizer} > evaluation_out 2> evaluation_err""".format(
+mpirun --mca mpi_warn_on_fork 0 singularity exec {singularity_image_location} python2.7 $HOME/nqs/scripts/evaluation.py {epxperiment_folder} {number_of_qubits} {number_of_cycles} {number_of_circuits} {listOMPNodes} {listOMPTasks} {listOMPThreads} {listSamples} {listIterations} {listInitialHidden} {listSampleSteps} {numRuns} {randomRestarts} {earlyStopping} {optimizer} {learnCZ}> evaluation_out 2> evaluation_err""".format(
                         epxperiment_folder=epxperiment_folder,
                         experiment_name=experiment_name,
                         noctua_user=noctua_user,
@@ -49,7 +45,8 @@ mpirun --mca mpi_warn_on_fork 0 singularity exec {singularity_image_location} py
                         singularity_image_location=singularity_image_location,
                         randomRestarts=randomRestarts,
                         earlyStopping=earlyStopping,
-                        optimizer=optimizer
+                        optimizer=optimizer,
+                        learnCZ=learnCZ
                         )
 
 f = open("{epxperiment_folder}/evaluation.slurm".format(epxperiment_folder=epxperiment_folder),'w')

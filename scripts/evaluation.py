@@ -28,9 +28,10 @@ numRuns = int(sys.argv[12])
 randomRestarts = int(sys.argv[13])
 earlyStopping = (str(sys.argv[14]) == 'True')
 optimizer = str(sys.argv[15])
+learnCZ = (str(sys.argv[16]) == 'True')
 
 class Evaluation:
-    def __init__(self, experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns, randomRestarts, earlyStoppings, optimizer):
+    def __init__(self, experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns, randomRestarts, earlyStoppings, optimizer, learnCZ):
         self.experimentFolder=experimentFolder
         self.listSystemSizes=listSystemSizes
         self.listCycles=listCycles
@@ -46,6 +47,7 @@ class Evaluation:
         self.randomRestarts=randomRestarts
         self.earlyStopping=earlyStopping
         self.optimizer=optimizer
+        self.learnCZ=learnCZ
 
     def plotTVDIterations(self):
         pass
@@ -370,13 +372,13 @@ class Evaluation:
                         idx = 0
                         for line in content:
                             gate = line.split()[0]
-                            if(gate != 'T'): #TODO: one method does not learn CZ!
+                            if(gate != 'T' or (not self.learnCZ and gate != 'CZ')):
                                 idx = idx + 1
                                 for r in range(self.numRuns):
-                                    #TODO: numInitialHidden is not always 6!
+                                    initialHidden = self.listInitialHidden[0]
                                     try:
-                                        testLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'test')
-                                        trainLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,6,0,r, idx, 'training')
+                                        testLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,initialHidden,0,r, idx, 'test')
+                                        trainLogOverlaps = self.loadLogOverlap(qubits,c,i,1,1,1,s,maxIterations,initialHidden,0,r, idx, 'training')
 
                                         for x in testLogOverlaps:
                                             if(not isinstance(x,float)):
@@ -424,15 +426,14 @@ class Evaluation:
             ciSqrtYTrain = 1.96 * stdSqrtYTrain
             ciSqrtYTest = 1.96 * stdSqrtYTest
 
-            meanCZTrain = np.mean(CZTrain, axis=0)
-            meanCZTest = np.mean(CZTest, axis=0)
-            stdCZTrain = np.std(CZTrain, axis=0)
-            stdCZTest = np.std(CZTest, axis=0)
-            ciCZTrain = 1.96 * stdCZTrain
-            ciCZTest = 1.96 * stdCZTest
+            if(self.learnCZ):
+                meanCZTrain = np.mean(CZTrain, axis=0)
+                meanCZTest = np.mean(CZTest, axis=0)
+                stdCZTrain = np.std(CZTrain, axis=0)
+                stdCZTest = np.std(CZTest, axis=0)
+                ciCZTrain = 1.96 * stdCZTrain
+                ciCZTest = 1.96 * stdCZTest
             
-            maxy = np.max([np.max(meanAllTest), np.max(meanAllTrain), np.max(meanSqrtXTest),np.max(meanSqrtXTrain), np.max(meanSqrtYTest), np.max(meanSqrtYTrain), np.max(meanCZTest), np.max(meanCZTrain)])
-
             axs[0,0].plot(range(len(meanSqrtXTest)), meanSqrtXTest, label = 'test')
             axs[0,0].plot(range(len(meanSqrtXTrain)), meanSqrtXTrain, label = 'train')
             #axs[0,0].fill_between(range(len(meanSqrtXTest)), (np.array(meanSqrtXTest)-ciSqrtXTest), (np.array(meanSqrtXTest)+ciSqrtXTest), alpha=.1)
@@ -449,13 +450,14 @@ class Evaluation:
             axs[0,1].set_title('sqrt Y')
             axs[0,1].legend()
 
-            axs[1,0].plot(range(len(meanCZTest)), meanCZTest, label = 'test')
-            axs[1,0].plot(range(len(meanCZTrain)), meanCZTrain, label = 'train')
-            #axs[1,0].fill_between(range(len(meanCZTest)), (np.array(meanCZTest)-ciCZTest), (np.array(meanCZTest)+ciCZTest), alpha=.1)
-            #axs[1,0].fill_between(range(len(meanCZTrain)), (np.array(meanCZTrain)-ciCZTrain), (np.array(meanCZTrain)+ciCZTrain), alpha=.1)
+            if(self.learnCZ):
+                axs[1,0].plot(range(len(meanCZTest)), meanCZTest, label = 'test')
+                axs[1,0].plot(range(len(meanCZTrain)), meanCZTrain, label = 'train')
+                #axs[1,0].fill_between(range(len(meanCZTest)), (np.array(meanCZTest)-ciCZTest), (np.array(meanCZTest)+ciCZTest), alpha=.1)
+                #axs[1,0].fill_between(range(len(meanCZTrain)), (np.array(meanCZTrain)-ciCZTrain), (np.array(meanCZTrain)+ciCZTrain), alpha=.1)
 
-            axs[1,0].set_title('CZ')
-            axs[1,0].legend()
+                axs[1,0].set_title('CZ')
+                axs[1,0].legend()
 
             axs[1,1].plot(range(len(meanAllTest)), meanAllTest, label = 'test')
             axs[1,1].plot(range(len(meanAllTrain)), meanAllTrain, label = 'train')
@@ -729,7 +731,7 @@ class Evaluation:
             histogram[key] = float(histogram[key])/float(total)
         return histogram
 
-ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns, randomRestarts, earlyStopping, optimizer)
+ev = Evaluation(experimentFolder, listSystemSizes, listCycles, numCircuits, listOMPNodes, listOMPTasks, listOMPThreads, listSamples, listIterations, listInitialHidden, listSampleSteps, numRuns, randomRestarts, earlyStopping, optimizer, learnCZ)
 #ev.generateCSV()
 #ev.generateReport()
 #ev.generatePlots()
