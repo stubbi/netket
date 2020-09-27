@@ -5,7 +5,7 @@ def samples(n):
     return int(n * (math.log(n) + 0.577216) + 1.0/2.0)
 
 
-experiment_name = 'final-4-SR-restarts-learned'
+experiment_name = 'final-4-SR-no-restarts-learned'
 circuit_generator_script = 'random_circuit.py'
 # parameters to be tested
 number_of_qubits = [4]
@@ -25,7 +25,7 @@ number_of_initial_hidden_units = [int(q*(q-1)/2.0) for q in number_of_qubits]
 number_of_sample_steps = [0]#q if q%2 != 0 else q+1 for q in number_of_qubits]
 number_of_runs = 5 #number of runs for a specific circuit
 
-randomRestarts = 5
+randomRestarts = 0
 earlyStopping = True
 # AdaDelta, AdaGrad, AdaMax, AMSGrad, Momentum, RMSProp, Sgd, StochasticReconfiguration
 optimizer = 'StochasticReconfiguration'
