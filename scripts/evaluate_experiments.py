@@ -17,8 +17,8 @@ batch_script ="""#!/bin/bash
 #SBATCH --ntasks-per-node=1
 #SBATCH -J {experiment_name}-evaluation
 #SBATCH -A {noctua_user}
-#SBATCH -p short
-#SBATCH -t 00:30:00
+#SBATCH -p batch
+#SBATCH -t 12:00:00
 #SBATCH --mail-type fail
 #SBATCH --mail-user {email}
 export OMP_NUM_THREADS=1
