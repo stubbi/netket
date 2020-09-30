@@ -172,8 +172,8 @@ class Evaluation:
             f_xeb = 0
             tvd = 0
             for p in range(len(meanRBM)):
-                f_xeb += meanRBM[p] * meanExact[p]
-                tvd = abs(meanRBM[p] - meanExact[p])
+                f_xeb += meanRBM[p]/(2**qubits) * meanExact[p]/(2**qubits)
+                tvd = abs(meanRBM[p]/(2**qubits) - meanExact[p]/(2**qubits))
             f_xeb = len(meanRBM) * f_xeb - 1
             tvd = tvd/2
 
@@ -241,8 +241,8 @@ class Evaluation:
             f_xeb = 0
             tvd = 0
             for p in range(len(meanRBM)):
-                f_xeb += meanRBM[p] * meanExact[p]
-                tvd = abs(meanRBM[p] - meanExact[p])
+                f_xeb += meanRBM[p]/(2**qubits) * meanExact[p]/(2**qubits)
+                tvd = abs(meanRBM[p]/(2**qubits) - meanExact[p]/(2**qubits))
             f_xeb = len(meanRBM) * f_xeb - 1
             tvd = tvd/2
 
