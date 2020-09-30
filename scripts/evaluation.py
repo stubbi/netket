@@ -169,7 +169,15 @@ class Evaluation:
             meanRBM = np.mean(allSortedRbmProbs, axis=0)
             meanExact = np.mean(allSortedExactProbs, axis=0)
 
-            axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
+            f_xeb = 0
+            tvd = 0
+            for p in range(len(meanRBM)):
+                f_xeb += meanRBM[p] * meanExact[p]
+                tvd = abs(meanRBM[p] - meanExact[p])
+            f_xeb = len(meanRBM) * f_xeb - 1
+            tvd = tvd/2
+
+            axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = "exact {tvd} {fxeb}".format(tvd=tvd, fxeb=f_xeb))
             axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
 
             axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
@@ -230,7 +238,15 @@ class Evaluation:
             meanRBM = np.mean(allSortedRbmProbs, axis=0)
             meanExact = np.mean(allSortedExactProbs, axis=0)
 
-            axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = 'exact')
+            f_xeb = 0
+            tvd = 0
+            for p in range(len(meanRBM)):
+                f_xeb += meanRBM[p] * meanExact[p]
+                tvd = abs(meanRBM[p] - meanExact[p])
+            f_xeb = len(meanRBM) * f_xeb - 1
+            tvd = tvd/2
+
+            axs[idx0,idx1].plot(range(len(meanExact)), meanExact, label = "exact {tvd} {fxeb}".format(tvd=tvd, fxeb=f_xeb))
             axs[idx0,idx1].plot(range(len(meanRBM)), meanRBM, label = 'RBM')
 
             axs[idx0,idx1].set_title('{c} Cycles'.format(c=c))
@@ -312,7 +328,7 @@ class Evaluation:
                 idx1=1
 
             ax = axs[idx0, idx1]
-            im = ax.imshow(heatmap)
+            im = ax.imshow(heatmap, vmin=0, vmax=1)
 
             # We want to show all ticks...
             ax.set_xticks(np.arange(len(self.listSamples)))
