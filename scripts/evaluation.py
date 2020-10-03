@@ -169,6 +169,8 @@ class Evaluation:
             meanRBM = np.mean(allSortedRbmProbs, axis=0)
             meanExact = np.mean(allSortedExactProbs, axis=0)
 
+            pt = [4*math.exp(0.25*(x-16)) for x in range(16)]
+
             f_xeb = 0
             tvd = 0
             for p in range(len(meanRBM)):
@@ -238,7 +240,7 @@ class Evaluation:
             meanRBM = np.mean(allSortedRbmProbs, axis=0)
             meanExact = np.mean(allSortedExactProbs, axis=0)
 
-            pt = [4*exp(0.25*(x-16)) for x in range(16)]
+            pt = [4*math.exp(0.25*(x-16)) for x in range(16)]
 
             f_xeb = 0
             tvd = 0
